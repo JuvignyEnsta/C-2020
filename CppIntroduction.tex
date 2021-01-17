@@ -1,0 +1,493 @@
+\chapter{Introduction}
+
+\section{Qu'est ce que le C++}
+
+\subsection{Un peu d'histoire}
+
+L'histoire du C++ est très lié à l'histoire du C. Le langage C lui-même est historiquement lié au système UNIX.
+
+En 1969, la première version du système UNIX voit le jour dans les laboratoires Bell, dans le New Jersey, pour une machine appelée coquettement DEC PDP-7. Mais le langage utilisé pour écrire ce système était l'assembleur. Or l'assembleur est un langage trop proche du matériel informatique utilisé et qui permet peu de suivi et d'évolution des logiciels.
+
+Peu après l'apparition d'UNIX, Ken Thompson créa un nouveau langage de programmation, nommé B, lui-même inspiré du langage BCPL (Basic Combined Programming Language, développé par Martin Richards). Le but de B était de créer un langage plus simple que le BCPL, lui-même plus simple déjà que le langage CPL. Mais ce but ne fut que trop bien atteint, et le B s'avéra être un peu trop simple et trop dépendant de l'architecture.
+
+Peu après l'apparition du B, une nouvelle machine fut introduite : le PDP-11. UNIX et B ont tout de suite étés transférés vers cette nouvelle architecture, plus rapide que le PDP-7. Mais réécrire UNIX en assembleur (car les assembleurs ne sont pas les mêmes de machine à machine) était une tâche trop ardue, et on considéra de le réécrire en B. Le problème était alors que le B était relativement lent, du au fait qu'il s'agissait d'un langage interprété (comme le Basic et le Java aujourd'hui).
+
+C'est pour cela qu'en 1971, on commença a travailler sur le successeur de B, nommé dans l'ordre des choses C. On s'accorde pour dire que Dennis Ritchie est le véritable créateur du C. La puissance du C était véritable : ce langage n'avait pas été fait spécifiquement pour un type de machine, ou pour une système particulier. C'est donc un langage hautement portable. De plus, son rayon d'action s'étend du bas niveau de la machine (le C peut générer du code aussi rapide que du code assembleur), au haut niveau des langages orientés problèmes. Virtuellement, on peut donc tout faire avec du C : du pilote de matériel jusqu'au logiciel de gestion, en passant par les jeux.
+
+Le C devint vite tellement populaire que tout le monde voulait en faire sa version. Si bien que les différents compilateurs devinrent incompatible les uns avec les autres, et on avait perdu une grande part de la portabilité du C. L'idée vint alors qu'il fallait un standard pour le langage C. C'est un comité de l'ANSI (American National Standards Institute) qui mit au point ce standard en 1983, et depuis, la plupart des compilateurs (Borland, Microsoft, GNU CC...) se sont pliés à ce standard, si bien qu'un programme écrit en ANSI C est compilable presque partout.
+
+Le C avait donc de nombreux avantages. Mais il lui manquait certaines caractérisrique des compilateurs modernes : la programmation orientée objet, fonctionnelle, \ldots
+
+Le Dr. Bjarne Stroustrup de Bell Laboratories est le créateur du C++, dont le développement date du début des années 1980. Son but était de créer un langage permettant la programmation orientée objet tout en restant hautement performant. Il fallait aussi toucher un large public. Or les deux dernières caractéristiques désignaient directement le C, déjà utilisé pour écrire des milliards de lignes de code dans tous les domaines. Il créa alors le C++ sur la base du C, en prenant soin de préserver la compatibilité : tout programme C peut être compilé en C++. La plupart des ajouts sont inspirés des langages Simula67 et Algol68. 
+
+Mais, de la même façon que le C, l'évolution du langage C++ commençait à diverger entre les éditeurs de compilateur. Dans le courant de l'année 1994 les comités de normalisation ISO et ANSI ont publié une version préliminaire officielle du C++ X3 JI 6/WG21. La dernière version préliminaire fut publiée en décembre 1996. A part quelques points de détail, elle comportait l'essentiel de ce qui allait être la version définitive, datée du 27 septembre 1998 notée norme ISO/IEC 14882:1998(E). On se réfère à ce standard en parlant du C++ 98.
+
+Il fallut ensuite de nombreuses années avant que le standard soit remis à jour. Une première mise à jour, essentiellement pour
+corriger quelques problèmes liés au standard 98 (en particuliers des omissions) a été effectué en 2003 (standard ISO/IEC 14882:2003, C++ 03). Une vraie évolution du langage eu lieu avec la sortie d'un nouveau standard le 12 Août 2011 (standard ISO/IEC 14882:2011, C++ 11) qui apporta un grand nombre de nouveautés. Depuis, le standard est mis à jour tous les trois ans, en rajoutant de nouvelles fonctionnalités permettant de repousser les limites du langage. Il existe donc actuellement un standard datant du 18 Août 2014 ( C++ 14 ) qui apporte quelques nouveautés au C++ 11, une autre de Mars 2017 (C++ 17) qui corrige certains défauts du C++14 (en enlevant certaines fonctionnalités du langage) et en rajoute un grand nombre, et finalement la version actuelle publié par l'ISO (avec un peu de retard dû au COVID\ldots) en Décembre 2020 qui rajoute un grand nombre de nouveautés au langage. La prochaine version du standard apparaîtra donc en 2023, et le travail sur cette future version a déjà commencé\ldots
+
+\subsection{Caractéristiques du C++}
+
+Le C++ est donc un langage compilé dont la performance aujourd'hui est proche de celle du C, qui permet plusieurs paradigmes de programmation, à savoir :
+\begin{itemize}
+    \item La programmation structurée : de la même manière qu'en C, on décompose le problème en des fonctions agissant sur des structures de données;
+    \item La programmation orientée objet : la programmation est centralisé sur les données à gérer et la façon dont on les manipule;
+    \item La programmation fonctionnelle : On décompose le problème en un ensemble de fonction (proche du sens mathématique) qu'on manipule ensuite pour créer le programme.
+\end{itemize}
+
+Lors d'un projet informatique, il est déconseillé de se fixer un seul paradigme de programmation. Selon les différentes parties du projet, un paradigme sera mieux adapté qu'un autre. Il faut donc savoir rester pragmatique et utiliser le bon paradigme de programmation selon le problème rencontré. 
+
+Il faut aussi savoir que le C++ est doté en standard d'une bibliothèque d'objets et de fonction très riche qui permet de gagner du temps lors de l'élaboration d'un projet. En particuliers, on trouvera dans cette bibliothèque :
+\begin{itemize}
+    \item une partie utilitaire : des pointeurs intelligents, des fonctions de mesure du temps (calendrier ou chronomètre), des fonctions de hashage, une définition de pair, de tuple (comme en python), de conversion de chaînes de caractère, \ldots
+    \item une partie pour gérer des conteneurs : tableaux statiques (array), tableaux dynamiques (vector), liste simplement ou doublement chaînées, dictionnaires avec ou sans tables de hashage, ensemble assurant l'unicité des éléments, des queues
+    (à gestion prioritaire ou non), \ldots ainsi que des fonctions applicables dessus comme des tris (partiels ou complets),
+    la recherche d'éléments (rapide ou non), etc.
+    \item Une partie pour gérer les chaînes de caractère : transformer des réels ou des entiers en chaîne de caractère, gérer (de façon basique pour l'instant) des chaînes en UTF 8, UTF 16 ou UTF 32 (permettant d'avoir des caractères internationaux : arabes, chinois, japonais, indien, etc. ou encore des symboles mathématiques);
+    \item Une partie pour gérer les entrées--sorties et les fichiers : créer des fichiers formatés ou binaires, gérer les répertoires (création, destruction, etc. ) ou les liens entre fichiers, gestion des accès aux fichiers (les permissions
+    en lecture, écriture, exécution), etc.
+    \item Une partie mathématique : une bibliothèque permettant de gérer facilement les nombres complexes, une bibliothèque très riche pour les nombres aléatoires, permettant de choisir le générateur aléatoire mais aussi la loi de distribution
+    que les nombres doivent suivre, des fonctions complexes comme les polynômes de laguerre, de legendre, d'Hermite, et., la fonction beta, les intégrales elliptiques, les fonctions de Bessel de premier et second type, la fonction zeta de Riemann,
+    \ldots
+    \item Une bibliothèque permettant de manipuler des expressions régulières
+    \item Une bibliothèque permettant de gérer les threads posix (indépendamment du système d'exploitation)
+    \item Enfin, depuis C++ 17, la plupart des fonctions proposées par ces librairies peuvent être exécutées en parallèle
+    sur les architectures multi-c{\oe}urs des ordinateurs modernes.
+\end{itemize}
+
+Nous verrons au fur et à mesure du cours quelques fonctionnalités de cette bibliothèque très riche. Ce qu'il faut cependant comprendre, c'est que le C++ est un langage extrémement riche proposant une très grande étendue de fonctions. Il est tout simplement impossible de maîtriser à 100\% ce langage. D'ailleurs, le Dr. Bjarne Stroustrup (créateur du C++) a lui-même estimé qu'il ne connaissait qu'environ 70\% du langage. Il serait donc illusoire de totalement maîtriser le langage à la fin de ce cours ! (par ailleurs, votre professeur ne maîtrise pas non plus 100\% du C++ !)
+
+\section{Compiler des sources C++}
+
+\underline{Plusieurs compilateurs existent sous Linux, Mac ou Windows :}
+
+\textbf{Sous Linux}, le compilateur \texttt{g++} n'est pas installé par défaut (contrairement au \texttt{gcc}). Il faut donc l'installer en se reportant à la documentation d'installation qui dépend de la distribution utilisée. Il existe aussi un autre compilateur \texttt{clang} que je recommande chaudement pour diverses raisons, en particuliers son interaction incroyable avec l'éditeur sublime (que je recommande également, mais qui est un shareware parfaitement utilisable sans payer la license) permettant de formater ces sources selon des critères qu'on peut soit même définir ainsi qu'une compilation en temps réel du code en train d'être édité au moment de la sauvegarde pour vérifier les problèmes de compilation éventuels. Il existe également un compilateur C++ de PGI gratuit mais que je ne recommande pas sauf si on veut programmer "facilement" la carte graphique. Enfin, il existe le compilateur C++ d'Intel, payant (et cher !) qui est livré avec des bibliothèques optimisées pour le calcul scientifique.
+
+\textbf{Sous Mac}, pour avoir accès à \texttt{g++}, il faut installer \texttt{Homebrew} (gratuit) qui de toute façon sera également nécessaire en troisième année pour le calcul parallèle. Vous pouvez alternativement installer \texttt{XCode} qui fournit \texttt{clang} comme compilateur C++ !
+
+\textbf{Sous Windows}, outre \texttt{CodeBlock} que je ne recommande pas forcément, vous pouvez installer \texttt{MSys 2} qui est un environnement à la Unix permettant de compiler des sources en exécutables Windows comme si vous étiez sous Unix ! MSys 2 est basé sur une distribution Linux (ArchLinux) est propose les dernières versions de g++ ou de clang ainsi que d'autres outils familiés pour un utilisateur d'unix (Makefile, python, opengl, etc. ) Du point de vue éditeur, \texttt{sublime text} est également proposé sous Windows et peut très bien interagir avec la version clang proposée par Msys 2 pour avoir les mêmes fonctionnalités que sous Linux. Enfin, une autre solution est de téléchargé Visual C++ dans sa version Community, qui a l'avantage d'être gratuit même si vous n'aurez pas accès à des options d'optimisation. Par contre, le cours proposé ici se base sur les options proposés par g++ (et clang qui possède les mêmes options que g++) et fera quelques explorations dans le monde de C++20, version du C++ qui n'est pas encore supporté par Visual C++ (mais bien supporté par g++ et clang).
+
+Enfin, pour ceux qui ne possèdent qu'une tablette ou un téléphone portable, sachez qu'il existe des sites vous proposant de compiler des programmes C++ et de les exécuter. Bien entendu, cela peut s'avérer utile pour des exercices mais bien insuffisant pour mener un programme de la taille d'un projet ! Un lien intéressant proposant du C++ 17 est la page web suivante :
+\url{https://www.onlinegdb.com/online_c++_compiler} qui propose un compilateur mais aussi un outil de débogage de votre code (gdb en l'occurence).
+
+\subsection{Les options de compilation}
+
+Lors de la compilation de vos sources, vous aurez selon le contexte de production de votre code plusieurs options à fournir au compilateur.
+
+\textbf{Si vous êtes en train de développer}, il est conseillé d'utiliser un maximum d'options permettant de détecter les bogues et les maladresses d'écriture en amont plutôt qu'à la fin de votre projet ! Il est donc conseillé de compiler votre source en exécutant la commande suivante :
+
+\texttt{g++ -std=c++20 -g -Wall -pedantic -D\_GLIBCXX\_DEBUG  -o \textcolor{blue}{<nom de l'exécuble> <nom du  ou des fichiers sources>}}
+
+Si vous utilisez clang, il suffit de remplacer g++ par clang (et garder les mêmes options). Voici ce que font chaque option :
+\begin{itemize}
+    \item \texttt{-std=c++20} : compile le code selon la norme ISO C++ 20
+    \item \texttt{-g} : Permet de conserver les symboles des variables et fonctions pour pouvoir lancer un éventuel débogage et voir la pile d'appel
+    \item \texttt{-Wall} : Actionne les messages de Warning pour toutes les options possibles (variables non intialisées, non utilisées, nommant une variable dans un sous bloc avec un nom de variable déjà existant, etc. )
+    \item \texttt{-pedantic} : Rend le compilateur ``pédant'' (sic !) et lui demande de générer des messages de warning si on
+    s'écarte même très légèrement de la norme ISO. Cela permet en particuliers de s'assurer que notre code sera portable avec
+    d'autres compilateurs.
+    \item \texttt{-D\_GLIBCXX\_DEBUG} : Permet de détecter la moindre erreur mémoire faite en utilisant la bibliothèque standard du C++, en particuliers les débordements d'indice en utilisant les tableaux statiques ou dynamiques.
+\end{itemize}
+
+\textbf{Si vous êtes en train de compiler pour livrer un exécutable}, on veut bien sûr avoir le code le plus compact et rapide possible. Il est conseillé dans ce cas de compiler vos sources en exécutant les options suivantes :
+
+\texttt{g++ -std=c++20 -O3 -march=native -DNDEBUG -o \textcolor{blue}{<nom de l'exécuble> <nom du  ou des fichiers sources>}}
+
+Voici ce que signifie chaque option :
+\begin{itemize}
+    \item \texttt{-O3} : permet une optimisation maximale, quitte à modifier l'ordre des opérations et ne pas avoir un résultat identique au binaire près (si il est important que les opérations soient dans un ordre identique à ce qui a été écrit, remplacer \texttt{-O3} par \texttt{-O2})
+    \item \texttt{-march=native} : \'Emet du code machine adapté au processeur se trouvant sur la machine où le code est compilé (et profiter ainsi des architectures modernes des processeurs pour un code plus rapide !)
+    \item \texttt{-DNDEBUG} : Supprime les assertions (qu'on verra plus loin dans le cours) qui servent à déboguer le code.
+\end{itemize}
+
+Il faut avoir conscience qu'en mode dévelopement, votre code s'exécutera relativement lentement par rapport à l'exécutable créer avec toutes les optimisations données pour livrer un exécutable. Cependant, cela vous permettra déjà de supprimer un grand nombre
+d'erreurs de programmation sans trop vous casser la tête.
+
+Enfin, il est conseillé de créer un makefile pour compiler vos codes, permettant :
+\begin{itemize}
+  \item De recompiler à chaque fois des fichiers qui n'ont pas été modifiés entre deux compilations;
+  \item D'éviter de retaper à chaque fois la ligne de commande avec toutes les options nécessaires.
+\end{itemize}
+
+\section{Des bonnes pratiques de programmation}
+
+Lorsqu'on programme, on passe un certain temps à écrire du code, mais on passe beaucoup plus de temps à \textbf{lire}
+du code que soi-même ou d'autres ont écrit. Il est donc important d'avoir un code clair et agréable à lire.
+
+On peut faire l'analogie entre l'écriture d'un code et l'écriture d'un texte. Lorsque le texte est mal écrit et mal présenté, qu'il contient des fautes d'orthographe, que les phrases sont mal structurées et que les idées ne sont pas organisées, ce texte est très difficile à lire et donc à comprendre. Il en va de même pour le code : un code brouillon est très diffile et fatiguant à comprendre\ldots de plus, les bogues s'y cachent beaucoup plus facilement.
+
+Considérons le code (en C) suivant :
+\begin{lstlisting}
+int k(int i)
+{
+int rsflkj = 1; if (i==1) return rsflkj; else rsflkj = i;
+                          return rsflkj * k(i-1);
+}
+\end{lstlisting}
+
+Arrivez-vous du premier coup d'{\oe}il à savoir ce que fait cette fonction ? C'est la fonction factorielle. Elle serait bien plus simple à comprendre avec un code bien écrit, non ?
+
+Il est donc très important de respecter certaines bonnes pratiques de programmation qui s'appliquent naturellement à la
+rédaction d'algorithmes pour rendre le plus agréable possible la lecture de code.
+
+Cette section n'a pas vocation à vous inventorier toutes les bonnes pratiques de programmation, ce n'est pas la vocation première de ce cours, mais vous donne déjà quelques éléments essentiels là-dessus (on reparlera également de bonnes pratiques dans divers chapitres de ce cours).
+
+\subsection{Contrat--Interface contre mise en {\oe}uvre d'un algorithme}
+
+Le \textbf{contrat} caractèrise l'\textbf{interface} d'un algorithme, c'est-à-dire qu'il explique le plus clairement possible ce que l'algorithme est capable de produire comme sorties étant donné ce qu'on lui fournit en entrée. On y spécifiera les conditions en entrée de l'algorithme (les pré-conditions) qui vont décrire les valeurs que peuvent prendre les données fournies en entrées pour que l'algorithme soit capable de fonctionner, et les conditions en sortie de l'algorithme (post-conditions) qui nous renseignera sur ce que l'on peut attendre à obtenir comme résultats.
+
+Par conséquent, lorsqu'on consulte le contrat d'un algorithme, on est renseigné sur ce à quoi on peut s'attendre, ainsi que sur les limites de l'algorithme que l'on va utiliser, sans pour autant avoir besoin de comprendre comment l'algorithme est mise en {\oe}uvre. Il nous appartient de composer avec ces informations.
+
+Le contrat permet donc de savoir très exactement ce que l'algorithme est capable de faire, mais il ne dit rien sur \textbf{comment} l'algorithme va s'y prendre pour résoudre le problème.
+
+\subsection{Précondition et post-condition}
+
+Les préconditions et les postconditions sont des conditions faisant partie du contrat relatif à un algorithme.
+
+Les \textcolor{blue}{préconditions} sont des conditions vérifiant que les données connues à l'entrée de l'algorithme appartiennent bien au domaine de définition de l'algorithme et qu'elles sont cohérentes entre elles.
+
+Les \textcolor{blue}{post-conditions} sont des conditions vérifiant que les données en sortie appartiennent bien à l'image de l'algorithme ou du moins ont des valeurs cohérentes et attendues par rapport à ce que fait l'algorithme.
+
+Ainsi par exemple, prenons un algorithme calculant la racine carrée d'un nombre réel :
+\begin{itemize}
+  \item L'unique pré-condition de cette fonction est que le nombre réel soit positif ou nul;
+  \item L'unique pré-condition de cette fonction est que la racine carrée retournée soit positive ou nul;
+\end{itemize}
+
+Si on traduit cela en C ou C++, on utilisera les assertions que l'on trouve dans la bibliothèque |assert.h| (en C) ou |cassert| en C++. Les assertions sont des fonctions demandant en entrée une condition. Si cette condition à l'exécution est vérifiée,
+le programme continue son exécution, sinon le programme s'arrête sur l'assertion et affiche la ligne et le fichier où l'assertion n'a pas été vérifiée. Les assertions ne sont activées que si l'option |-DNDEBUG| a été omise, sinon elles sont ignorées par le compilateur. Ainsi, pour notre racine carrée, nous traduirons la pré-condition et la post-condition par :
+\begin{lstlisting}[caption = Exemple d'utilisation d'assertion (C ou C++)]
+#include <assert.h> // assert.h accepté aussi en C++, mais on préfère #include <cassert>
+
+double sqrt(double x)
+{
+  assert(x>=0); // Pré-condition
+
+  sq = ...           // Calcul de la racine qu'on stocke dans sq
+
+  assert(sq >= 0); // Post-condition
+
+  return sq;
+}
+\end{lstlisting}
+
+La simple lecture du code nous indique donc les valeurs valides pour cette fonction et les conditions sur les valeurs de retour.
+
+Les préconditions et les postconditions peuven être des conditions demandant eux-mêmes un algorithme permettant de vérifier l'état ou les états de valeurs en entrées ou en sortie.
+
+Ainsi, prenons un algorithme de tri sur des valeurs contenus dans un tableau dont on ne connaît pas a priori les types (en Python, cela arrive souvent, en C++ nous verrons que nous aurons également souvent ce cas de figure avec les templates). Les pré-conditions et les post-conditions sont :
+\begin{itemize}
+  \item \textcolor{blue}{Pré-conditions} : 
+  \begin{itemize}
+    \item Que les valeurs dans le tableau puisse être comparer deux à deux à l'aide d'un opérateur de comparaison;
+    \item Que cet opérateur de comparaison définisse une relation d'ordre (au sens mathématiques du terme);
+  \end{itemize}
+  \item \textcolor{blue}{Post-conditions} :
+  \begin{itemize}
+    \item Que les valeurs du tableau en sortie soit une permutation des valeurs du tableau en entrée;
+    \item Que les valeurs du tableau en sortie vérifie la relation d'ordre en parcourant linéairement le tableau;
+  \end{itemize}
+\end{itemize}
+
+On voit que les préconditions et les post-conditions sont moins triviales ici que pour la racine carrée.
+
+La première pré-condition en C++ sera de toute façon vérifiée automatiquement par le compilateur (en Python, on peut vérifier cette pré-condition pendant le tri).
+
+La deuxième pré-condition est impossible à vérifier par le compilateur ou les assertions. C'est donc au programmeur ici de
+s'assurer que l'opérateur de comparaison employée définit bien une relation d'ordre.
+
+Pour les post-conditions, la première post-condition est loin d'être triviale à mettre en {\oe}uvre : soit on utilise un check-sum qui nous assure partiellement que la post-condition est vérifiée, soit en C++ on peut utiliser une fonction déjà
+définie dans la bibliothèque standard (Dans la bibliothèque |algorithm|, il existe une fonction |is_permutation| qui vérifie
+qu'un tableau de valeurs est bien la permutation d'un autre tableau de valeurs).
+
+Quant à la seconde post-condition, il suffit de parcourir linéairement tout le tableau en sortie pour vérifier que les éléments consécutifs vérifient bien la relation d'ordre.
+
+Remarquons que dans cet exemple, les pré et post-conditions sont loin d'être triviales et ont un coup en temps de calcul qui peut être non négligeable. Cependant, en C et C++, rappelons que ce coût ne sera effectif que lorsqu'on sera en phase de développement (|-DDEBUG|) mais ne sera plus présent lors de la production finale du code (où on utilisera l'option |-DNDEBUG|).
+
+Même si le code produit durant la phase de développement sera plus lent, une bonne utilisation des pré et post conditions peut réduire drastiquement le temps de développement en permettant de détecter assez tôt des bogues potentiels. Il ne faut pas oublier que la relecture du code et la phase de "débogage" sont des parties du développement qui prennent la plus grosse partie du temps de mise en {\oe}uvre.
+
+\subsection{Qu'est ce qui caractérise un code "bien écrit"}
+
+Un code mettant en {\oe}uvre un algorithme est bien écrit si il a les propriétés suivantes :
+\begin{itemize}
+  \item \^Etre facile à lire, par soi-même mais aussi par les autres;
+  \item Avoir une organisation logique et évidente;
+  \item \^Etre explicite, montrer clairement les intentions du développeur;
+  \item \^Etre soigné et robuste au temps qui passe.
+\end{itemize}
+
+Regardons en détail chacune de ces caractéristiques :
+
+\underline{\textbf{Le code doit être facile à lire}}
+
+Pour que le code soit facile à lire, il faut d'une part qu'il soit bien structuré et bien présenté, et d'autre part,
+que les noms des variables et des fonctions soient choisis avec soin.
+
+Pour ce qui est de la structure et de la présentation, il est important, particulièrement en C et C++, de respecter une
+règle fixe d'indentation en veillant à ce que des blocs d'instructions se trouvant au même niveau doivent être précédés
+du même nombre d'espaces, ce qui nous conduit naturellement à bien \textbf{indenter} notre code.
+
+Par exemple, si on regarde le code C ci--dessous, il est évident que le manque d'indentation ne facilite par la lecture et la compréhension du code, n'est-ce-pas ?
+
+\begin{lstlisting}[caption=Code sans indentation]
+void m(int n, float* A, float* B, float* C) {
+int i,j,k;
+for (i = 0; i < n; ++i ){
+float a = 0.;
+for (j = 0; j < n; ++j ){
+for (k = 0; k < n; ++k ){
+a += A[i+k*n]*B[k+j*n];
+}
+C[i+j*n] += a;
+}
+\end{lstlisting}
+
+Pour ce qui est du choix des noms des choses (variables, fonctions, structures, etc.), nous en reparlerons un peu plus loin.
+
+\underline{\textbf{Le code doit avoir une organisation logique et évidente}}
+
+Ce point est plus délicat car nous avons souvent des solutions différentes pour résoudre le même problème. Il est donc normal qu'un code qui semble logique à quelqu'un, semble "tordu" à son voisin.
+
+\'Etant conscient de cela, il faut vous efforcer de trouver des solutions logiques et simples aux problèmes que vous devez résoudre et d'éviter d'emprunter des chemins plus compliqués qui ne feraient que semer la confusion. 
+
+Par exemple, pour afficher les nombres de un à dix, il suffit de faire une boucle qui fait évoluer un compteur entre un et dix et qui affiche ce compteur à chaque itération.  La solution qui consisterait à faire une boucle qui fait évoluer un compteur entre neuf et zéro et qui afficher à chaque itération la valeur |10-compteur| fonctionne aussi mai est à proscrire car elle est moins "simple".
+
+De même, lors de la déclaration d'une fonction, éviter si possible d'avoir des paramètres redondants ou qui peuvent se déduire d'autres paramètres dans la liste de vos paramètres, cela vous évitera en particuliers d'avoir des incohérences entre les divers paramètres de votre fonction.
+
+
+Par exemple, pour orthogonaliser un vecteur par rapport à un autre vecteur :
+\begin{lstlisting}[caption=Exemple de paramètre superflu]
+void orthonogalise(double u[3], double nrmu, double v[3])
+{
+    double dotuv = u[0]*v[0]+u[1]*v[1]+u[2]*v[2];
+    v[0] = v[0] - dotuv*u[0]/(nrmu*nrmu);
+    v[1] = v[1] - dotuv*u[0]/(nrmu*nrmu);
+    v[2] = v[2] - dotuv*u[0]/(nrmu*nrmu);
+}
+\end{lstlisting}
+
+Le paramètre donnant la norme de $u$ est redondante avec les c{\oe}fficients de $u$ et il y a un risque que la valeurs
+passée ne soit pas celle de $u$, ce qui amènera l'algorithme a faire un calcul faux ! 
+
+Quitte à faire un peu plus de calcul, il est donc préférable de ne passer que les deux vecteurs $u$ et $v$ !
+\begin{lstlisting}[caption=Exemple sans paramètre superflu]
+void orthonogalise(double u[3], double v[3])
+{
+    double sqr_nrm_u = u[0]*u[0]+u[1]*u[1]+u[2]*u[2]; // Calcul ||u||²
+
+    assert(sqr_nrm_u > 1.E-14); // Pre-condition verifiant que le vecteur u n'est pas nul
+
+    double dotuv = u[0]*v[0]+u[1]*v[1]+u[2]*v[2];
+    v[0] = v[0] - dotuv*u[0]/sqr_nrm_u;
+    v[1] = v[1] - dotuv*u[0]/sqr_nrm_u;
+    v[2] = v[2] - dotuv*u[0]/sqr_nrm_u;
+
+    assert(std::abs(v[0]*u[0]+v[1]*u[1]+v[2]*u[2]) < 1.E-14);
+}
+\end{lstlisting}
+
+
+
+\underline{\textbf{Le code doit être explicite}}
+
+Lorsqu'on écrit des algorithmes ou que l'on développe des programmes, on est parfois tenté de prendre
+des raccourcis car "on sait" que telle ou telle méthode permet de faire telle ou telle chose bien pratique.
+
+Il n'est pas interdit de prendre des raccourcis, mais il faut toujours prendre le soin de l'expliquer, au moins
+au travers des commentaires, pourquoi on fait cela. C'est important à la fois pour permettre aux autres
+de comprendre pourquoi votre solution est astucieuse\ldots mais aussi pour vous, au cas où vous ne vous
+souveniez plus de "pourquoi vous avez fait ça".
+
+Par exemple, si vous devez afficher une matrice de dimension $M\times M$, la procédure usuelle est de faire deux
+boucles imbriquées permettant d'afficher chacun des éléments de la matrice. Or, si vous savez que votre matrice
+est triangulaire, vous allez probablement vouloir optimiser votre double boucle d'affichage. C'est naturellement
+une bonne idée\ldots mais pensez bien à rappeler dans le commentaire pourquoi vous procédez de la sorte.
+
+\underline{\textbf{Le code doit être soigné et robuste au temps qui passe}}
+
+Lorsqu'on écrit un code, on a la fâcheuse tendance à s'arrêter dès que celui-ci fonctionne. C'est un tort !
+Le code doit être entretenu. Cela signifie qu'il faut relire son code après l'avoir terminé, vérifié que l'on a bien
+supprimé les éléments obsolètes, vérifier que les commentaires sont à jour et cohérents avec le code conservé, etc.
+
+Cette opération de "maintenance" du code est cruciale, mais elle est pourtant souvent négligée par beaucoup, ce qui
+peut poser des problèmes, notamment lorsque vous rencontrez un bogue.
+
+L'exemple le plus classique est le suivant : Vous mettez un {\oe}uvre une fonction |tri| pour trier des éléments d'un tableau.
+Vous n'êtes pas satisfaits du comportement de cette méthode lorsque vous l'utilisez depuis votre programme principal. Vous mettez en {\oe}uvre une nouvelle fonction |tri_rapide| qui utiliser une autre stratégie pour trier les éléments du tableau.
+Cette méthode marche mieux. Vous l'utilisez donc dans votre programme principal. Votre programme fonctionne et vous passez à autre chose, sans penser à intégrer proprement vos modifications dans votre programme. Quelques jours plus tard, vous reprenez
+votre code et vous observez un bogue. Vous pensez que cela vient du tri effectué, et vous allez donc observer ce qui se passe dans |tri|. Après quelques heures de recherche, vous êtes furieux contre vous-même car vous réalisez que la méthode |tri| n'est plus utilisée dans votre code\ldots
+
+Croyez-le ou non, mais les problèmes de ce type arrivent beaucoup plus souvent qu'on ne le pense\ldots surtout quand on cherche à faire vite.
+
+Avant de passer au point suivant, un autre exemple de code illustrant ce qui se passe très souvent. Voyez-vous le problème :
+
+\begin{lstlisting}
+void une_fonction(bool continuer)
+{
+  // La boucle s'arrête si i est négatif ou si continuer prend la valeur false
+  int i = 0, j = 4;
+  while (continuer)
+  {
+    std::cout << "Mon code marche" << std::endl;
+    // i += 1;
+    j += 1;
+    if (j>10) continuer = true;
+  }
+}
+\end{lstlisting}
+
+Comme vous pouvez le voir, le premier commentaire ne correspond plus du tout à ce que fait l'algorithme et obsurcit plutôt
+la compréhension du code plutôt qu'il l'éclaire ! Ce premier commentaire devait sûrement être pertinent dans les premières
+versions du code mais au fur et à mesure de l'évolution de ce dernier, ne correspond plus du tout à ce que fait l'algorithme !
+
+\subsection{C'est bien joli tout ça, mais coder proprement ça prend du temps !}
+
+Faux ! Il ne faut pas confondre vitesse et précipitation.
+
+On a souvent tendance à penser que l'on perd énormément de temps à soigner son code, à le structurer correctement,
+à le reorganiser et à le documenter, mais c'est faux. Au contraire, on gagne du temps à faire tout cela.
+
+Voici quelquels arguments pour en convaincre :
+\begin{itemize}
+  \item Si vous adoptez les bonnes pratiques dès le début, vous faites déjà 50\% du travail;
+  \item Si le code est bien écrit, il est plus facile, et donc plus rapide à relire, et n'oubliez pas
+  que vous passez plus de temps à lire votre code qu'à l'écrire\ldots donc quand votre code est propre, vous vous faites
+  gagner du temps;
+  \item Si le code est logique et bien structuré, il sera plus facile de retrouver les bogues qu'il contient, et donc de
+  l'améliorer\ldots
+\end{itemize}
+
+Ce sont donc autant de raisons qui devraient vous convaincre qu'il est important d'être organisé, clair, méthodique et
+rigoureux quand vous développez.
+
+\subsection{De l'importance des commentaires}
+
+Les commentaires sont essentiels pour "éclairer" votre code. Un commentaire est un texte qui est ignoré par le compilateur
+lorsqu'il crée l'exécutable, mais qui peut être lu par le développeur lorsqu'il lit le programme.
+
+Bien que les commentaires soient essentiels, il ne faut pas en abuser.
+
+Un bon commentaire peut :
+\begin{itemize}
+  \item Faciliter la lecture du code;
+  \item Apporter une indication sur un choix de conception;
+  \item Expliquer une motivation qui ne serait pas évidente;
+  \item Donner un exemple pour permettre de mieux comprendre ce que fait le code.
+\end{itemize}
+
+Quelques exemples de mauvais commentaires :
+\begin{itemize}
+  \item Un commentaire qui décrit un morceau de code qui n'existe plus;
+  \item Un commentaire qui explique une évidence;
+  \item Un commentaire sur plusieurs lignes pour expliquer une chose simple;
+  \item Un commentaire sur l'historique des modifications d'un fichier. C'est parfois utile, mais dans la
+  plupart des cas, il vaut mieux confier cette tâche à votre gestionnaire de versions qui fera le travail
+  pour vous.
+\end{itemize}
+
+Amusez-vous à trouver pourquoi tous les commentaires ci--dessous sont des mauvais commentaires :
+\begin{lstlisting}
+i = 0; // On initialise la variable i à zéro
+i = i + 1; // On incrémente de un la variable i
+// On additionne a et b et on stocke le résultat dans c
+c = a + b;
+// Ci--dessous, on fait une double boucle pour afficher la matrice :
+for (i = 0; i < 10; ++i )
+  std::cout << "valeur : " << i << " ";
+// Fin du for
+std::cout << std::endl; // Retour à la ligne
+/*
+  Et maintenant, on va s'occuper de retourner la valeur de i. On utilise pour cela
+  l'instruction return  à laquelle on passe la valeur de i
+  */
+return i;
+\end{lstlisting}
+
+\underline{Remarque} : Si vous vous sentez obligé de commenter la fin d'un bloc d'instructions, c'est que
+probablement votre bloc d'instruction est trop long et que vous pouvez certainement fragmenter votre code
+en éléments plus simples.
+
+\underline{\textcolor{red}{Attention}} : Les commentaires ne doivent pas palier un manque de clarté de votre code. Si
+vous avez besoin de commentaires pour cela, c'est probablement que vous pouvez améliorer votre code pour le rendre plus
+lisible. Essayez donc de le reécrire, au moins partiellement, en l'améliorant.
+
+Comme nous l'avons déjà évoqué, les commentaires, comme le code, doivent être maintenus, c'est à dire qu'ils doivent
+évoluer avec le code, et disparaître si le code correspondant disparaît. Par conséquent, il faut veiller au bon dosage
+de vos commentaires, de sorte à ne pas alourdir inutilement votre travail de maintenance. Et puis, pour citer
+Guido Von Rossum, le créateur du langage Python, "Les interfaces, c'est comme les blagues, si on doit les expliquer, c'est qu'elles sont ratées !". Donc si on doit commenter l'utilisation d'une fonction avec un grand nombre de commentaire, c'est
+que la fonction fait soit trop de chose, soit est inutilement compliquée !
+
+Enfin, une bonne pratique est d'utilisé des outils tels que |doctest| qui vous permettent d'écrire des petits tests pour vos fonctions tout en les documentant. Les avantages de cette pratique sont d'une part que cela vous "force" à tester votre code,
+et qu'il permet en même temps d'en avoir une documentation "par l'exemple" qui sera forcément cohérente avec le code et à jour
+(sinon les tests ne fonctionneraient pas). 
+
+\subsection{Comment nommer les choses ?}
+
+Les noms que vous choisissez pour vos variables vont grandement contribuer à la lisibilité de votre code.
+
+Par exemple, vous conviendrez que le code suivant est peu clair :
+\begin{lstlisting}
+gfdjkgldfj = 4;
+ezgiofdgfdljkrljl = 1;
+gfdjkgldfj = ezgiofdgfdljkrljl + gfdjkgldfj;
+\end{lstlisting}
+tandis que le code suivant
+\begin{lstlisting}
+x = 4;
+x += 1;
+\end{lstlisting}
+est bien plus clair et fait exactement la même chose !
+
+La première règle est donc de choisir des noms de variables prononçables et faciles à retenir.
+
+Vous devez également choisir des noms de variables explicites pour vous mais aussi pour les autres.
+
+Par exemple, |a| est bien moins explicite que |adresseClient|. De même, |lf| est moins explicite que
+|largeurFenetre|. Pensez également que vous serez probablement amenés à chercher vos variables dans votre code
+avec un outil de recherche. À votre avis, combien d'occurences de |a| allez vous trouver ? Et combien
+d'occurences de |adresseClients| ?
+
+\'Evitez également de choisir des noms de variables qui induisent un contre-sens. Par exemple, si vous écrivez
+|matrice = 8|, on pourrait penser que la variable est une matrice, or il s'agit clairement d'un entier. Au moment
+de l'affectation, il est facile de se rendre compte du type de la variable, mais maintenant, imaginez que vous
+rencontriez au beau mileu de votre code la ligne suivant :
+\begin{lstlisting}
+   matrice = 4 * matrice;
+\end{lstlisting}
+Comment allez vous interpréter cette instruction ?
+
+\'Evitez également les noms de variables qui n'ont pas de sens, comme |plop|, surtout si vous en utilisez plusieurs
+dans la même portion de code. Vous risquez de vous perdre dans les noms, et donc d'introduire inutilement des
+bogues dans votre code.
+
+Ne trichez pas non plus quand vous choisissez des noms de variables. Par exemple, en C, on ne peut pas nommer une variable
+|case| ou |volatile| car ce sont des mots réservés du langage. Si vous pensez avoir besoin de ces mots pour nommer vos
+variables, ne trichez pas en écrivant |ccase| ou |vvolatile|, vous risqueriez de vous perdre dans vos propres astuces.
+
+Enfin, essayez d'être cohérents losque vous choisissez vos noms de variables. Par exemple, si vous décidez d'utiliser
+le français pour nommer vos variables, utilisez le français tout du long, n'alternez pas avec l'anglais.
+|longueurPath| et |lengthChemin| sont des noms pour le moins curieux !
+
+\subsection{En conclusion}
+
+Pour revenir sur la première fonction (la fonction factorielle) présentée au début de cette section, on pourrait l'écrire
+proprement de la manière suivante :
+
+\begin{lstlisting}
+long fact(long n)
+{
+  assert(n>=0); // Pré-condition
+
+  if (n == 0) // Cas particuliers : 0! = 1
+    return 1;
+
+  long resultat = n * fact(n-1); // n! = n * (n-1)!
+
+  assert(resultat > 0);          // Post-condition
+  return resultat;
+}
+\end{lstlisting}
+
+La fonction possède un nom évoquant la fonction factorielle. La pré-condition indique que $n$ doit être positif pour que la fonction soit valide. La post-condition indique que le résultat de la factorielle est une valeurs entière supérieure ou égale à un ! Avec peu de commentaires, des assertions et un choix adéquat du nom des choses, le code devient bien plus clair et facile à lire.
+
+
+

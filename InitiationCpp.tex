@@ -1,0 +1,2131 @@
+\chapter{Initiation au C++}
+
+Nous allons attaquer dans ce chapître la programmation en C++. Pour ceux rompu aux arcanes du C, beaucoup de passages
+de ce chapître seront des rappels du C, mais ce chapître contient également son lot de nouveautés par rapport aux
+langage C. Aussi n'est-il pas conseillé de sauter ce chapître même si le C n'a plus de secret pour vous. Passez simplement les passages évoquant des spécificités communs au C et C++.
+
+De même, ce chapître ne changera pas fondamentalement votre paradigme de programmation, vous pouvez simple le voir comme un chapître présentant un langage C "amélioré".
+
+Enfin, ce chapître, ainsi que le reste du cours, n'a pas vocation à vous présenter le C++ de A à Z. Ce serait très ambitieux de la part de l'auteur, voire impossible à réaliser. Le créateur du C++, le Dr. Bjarn Stroustrup déclare lui-même ne connaître que 70\% du langage C++ ! Un débutant connaît environ 10\% du langage et un expert 60\% du langage.
+
+Il ne faut donc pas hésiter à se documenter, en particuliers sur internet. Pour avoir une documentation de référence (pas pour apprendre), on peut se référer aux deux sites suivants (en anglais) :
+
+\begin{itemize}
+    \item \url{https://en.cppreference.com/w/}
+    \item \url{http://www.cplusplus.com/}
+\end{itemize}
+
+\section{Les blocs d'instruction}
+
+Comme son nom le laisse entendre, le bloc d'instruction est un "bloc" contenant une ou plusieurs instructions. En C et C++, le bloc commence par une accolade ouvrante et se termine par une accolade fermante. L'exemple ci--dessous vous montre un bloc d'instructions demandant votre nom et l'affichant sur la console.
+
+\begin{lstlisting}[caption=Exemple de bloc d'instructions]
+{
+  printf("Veuillez rentrer votre nom s'il vous plait : ");
+  char buffer[256];
+  scanf("%255s", buffer);
+  printf("Bonjour %s\n", buffer);
+}
+\end{lstlisting}
+
+Un bloc d'instruction peut lui-même contenir un bloc d'instruction. On parle alors de sous-blocs d'instruction.
+
+\section{Et pour commencer : un petit programme "Hello world"}
+
+Nous allons commencer par disséquer un petit programme affichant "Hello world" sur une console. Voici le programme :
+\begin{lstlisting}[stepnumber=1,caption=Un programme Hello World !]
+#include <iostream>
+
+int main()
+{
+    std::cout << "Hello World !" << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\begin{itemize}
+  \item[$1^{\mbox{ère}}$ ligne] : |#include| est une instruction demandant au compilateur de "charger" des instructions ou des nouveaux types (du moins leurs déclarations) permettant d'étendre les possibilités du langage. Ici, nous demandons au compilateur de charger une "bibliothèque" |iostream| (\textbf{i}nput \textbf{o}utput \textbf{stream}) qui permet d'afficher sur l'écran divers messages. Il faut en effet savoir que les instructions de base du C++ (comme pour le C) ne permettent pas d'afficher un quelconque message à l'écran. Il faut pour cela utiliser une "bibliothèque" permettant d'étendre les possibilités du langage de base. Les symboles \verb@<@ et \verb@>@ autour de |iostream| signifie que cette bibliothèque est une bibliothèque externe, c'est à dire une bibliothèque qui n'est pas définie dans le même espace de travail que le programme. Ici, la bibliothèque |iostream| est une bibliothèque standard du C++ faisant partie du standard ISO (et qu'on retrouve donc pour tous les compilateurs compatibles avec la norme internationale);
+  \item[$3^{e}$ ligne] : Elle définit une "fonction spéciale" |int main()| (on verra plus loin ce qu'est une fonction en C++), qui sert de point d'entrée pour l'exécution du programme, c'est à dire qu'à l'éxécution du programme compilé, l'ordinateur commencera à exécuter les instructions se trouvant dans le bloc d'instruction de la fonction |main| (ce qui se trouve dans les accolades juste en dessous de |int main()|. Un programme C++ contiendra toujours une et une seule fonction |main| qui servira d'unique point d'entrée lors de l'exécution du programme compilé. Cette fonction renvoie toujours en entier (|int|)  au sysstème pour lui signaler si l'exécution s'est bien déroulée ou non.
+  \item[$4^{e}$ ligne] : On reconnaît ensuite le début d'un bloc d'instruction, qui correspond ici au bloc d'instruction que doit exécuter l'ordinateur lorsqu'il rentre dans la fonction |main| à l'exécution. La fin du bloc d'instruction se trouve à la ligne sept.
+  \item [$5^{e}$ ligne] : On demande à l'ordinateur d'afficher "Hello World !" sur une console (celle à partir de laquelle on a lancé le programme). |std::cout| déclare qu'on veut afficher un message sur une console (|cout| est une contraction de \textbf{c}onsole \textbf{out}put), le symbole \verb@<<@ indique qu'on veut rediriger un flux de messages vers cette console pour les afficher (les messages se trouvant à droite du symbole \verb@<<@). Le premier message à rediriger vers la console est une chaîne de caractères contenant le message "Hello World !", le message étant entouré par des guillemets, puis afin de rediriger un second message sur la console, on reutilise le symbole \verb@<<@ qui s'enchaîne avec le premier \verb@<<@. Enfin on définit le second (et dernier) message comme étant, \verb@std::endl@, qui est une instruction d'affichage demandant d'afficher tous les messages redirigés auparavant et de passer à la ligne suivante sur la console (|endl| est une contraction de \textbf{end} \textbf{l}ine). Enfin, le symbole \verb@;@ signifie qu'on a terminer de définir une instruction (Il faut mettre un |;| à la fin de chaque instruction en C++).
+  \item [$6^{e}$ ligne] : On demande au programme de renvoyer une valeur \verb@EXIT_SUCCESS@ définie dans la bibliothèque |cstdlib| elle-même utilisée par |iostream|, et qui signale au système que l'exécution du programme s'est bien passée (en cas d'erreur ou de problème rencontré dans le programme, on aurait pu retourner \verb@EXIT_FAILURE@).
+\end{itemize}
+
+\section{Headers et fichiers sources}
+
+Un projet C++ contiendra principalement deux types de fichiers : les headers et les fichiers sources.
+
+Par convention, les headers propre au projet auront pour extension |.hpp|. Par exemple
+\begin{verbatim}
+polynomes.hpp
+rationnel.hpp
+matrice.hpp
+\end{verbatim}
+
+Les headers contiendront la définition de nouveaux types et la déclaration de fonctions, c'est à dire l'inventaire
+des "instructions" que l'on rajoute au langage avec les paramètres attendus et quel type de valeurs est retourné.
+
+On y reviendra sur le chapître des fonctions.
+
+Les fichiers sources auront pour convention l'extension |.cpp|. Par exemple :
+\begin{verbatim}
+polynomes.cpp
+rationnel.cpp
+matrice.cpp
+\end{verbatim}
+
+Les fichiers sources contiennes le code décrivant les algorithmes permettant de répondre à ce que sont censés faire les fonctions déclarés dans le header correspondant (sauf pour celui contenant la fonction main qui n'a pas de header correspondant).
+
+Par exemple, construisons une bibliothèque qui permet de calculer le carré d'un entier. On crée d'abord le header |carre.hpp| qui nous permettra de spécifier une interface, c'est à dire quel sera le nom de la fonction, les types des valeurs attendues et le type de valeur retournée :
+
+\begin{lstlisting}
+#ifndef _CARRE_HPP_
+#define _CARRE_HPP_
+
+int carre(int n);
+
+#endif
+\end{lstlisting}
+
+Les deux premières lignes ainsi que la dernière sont utiles pour s'assurer qu'un fichier source, de façon directe ou indirecte, inclut plusieurs fois la déclaration de la fonction |carre|. Outre un gain non négligeable en temps de compilation, il se trouve également que le C++ n'aime pas qu'on déclare plusieurs fois la même fonction.
+
+Ensuite vient la définition de la fonction, qui comprend : le type de valeur qu'elle retourne, son nom et le type de paramètre qu'elle attend. On n'écrit ici aucun algorithme décrivant comment nous allons calculer le carré de n ! On termine la déclaration par un point virgule.
+
+On crée ensuite le fichier source correspondant, |carre.cpp| qui décrira la fonction avec un algorithme permettant de calculer le carré de n. Bien que cela ne soit pas obligatoire, il est conseillé d'inclure |carre.h| pour s'assurer qu'on conserve bien la même interface que celle déclarée dans le header !
+
+\begin{lstlisting}
+#include "carre.hpp"
+
+int carre(int n)
+{
+  return n*n;
+}
+\end{lstlisting}
+
+Le bloc d'instruction juste en dessous de la fonction (sans point virgule à la fin de la ligne !), décrit en langage C++ l'algorithme qui calcule le carré de n et le retourne en sortie de la fonction.
+
+Pour appeler cette fonction, il suffit d'écrire une ligne du type
+\begin{lstlisting}[caption=Exemple d'utilisation de la fonction]
+int res = carre(5);
+\end{lstlisting}
+
+qui appelle la fonction avec le paramètre cinq et renvoie la valeur vingt-cinq qu'on rangera dans la variable res.
+
+En C++, on a aussi parfois besoin d'autres types de fichiers, qui essentiellement contiennent des lignes devant se trouver dans un header mais qui pour une raison ou une autre peut être mise dans un autre fichier. Pour ces fichiers, soit on garde le protocole de rajouter le suffixe |.hpp| soit on choisit une autre extension, mais dans ce cas, rien de normalisé existe.
+
+\section{Les variables}
+
+Les variables sont des noms (symboles) auxquelles on associe des valeurs. Ces valeurs peuvent changer au cours du temps (mais ce n'est pas obligatoire, les variables dans les langages fonctionnels ne peuvent changer de valeurs).
+
+
+\subsection{Convention sur le nom des variables}
+
+Le nommage des variables (mais également des structures, des classes, des fonctions qu'on verra plus loin) est assez souple mais doit obéir tout de même à certaines règles.
+
+Une variable ne doit pas contenir :
+\begin{itemize}
+  \item Un espace ou une tabulation
+  \item Une ponctuation (\verb@, ; . : ! ? # \@);
+  \item Des simples ou double quotes (\verb@'@ ou \verb@"@);
+  \item Des symboles servant à définir des opérateurs (\verb@+ - ^ / * | &@);
+  \item Des parenthèses, bracket ou accolades \verb@( [ { } ] )@;
+  \item Les symboles \verb!@! et \copyright.
+\end{itemize}
+
+Une variable ne doit pas également commencer par un chiffre.
+
+Par contre, un caractère peut contenir toute lettre de l'alphabet (accents compris), ainsi qu'une grande partie des caractères unicodes (alphabet grecque, japonais, indou, etc. ).
+
+Ainsi, les noms suivants sont valides : \verb@a, _a, π, ζ, clé, périmètre@,\ldots
+
+Les noms suivants \textcolor{red}{\bf ne sont pas valides} : \verb@3a, {z, !b, la clef@
+
+Utiliser des lettres autres que les lettres anglosaxonnes ne posent aucun soucis de portabilité, car cela fait partie de la norme C++ depuis 2011, tant que l'éditeur que vous utilisez supporte l'édition en unicode, ce qui est le cas de la grande majorité des éditeurs de texte aujourd'hui. Les compilateurs Intel, Gnu, Clang et Microsoft supportent les variables nommées avec des caractères unicode.
+
+\underline{Ce qui dit exactement la norme C++ 11 :}
+Un identifieur pour une variable est une séquence arbitrairement longue de lettres et de chiffres. Chaque caractère universel dans un identifieur devra être une lettre qui respecte la norme ISO 10646 et être un caractère comme spécifié dans E.1. L'élément inital ne devra pas être un caractère universel qui appartient aux ensembles désignés par E.2. Les lettres minuscules et majuscules sont différentes. Tout les caractères sont spécifiques.
+
+\textbf{E.1} liste les caractères permis dont font parti les lettres grecques, les lettres accentuées mais aussi des caractères comme \verb@ª ¯ ² ³ ´ µ ·  ¹ º ¼ ½ ¾ Ø ° Ö  𐀀@ 
+\textbf{E.2} liste les caractères qui ne sont pas permis en première lettre dans l'identifieur d'une variable, à savoir les chiffres, et ce qui peut ressembler à des quotes.
+
+Pour plus de précision, voir le draft ISO C++ 11 (\url{https://isocpp.org/files/papers/n4296.pdf} à la page 1265).
+
+\subsection{Déclaration}
+
+Une variable est définie par son \textbf{type} (un réel, un entier, une chaîne de caractère, un tableau, etc. ) suivi du nom de la variable. Les variables peuvent être déclarées à n'importe quel endroit du code. Une variable n'existe qu'au sein du bloc d'instruction dans lequel elle est déclarée. Elle ne sera en outre visible que dans ce bloc d'instruction ou dans les sous-blocs d'instruction contenus dans le bloc d'instruction.
+
+Il faut savoir que chaque variable déclarée dans un bloc d'instruction est stockée dans une zone mémoire particulière du programme nommée \textsl{pile d'exécution}. L'état de cette pile évolue au cours du temps en fonction des variables que l'on a défini.
+
+Ainsi par exemple (|int| déclarant le type de la variable comme un entier) :
+
+\begin{lstlisting}[stepnumber=1,caption=Exemple de pile d'exécution]
+{
+  int a;
+  {
+    int b = 3;
+    a = 2;
+    int c = 4;
+    b = 5;
+  }
+  a= 8;
+}
+\end{lstlisting}
+
+aura pour pile d'exécution :
+
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|}\hline
+Numéro de ligne & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ \hline\hline
+\multirow{4}{*}{Pile} & & & & & & & & & & \\
+\cline{2-11} &   &   &   &   &   &c=4&c=4&   &   &    \\
+\cline{2-11} &   &   &   &b=3&b=3&b=3&b=5&   &   &    \\
+\cline{2-11} &   & a & a & a &a=2&a=2&a=2&a=2&a=8&    \\ \hline
+\end{tabular}
+
+On voit que les variables s'entassent sur la pile et disparaissent dès qu'on quitte le bloc d'instruction où elles ont été déclarées. 
+
+Si une variable est déclarée en dehors de tout bloc d'instruction, c'est une variable \textsl{globale} qui aura une durée de vie aussi longue que l'exécution du code lui-même. Elle sera alors visible par tous les blocs d'instructions. Il est fort peu recommandé d'utiliser les variables globales car elles peuvent être génératrices de nombreux bogues, en particulier dans un contexte multi-threads (qu'on verra dans le cours de l'année prochaine).
+
+\subsection{Types scalaires}
+
+Les types scalaires sont des types de variables représentant des nombres entiers ou réels, voire complexes. 
+
+\subsubsection{Le type booléen}
+
+Le type booléen est un type de variable ne pouvant prendre que deux valeurs : vrai ou faux. On déclare une variable booléenne
+en C++ à l'aide du mot clef |bool| et les valeurs vrai ou faux correspondent respectivement aux mots clefs |true| et |false|.
+
+\begin{lstlisting}
+bool flag = true; // La variable flag est mise à vraie
+flag = false;
+\end{lstlisting}
+
+Il est possible de faire des opérations logiques sur les booléens, à savoir :
+\begin{itemize}
+  \item \textcolor{red}{OU logique} (symbole \verb@|@) : \verb@f1 || f2@
+  Cet opération renvoie vrai si au moins une des deux valeurs est vraie (voir la table de vérité \ref{tab::or_logical_table})
+
+  \begin{table}[h]
+  \begin{center}
+  \begin{tabular}{ccc}\hline
+  Valeur de f1 & Valeur de f2 & Valeur de \verb@f1 || f2@ \\ \hline\hline
+      |false|  &   |false|    &    |false| \\ \hline
+      |true|   &   |false|    &    |true|  \\ \hline
+      |false|  &   |true|     &    |true|  \\ \hline
+      |true|   &   |true|     &    |true|  \\ \hline
+  \end{tabular}
+  \end{center}
+  \caption{Table de vérité de l'opérateur OU logique}
+  \label{tab::or_logical_table}
+  \end{table}
+
+  \item \textcolor{red}{ET logique} (symbole \verb@&&@) : \verb@f1 && f2@
+  Cet opération renvoie vrai si et seulement si les deux valeurs sont vraies (voir la tableau de vérité
+  \ref{tab::and_logical_table})
+
+  \begin{table}[h]
+  \begin{center}
+  \begin{tabular}{ccc}\hline
+  Valeur de f1 & Valeur de f2 & Valeur de \verb@f1 && f2@ \\ \hline\hline
+      |false|  &   |false|    &    |false| \\ \hline
+      |true|   &   |false|    &    |false| \\ \hline
+      |false|  &   |true|     &    |false| \\ \hline
+      |true|   &   |true|     &    |true|  \\ \hline
+  \end{tabular}
+  \end{center}
+  \caption{Table de vérité de l'opérateur ET logique}
+  \label{tab::and_logical_table}
+  \end{table}
+
+  \item \textcolor{red}{OU EXCLUSIF} (symbole \verb@^@) : \verb@f1 ^ f2@
+  Cet opération renvoie vrai si une seule des deux valeurs est vraie (et l'autre fausse)
+  (voir la table de vérité \ref{tab::xor_logical_table})
+
+  \begin{table}[h]
+  \begin{center}
+  \begin{tabular}{ccc}\hline
+  Valeur de f1 & Valeur de f2 & Valeur de \verb@f1 ^ f2@ \\ \hline\hline
+      |false|  &   |false|    &    |false| \\ \hline
+      |true|   &   |false|    &    |true|  \\ \hline
+      |false|  &   |true|     &    |true|  \\ \hline
+      |true|   &   |true|     &    |false| \\ \hline
+  \end{tabular}
+  \end{center}
+  \caption{Table de vérité de l'opérateur OU exclusif}
+  \label{tab::xor_logical_table}
+  \end{table}
+
+  \item \textcolor{red}{NON logique} (symbole \verb@!@) : \verb@!f1@
+  Cet opération renvoie faux si la valeur est vraie et vraie si la valeur est fausse
+  (voir la table de vérité \ref{tab::not_logical_table})
+
+  \begin{table}[h]
+  \begin{center}
+  \begin{tabular}{cc}\hline
+  Valeur de f & Valeur de \verb@!f@ \\ \hline \hline
+     |false|  &    |true| \\ \hline
+     |true|   &    |false|\\ \hline
+  \end{tabular}
+  \end{center}
+  \caption{Table de vérité de l'opérateur NON logique}
+  \label{tab::not_logical_table}
+  \end{table}
+\end{itemize}
+
+Par ailleurs, les opérateurs de comparaison, c'est à dire
+\begin{itemize}
+  \item \textcolor{darkgreen}{est égale à} (symbole \verb@==@, \textcolor{red}{attention aux deux symboles \texttt{=}})
+  \item \textcolor{darkgreen}{est différent de} {symbole \verb@!=@})
+  \item \textcolor{darkgreen}{est inférieur à} (symbole \verb@<@)
+  \item \textcolor{darkgreen}{est supérieur à} (symbole \verb@>@)
+  \item \textcolor{darkgreen}{est inférieur ou égal à} (symbole \verb@<=@)
+  \item \textcolor{darkgreen}{est supérieur ou égal à} (symbole \verb@>=@)
+\end{itemize}
+renvoie des valeurs booléennes. Ainsi, les instructions suivantes sont valides :
+\begin{lstlisting}
+bool est_plus_grand = 3 > 4; // est_plus_grand vaut false
+bool est_plus_petit = 2 < 5; // est_plus_petit vaut true
+bool flag = (1<5) && (5>2);  // flag vaut true
+bool is_equal = (4==-4+7);   // is_equal vaut false
+\end{lstlisting}
+
+Si on veut afficher un booléen, on va, de la même manière que pour le programme "Hello World !" vu dans la section précédente,
+utiliser un flux (de message) :
+\begin{lstlisting}[caption=Exemple d'affichage basique d'un booléen]
+std::cout << "est_plus_grand <-- " << est_plus_grand << std::endl
+          << "est_plus_petit <-- " << est_plus_petit << std::endl;
+\end{lstlisting}
+
+A l'éxécution, cette ligne d'instruction affichera
+\begin{verbatim}
+est_plus_grand <-- 0
+est_plus_petit <-- 1
+\end{verbatim}
+
+ce qui ne semble pas correspondre à la valeur de deux booléens. En fait, c'est bien la valeur des deux booléens\ldots 
+Par convention, dans beaucoup de langages, dont le C++, la valeur entière zéro correspond à la valeur |false| et la valeur |1| (ou d'autres valeurs entières non nulles) correspond à la valeur |true|.
+
+Les deux lignes suivantes sont parfaitement valides (mais non conseillé pour des raisons de lisibilité du code) :
+\begin{lstlisting}
+bool fi = 0; // fi vaut |false|
+bool fj = 1; // fj vaut |true|
+\end{lstlisting}
+
+Il est possible d'afficher sur l'écran une valeur "plus naturelle" pour les booléens. Il faut pour cela utiliser la bibliothèque standard |iomanip| qui contient entre autre une fonctionnalité permettant d'afficher |true| au |false| à l'écran.
+
+Ainsi, le programme suivant affichera bien des |true| et des |false| à l'écran :
+\begin{lstlisting}[caption=Exemple d'utilisation de std::boolalpha]
+#include <iostream>
+#include <iomanip>
+
+int main()
+{
+  bool f1 = 0; // f1 est faux
+  bool f2 = 1; // f2 est vrai
+  std::cout << std::boolalpha << "f1 : " << f1 << std::endl;
+  std::cout << "et f2 : " << f2 << std::endl;
+  std::cout << std::noboolalpha << "f1 && f2 : " << f1 && f2 << std::endl;
+  std::cout << "f1 || f2 : " << f1 || f2 << std::endl;
+  return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+L'instruction |std::boolalpha| dans le flux de message demande que les messages qui le suivent dans l'instruction et dans les instructions suivantes d'affichage devront afficher |true| ou |false| si ce sont des booléens.
+
+L'instruction |std::noboolalpha| dans le flux de message demande lui, au contraire, que les messages qui le suivent (dans l'instruction et ou les instructions d'affichage suivant) n'affichent plus les booléens que comme une valeur entière
+
+Ainsi, l'exécution de ce code affichera sur la console :
+\begin{verbatim}
+f1 : false
+et f2 : true
+f1 && f2 : 0
+f1 || f2 : 1
+\end{verbatim}
+
+\subsubsection{Les entiers}
+
+Il est possible en C++ (et en C) de définir des variables de type entier (pouvant contenir des valeurs entières).
+Cependant, ces entiers ne peuvent contenir qu'une certaine étendue de valeurs, du fait que leur représentation dans la mémoire de l'ordinateur ne prend que peu de place.
+
+Le C++ définit plusieurs types d'entiers, selon l'étendue des valeurs que l'on désire mais aussi si on souhaite des entiers pouvant être négatifs ou non (signé ou non signé selon la terminologie C).
+
+Voici un tableau récapitulant les divers types d'entiers proposés de base par le C/C++ :
+
+\begin{tabular}{|c|c|c|}\hline
+Type C & Commentaire & étendue \\ \hline \hline
+|char| & {\small Entier représenté sur 8 bits signé ou non signé} & $[0;255]$ ou $[-127;127]$ \\ \hline
+|signed char| & {\small Entier signé représenté sur 8 bits} & $[-127; 127]$ \\ \hline
+|unsigned char| & {\small Entier non signé représenté sur 8 bits} & $[0;255]$ \\ \hline
+|short|             & \multirow{4}{*}{\small Entier signé représenté sur 16 bits} & \multirow{4}{*}{$[-32767; 32767]$} \\ 
+|short int| & & \\
+|signed short| & & \\
+|signed short int| & & \\ \hline
+|unsigned short| & \multirow{2}{*}{\small Entier non signé représenté sur 16 bits}& \multirow{2}{*}{$[0;65535]$} \\
+|unsigned short int| & & \\ \hline
+|int| & \multirow{3}{*}{\small Entier signé représenté sur au moins 16 bits} &  Contient\\
+|signed| & & \multirow{2}{*}{$[-32767;32767]$}\\
+|signed int| & & \\ \hline
+|unsigned| & \multirow{2}{*}{\small Entier non signé représenté sur au moins 16 bits} & Contient \\
+|unsigned int| & & $[0;65535]$ \\ \hline
+|long|       & \multirow{4}{*}{\small Entier signé représenté sur au moins 32 bits} &  \multirow{2}{*}{Contient}\\
+|long int| & & \\
+|signed long| & & \multirow{2}{*}{$[-2^{31}+1;2^{31}-1]$}\\
+|signed long int| & & \\ \hline
+|unsigned long| &\multirow{2}{*}{\small Entier non signé représenté sur au moins 32 bits} & Contient \\ 
+|unsigned long int| & & $[0;2^{32}-1]$\\ \hline
+|long long|   & \multirow{4}{*}{\small Entier signé représenté sur 64 bits} & \multirow{4}{*}{$[-2^{63}+1;2^{63}-1]$} \\
+|long long int| & & \\
+|signed long long| & & \\
+|signed long long int| & & \\ \hline
+|unsigned long long|     & \multirow{2}{*}{\small Entier non signé représenté sur 64 bits} & \multirow{2}{*}{$[0;2^{64}-1]$} \\
+|unsigned long long int| & & \\ \hline
+\end{tabular}
+
+Il est très important de s'assurer lorsqu'on programme que les valeurs prises par nos entiers ne débordent pas, c'est à dire n'est pas contenu dans l'intervalle des valeurs que peut prendre le type d'entier. On parle alors de débordement de la représentation d'entier. Dépasser ces valeurs mènent à des bogues très dur à détecter et pouvant avoir des conséquences dramatiques. L'exemple le plus tristement célèbre d'un tel bogue est l'explosion d'ariane V lors de son premier vol, à cause d'une variable entière ayant dépassé les valeurs autorisées par son type. Pour illustrer le problème, considérons le code suivant :
+\begin{lstlisting}[caption=Débordement d'entier]
+short s = 32769;
+signed char  t = 130;
+std::cout << "s = " << s << " et t = " << int(t) << std::endl;
+\end{lstlisting}
+
+Si on exécute le code correspondant, le programme affichera
+
+\begin{verbatim}
+s = -32767 et t = -126
+\end{verbatim}
+
+Ce ne sont pas les valeurs attendues !
+
+L'explication vient du fait que le type |short| qui représente les entiers signés sur deux octets 
+ne peut prendre que des valeurs entre $-2^{15}+1 = -32767$ et $2^{15}-1 = 32767$ et que
+le type |char| qui représente les entiers signés sur un octet ne peut prendre que des valeurs entre
+$1-2^{7}=-127$ et $2^{7}-1=+127$.
+
+Un autre problème des entiers en C/C++ est que certains entiers ont une taille et une étendue dépendant du système d'exploitation. En particuliers :
+\begin{itemize}
+  \item Le type |char| considéré comme signé sous Linux, Windows et Mac OS mais non signé sur Androïd !
+  \item Les entiers longs codés sur trente-deux bits sous Windows mais sur soixante-quatre bits sur Linux ou Mac-OS
+\end{itemize}
+
+Heureusement, il existe un header |cstdint| qui permet de pouvoir spécifier sans confusion possible le type d'entier qu'on souhaite manipuler :
+
+\begin{lstlisting}[caption=Déclaration des entiers sans ambigüité]
+#include <cstdint>
+
+int main()
+{
+  std::uint8_t byte; // byte est un entier non signé (u) représenté sur 8 bits (un octet)
+  std::int8_t sbyte; // sbyte est un entier signé représenté sur 8 bits (un octet)
+  std::uin16_t ush;  // ush est un entier non signé représenté sur 16  bits (deux octets)
+  std::int16_t  sh;  // sh est un entier signé représenté sur 16 bits (deux octets)
+  std::uint32_t uent;// uent est un entier non signé représenté sur 32 bits (quatre octets)
+  std::int32_t ent;  // ent est un entier signé représenté sur 32 bits (quatre octets)
+  std::uint64_t ulg; // ulg est un entier non signé représenté sur 64 bits (huit octets)
+  std::int64_t   lg; //  lg est un entier signé représenté sur 64 bits (huit octets)
+}
+\end{lstlisting}
+
+Enfin, il est vivement conseillé d'éviter le plus possible l'emploi des entiers non signés qui sont sources de nombreux bogues !
+Prenons l'exemple suivant :
+
+\begin{lstlisting}[caption=Exemple de bogue généré par l'emploi d'un entier non signé]
+std::uint32_t i,j;
+for ( i = 1; i < 99; ++i )
+{
+  for ( j = i+1; j >= i-1; --j)
+  {
+     // On fait des calculs ici en utilisant i et j
+  }
+}
+\end{lstlisting}
+
+L'exécution de ce code ne nous rendra jamais la main ! En effet, dès la première itération sur |i|,
+le test de continuation de la boucle sur |j| demande à ce que |j| soit supérieure ou égal à zéro, 
+ce qui est toujours le cas puisque |j| est de type non signé !
+
+Ce problème n'aurait pas eu lieu si on avait utilisé des entiers signés (ce qui est généralement suffisant).
+
+De plus, si dans un code, un entier doit être positif pour que l'algorithme reste dans son domaine d'application, 
+il est préférable d'expliciter cette contrainte plutôt que de l'impliciter en prenant un entier non signé pour
+représenter l'entier (voir le chapître précédent).
+
+Prenons l'exemple suivant :
+\begin{lstlisting}[caption=Problèmes rencontrés avec les entiers non signés]
+// Recherche racine carrée d'un entier de la forme n² par dichotomie
+std::uint32_t sqn = 3249; // n² = 57²
+std::uint32_t a = sqn;
+std::uint32_t b = 0;
+std::uint32_t c = (a+b)/2;
+while (c*c-sqn != 0)// Tant que c n'est pas la racine carrée de a
+{
+  if (c*c-sqn<0)// Si c est plus petit que la racine carrée de a
+  {
+    b = c;
+    c = (b+a)/2;
+  }
+  else
+  {
+    a = c;
+    c = (b+a)/2;
+  }
+}
+assert(c*c == sqn); // Post-condition
+std::cout << "racine de " << sqn << " est egal a : " << c << std::endl;
+\end{lstlisting}
+
+Ce programme pose plusieurs problème :
+\begin{itemize}
+  \item Il n'est pas clair que |sqn| doit être un entier positif (l'algorithme pourrait chercher une racine complexe) si on ne fait pas attention à son type (qui varie du type signé que d'une lettre !). Initialisé |sqn| avec un nombre négatif risque de poser de sérieux problèmes\ldots
+  \item Plus grave, le programme ne marche pas et la boucle |while| (qu'on verra un peu plus loin) bouclera à l'infini. En effet, le test |c*c-sqn<0| n'est jamais vérifié car |c| et |sqn| sont des entiers non signés, et le résultat en C++ (comme en C) de la différence de deux entiers non signés est un entier non signé ! 
+\end{itemize}
+
+En remplaçant les entiers non signés par des entiers signés, on résoud les deux points mentionnés ci-dessus :
+\begin{lstlisting}[caption=Résolution problème entiers non signés avec des entiers signés]
+// Recherche racine carrée d'un entier de la forme n² par dichotomie
+std::int32_t sqn = 3249; // n² = 57² (on peut remplacer)
+assert(sqn>=0); // Pré-condition explicitant bien que sqn doit être positive !
+std::int32_t a = sqn;
+std::int32_t b = 0;
+std::int32_t c = (a+b)/2;
+while (c*c-sqn != 0)// Tant que c n'est pas la racine carrée de a
+{
+  if (c*c-sqn<0)// Si c est plus petit que la racine carrée de a
+  {
+    b = c;
+    c = (b+a)/2;
+  }
+  else
+  {
+    a = c;
+    c = (b+a)/2;
+  }
+}
+assert(c*c == sqn); // Post-condition
+std::cout << "racine de " << sqn << " est egal a : " << c << std::endl;
+\end{lstlisting}
+
+Ainsi, on évitera à la fois de nombreux bogues parfois difficiles à trouver et une documentation plus claire pour
+vous ou un autre lecteur éventuel du code.
+
+En ce qui concerne l'affichage des entiers, comme on le voit sur l'exemple ci-dessus, il suffit de rajouter notre
+entier dans le flot de sortie. Ainsi, dans l'exemple ci--dessus,
+\begin{lstlisting}
+std::cout << "racine de " << sqn << " est egal a : " << c << std::endl;
+\end{lstlisting}
+affichera bien
+\begin{verbatim}
+racine de 3249 est egal a : 57
+\end{verbatim}
+
+Si on veut formater la sortie des entiers, on peut utiliser (en incluant |iomanip|) les fonctions
+|std::setw(n)| qui réserve |n| caractères pour le prochain affichage et |std::setfill(c)| qui complètera
+par le caractère |c| les |n| caractères réservés. Ainsi :
+\begin{lstlisting}
+std::int32_t value1 = -32;
+std::int32_t value2 =   3;
+
+std::cout << "value1 = "  << value1 << std::endl;
+std::cout << " et value2 = " << value2 << std::endl;
+
+std::cout << "123456789ABCDEF" << std::endl;
+
+std::cout << std::setw(15) << "value1 = " << std::setw(4) << value1 << std::endl;
+std::cout << std::setw(15) << " et value2 = " << std::setw(4)  << std::setfill('0') << value2 << std::endl;
+\end{lstlisting}
+
+affichera
+
+\begin{verbatim}
+value1 = -32
+ et value2 = 3
+123456789ABCDEF
+      value1 =  -32
+   et value2 = 0003
+\end{verbatim}
+
+Les lettres "123456789ABCDEF" permettant de numéroter les colonnes en hexadécimales de 1 à F, cela permet de voir
+qu'on affiche bien les entiers après la quinzième colonne sur la console.
+
+\subsubsection{Les réels}
+
+Comme les entiers, les réels font partie du C++ natif (c'est à dire qu'on n'a pas besoin d'inclure des bibliothèques).
+Les réels sont représentés sur les ordinateurs en virgule flottante, c'est à dire qu'un réel $x$ est représenté sur
+un ordinateur sous la forme
+\[
+x = \mbox{signe}\times\mbox{mantisse}\times2^{\mbox{exposant}}
+\]
+où
+\begin{itemize}
+  \item signe est un bit valant zéro pour les nombres positifs et un pour les nombres négatifs;
+  \item mantisse est un entier \textbf{non signé} représenté sur $m$ bits ($n$ dépendant du type de réel choisit);
+  \item exposant est un entier \textbf{signé} représenté sur $e$ bits ($e$ dépendant du type de réel choisit).
+\end{itemize}
+
+Il existe trois  types de réels :
+\begin{itemize}
+  \item Les réels simple précision : Codés sur trente-deux bits, leur mantisse est représenté sur vingt-trois bits et leur exposant sur huit bits. La valeur d'un réel simple précision se note de chiffres avec la virgule symbolisée par un point,
+  avec un |f| à la fin du nombre. Par exemple : |float pi = 3.1415f;|
+  \item Les réels double précision : Codés sur soixante-quatre bits, leur mantisse est représenté sur cinquante-deux bits
+  et leur exposant sur onze bits. La valeur d'un réel double précision se note de chiffres avec la virgule symbolisée par un point. Par exemple : |double pi = 3.1415;|
+  \item Les réels longs double précision : Censés être sur cent-ving-huit bits, ils sont sur la grande majorité des compilateurs représentés seulement sur quatre-vingt bits sur les processeurs de type Intel du fait qu'aucun processeur ne supporte  actuellement en natif des réels cent-vingt-huit bits. La valeur d'un réel long double précision se note de chiffres avec la virgule symbolisée par un point et avec le caractère |l| ou |L| à la fin du nombre. Par exemple : |long double pi = 3.1415L|.
+\end{itemize}
+
+Il existe deux valeurs spéciales pour les réels : NaN et la valeur infinity qu'on trouve dans la bibliothèque |limits|.
+
+La première valeur est une valeur indiquant que le nombre représenté ne correspond pas à la représentation d'un nombre réel (NaN est la contraction de "Not a Number"). Puisqu'obtenir un Nan peut être un comportement anormale pour un code, le C++ offre deux "valeurs" différentes pour les Nans : |quiet_NaN| pour calculer sans broncher même si le résultat n'a pas de signification, et |signaling_NaN| qui si utilisé lors d'un calcul signale une erreur.
+
+La seconde valeur comme son nom l'indique représente une valeur infinie. 
+
+La syntaxe pour ces valeurs est de la forme
+\begin{lstlisting}
+std::numeric_limits<Type>::quiet_NaN;
+std::numeric_limits<Type>::signaling_NaN;
+std::numeric_limits<Type>::infinity;
+\end{lstlisting}
+où |Type| est le type de réel pour lequel on veut une de ces trois valeurs (|float| ou |double|)
+
+Les valeurs de type |NaN| ont la particularité de ne jamais être égal. Ainsi,
+\begin{lstlisting}
+std::numeric_limits<float>::quiet_NaN == std::numeric_limits<float>;
+\end{lstlisting}
+renverra toujours |false|.
+
+Pour tester si la valeur d'un réel est un NaN, il faut utiliser la fonction |isnan| présente dans la bibliothèque |cmath|.
+Par exemple :
+\begin{lstlisting}
+double x = 0./0.; 
+std::cout << std::boolalpha << " x est un nan ? " << std::isnan(x) << std::endl;
+\end{lstlisting}
+affichera |true| sur la console.
+
+Quant à la valeur |infinity|, elle a la particularité d'être toujours supérieure à n'importe quelle valeur réelle :
+\begin{lstlisting}
+#include <limits>
+
+int main()
+{
+  float fx = std::numeric_limits<float>::max; // Prend la valeur maximale que peut prendre un réel simple précision
+  float finf = std::numeric_limits<float>::infinity; // Prends la représentation de l'infini en réel simple précision
+  std::cout << std::boolalpha << fx << " < infini" << " ?  : " << (fx < finf) << std::endl;
+  return EXIT_SUCCESS;
+}
+\end{lstlisting}
+affichera
+\begin{verbatim}
+3.40282e+38 < infini ? : true
+\end{verbatim}
+
+
+Puisque les réels sur les ordinateurs sont contenus dans un volume de mémoire fixe, leur représentation est entâchée d'erreurs (pour représenter $\pi$, il faudrait par exemple une mémoire infinie\ldots)
+
+Introduisons la notion d'erreur relative :
+\begin{defn}
+On appelle erreur relative d'un réel $x$, l'erreur faite sur la valeur de sa représentation $\tilde x$ dans la mémoire de l'ordinateur :
+\[
+E_{r}(x,{\tilde x}) = \frac{\left\lvert x - {\tilde x}\right\rvert}{\left\lvert{\tilde x}\right\rvert}
+\]
+\end{defn}
+
+Cette précision relative va dépendre du type de réel choisi :
+\begin{itemize}
+  \item Pour les réels simple précision, elle sera d'environ $10^{-6}$;
+  \item Pour les réels double précision, elle sera d'environ $10^{-15}$;
+  \item Pour les réels long double précision sur Intel/AMD, elle sera d'environ $10^{-18}$.
+\end{itemize}
+
+Bien sûr, le cumul d'erreur lors des calculs qui se rajouteront ou se compenserons fera que cette erreur sera plus ou moins grande par rapport à l'erreur indiquée ci-dessus. C'est tout l'art du numéricien de choisir, à l'aide de ses outils mathématiques, les bons algorithmes qui permettent d'avoir une solution proche de la solution exacte.
+
+Pour employer les fonctions usuelles utiliées en mathématiques sur les réels, il faut utiliser la bibliothèque |cmath|
+qui contient la majorité des fonctions réelles usuelles. Par exemple :
+
+\begin{lstlisting}
+#include <cmath>
+#include <iostream>
+
+int main()
+{
+  float fpi = std::acos(-1.f);
+  float fx  = std::cos(fpi/4.f);
+
+  double pi = std::acos(1.);
+  double x  = std::cos(pi/4.);
+\end{lstlisting}
+
+Pour voir les fonctions mathématiques usuelles existantes dans la bibliothèque |cmath|, allez voir le lien suivant :
+\url{https://en.cppreference.com/w/cpp/numeric/math}
+
+À partir de C++ 17, il existe également d'autres fonctions réelles plus spécialisées que l'on peut trouver dans
+la bibliothèque |cmath|, comme des polynômes de Laguerre, Legendre, la fonction zeta de Riemann, etc\ldots
+
+À partir de C++ 20, il existe également une bibliothèque de constantes mathématiques |numbers| qui défini $\pi$, l'exponentielle, la racine de deux ou de trois et leurs inverses, le nombre d'or, la constante d'Euler $\gamma$, etc. (voir le lien  \url{https://en.cppreference.com/w/cpp/numeric/constants}).
+
+
+\begin{lstlisting}[caption=Exemple d'utilisation des constantes en C++ 20]
+#include <cmath>
+#include <numbers>
+#include <iostream>
+
+int main()
+{
+  float  π_f = std::numbers::pi_v<float>;
+  double π   = std::numbers::pi;
+  long double π_lf = std::numbers::pi_v<long double>;
+  double π⁻¹ = std::numbers::inv_pi;
+
+  std::cout << "π_f  = " << std::setprecision(std::numeric_limits<float>::digits10+1) << π_f << std:endl;
+  std::cout << "π    = " << std::setprecision(std::numeric_limits<double>::digits10+1) << π << std:endl;
+  std::cout << "π_lf = " << std::setprecision(std::numeric_limits<long double>::digits10+1) << π_lf << std:endl;
+  std::cout << "π⁻¹  = " << std::setprecision(std::numeric_limits<double>::digits10+1) << π⁻¹ << std::endl;
+
+  return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Par défaut, la valeur $\pi$ est en double précision, mais on peut utiliser |std::numbers::pi_v<Type>| pour avoir une valeur de $\pi$ en simple précision ou en double long.
+
+Notez l'utilisation de |std::numeric_limits<double>::digits10| avec |std::setprecision| pour afficher les chiffres
+significatifs de $\pi$ selon le type de réel employé.
+
+\subsubsection{Les complexes}
+
+Les nombres complexes ne sont pas des types natifs du C++, mais la bibliothèque standard (défini par le standard ISO) propose des types complexes.
+
+On peut donc trouver la gestion des complexes dans la bibliothèque |complex|, qui permet de définir plusieurs types de complexes :
+\begin{lstlisting}[caption=Exemple de déclaration et de définition de nombres complexes]
+#include <complex>
+
+int main()
+{
+    ...
+    std::complex<float> fcomplex;
+    std::complex<double> i(0.,1.);
+    std::complex<std::int32_t>   gauss(2,-3); // 2 -3i dans Z + i Z
+    ...
+}
+\end{lstlisting}
+
+Le type donné entre les chevrons $<$ et $>$ est le type de scalaire qui représente la partie réelle et la partie imaginaire du complexe. Ainsi, dans le code ci--dessus, |fcomplex| est un complexe dont la partie réelle et la partie imaginaire sont de type |float|, |i| quant-à lui aura sa partie réelle et sa partie complexe représentées par 
+des réels double précision |double|, tandis que |gauss| aura sa partie réelle et sa partie imaginaire représentées
+par des entiers de type |std::int32_t|.
+
+Remarquons aussi que l'initialisation (qu'on verra un peu plus bas) des nombres complexes se fait généralement en donnant la partie réelle et la partie imaginaire entre parenthèses lors de la déclaration.
+
+Néanmoins, si on veut une écriture plus naturelle des nombres complexes dans le code, on le peut depuis le C++ 2014 de
+la manière suivante :
+
+\begin{lstlisting}[caption=Exemple de déclaration des complexes à l'aide de littéraux]
+#include <complex>
+#include <iostream>
+
+int main()
+{
+    using namespace std::complex_literals;
+    std::complex<double> c = 1.0 + 1i;
+    std::cout << "abs" << c << " = " << std::abs(c) << '\n';
+    std::complex<float> z = 3.0f + 4.0if;
+    std::cout << "abs" << z << " = " << std::abs(z) << '\n';
+}
+\end{lstlisting}
+
+La ligne |using namespace std::complex_literals;| est essentielle pour pouvoir ensuite écrire les complexes d'une manière naturelle. Notons enfin que pour cette écriture naturelle ne fonctionne que si la partie réelle et la partie imaginaire d'un complexe sont réelles : simple (suffixe |if|), double (suffixe |i|) ou longue double (suffixe |ilf|).
+
+Notons que la fonction |std::abs| dans l'exemple ci-dessus calcul la norme du complexe.
+
+Il est possible également d'avoir l'argument du complexe ou bien encore sa norme au carré ( ce qui évite de calculer une racine carrée). De plus, les fonctions usuelles sont définies dans |complex| et il est possible de calculer des exponentielles, des racines, des sinus ou encore des cosinus complexes (en prenant la construction de Poincarré pour ces fonctions). 
+
+\textcolor{red}{Attention} : Contrairement à ce que l'on peut penser, le code ci--dessous :
+\begin{lstlisting}
+std::complex<double> c = 1. + 1i;
+std::cout << c.norm() << std::endl;
+\end{lstlisting}
+
+n'affiche pas la norme de |c| mais le carré de sa norme (sic).
+
+\subsection{Les chaînes de caractère}
+
+Une chaîne de caractère basiquement est un tableau de "caractères", où les caractères sont des chiffres, des lettres, des symboles.
+
+Ces chiffres, lettres, symboles peuvent être représentés de diverses manières en mémoire selon l'encodage choisi. On distingue les encodages suivant :
+\begin{itemize}
+  \item ASCII (\textbf{A}merican \textbf{S}tandard \textbf{C}ode for \textbf{I}nformation \textbf{E}change) : 
+  C'est un encodage des caractères paru aux alentours de 1960 qui permettait de transmettre des suites de caractères
+  entre différents appareils électroniques. Codé sur sept bits (plus un bit de contrôle), cet encodage est prévu que
+  pour gérer les caractères anglosaxons. Rien n'est donc prévu dans la norme pour gérer les accents français, ou les lettres allemandes, le cyrillic, le grecque, etc... C'est néanmoins l'encodage le plus universel actuellement, accepté par tous les systèmes et machines actuelles.
+  \item UTF8 (\textbf{U}niversal character set \textbf{T}ransformation \textbf{F}ormat -- \textbf{8} bits) :
+  est un encodage des caractères conçu pour coder l'ensemble des caractères connus proposé par l'ISO (\textbf{I}nternational \textbf{S}tandardization \textbf{O}rganization). Cet encodage reste totalement compatible avec le codage ASCII pour ce qui concerne les caractères anglo-saxons. Cet encodage a la particularité que chaque caractère n'est pas encodé sur un nombre fixe d'octet mais encodé sur un à quatre octets !
+  \item UTF16 (\textbf{U}niversal character set \textbf{T}ransformation \textbf{F}ormat -- \textbf{16} bits) : Proche de l'UTF-8, les caractères sont encodés cette fois ci sur deux ou quatre octets. Les caractères occidentaux sont tous encodés sur deux octets ce qui fait que l'UTF16 est compatible en occident avec l'encode UCS-2 (dont les caractères sont encodés avec une taille fixe de deux octets);
+  \item UTF32 (\textbf{U}niversal character set \textbf{T}ransformation \textbf{F}ormat -- \textbf{32} bits) : Proche de l'UTF-8, les caractères ont désormais une taille fixe de quatre octets par caractère. 
+\end{itemize}
+
+Si il est possible de définir un caractère par un de ces quatre encodages, le C++, mise à part l'encodage ASCII, ne propose que peu de chose pour gérer efficacement les autres encodages, que ce soit pour les caractères que pour les chaînes de caractères.
+
+Plusieurs types de chaînes de caractères sont proposés en C++ : les chaînes de caractères "basiques" et les |std::string|
+qui offrent des services permettant de gérer plus facilement les chaînes de caractères que les chaînes "basiques".
+
+\subsection{Les caractères}
+
+La valeur d'un caractère est encadrée par deux simples quotes \verb@'@. 
+
+Puisqu'un caractère peut-être codé en ASCII (un octet), en UTF8 (un à quatre octets), en UTF16 (deux ou quatre octets), etc., il faut parfois utiliser un type spécial pour déclaré le type d'un caractère :
+\begin{itemize}
+  \item Pour l'ASCII : Le type |char| suffit et on peut l'afficher normalement avec |std::cout|;
+  \item Pour l'UTF8  : le type |char| est utilisé, mais ne permet pas d'obtenir les caractères codés sur plus de un octet ! On affiche un caractère UTF8 avec |std::cout|;
+  \item Pour l'UTF16 : le type |wchar_t| est utilisé pour afficher toutes les lettres occidentales possibles à l'aide de |std::wcout| (Wide Cout). On peut également stocker un caractère UTF16 dans le type |char16_t|, mais il n'est plus possible dans ce cas de l'afficher (du moins, rien n'est proposé en C++ pour cela)
+  \item Pour l'UTF32 : On peut stocker le caractère dans un |char32_t| mais rien n'est proposé dans le C++ pour l'afficher (du moins à ma connaissance).
+\end{itemize}
+
+Notons que |wchar_t|, |char16_t| et |char32_t| sont des types basiques à partir de C++ 11.
+
+Pour définir l'encode du caractère, ormis pour l'ASCII où deux simples quotes suffisent, on rajoute un préfixe
+devant le premier simple quote, à savoir
+\begin{itemize}
+  \item Le préfixe 'u8' pour un encodage utf8
+  \item Le préfixe 'L'  pour un encodage utf16
+  \item Le préfixe 'u'  pour un encodage utf32
+\end{itemize}
+
+\begin{lstlisting}
+char ascii = 'p';
+char utf8  = u8'p';
+// Remarquer que utf8 = u8'é' va générer une erreur car le caractère 'é' est codé en UTF 8 sur plus de un octet !
+wchar_t utf16 = L'é';
+// On aurait pu aussi écrire char16_t utf16 = L'é' mais on n'aurait pas pu l'afficher dans ce cas.
+char32_t utf32 = u'é'; // Mais comment l'afficher ensuite ????
+\end{lstlisting}
+
+Enfin, remarquons, et ce sera le même problème pour les chaînes de caractère, que l'affichage d'un caractère autre
+qu'un caractère "ASCII" peut poser problème car rien ne vous assure que l'encodage des caractères attendus par votre console est compatible avec l'encodage choisi dans votre code (et c'est ce qui arrive 99.99\% du temps !).
+
+Il existe également des caractères de contrôle. Les plus courants sont :
+\begin{itemize}
+  \item Le retour à la ligne |'\n'| qui permet d'aller à la ligne suivante
+  \item La tabulation |'\t'| qui permet de tabuler et d'aligner l'affichage
+  \item Le retour en début de ligne |'\r'| qui permet de revenir à la première colonne de la ligne courante
+\end{itemize}
+
+\subsubsection{Les chaînes de caractères basiques}
+
+La valeur d'une chaîne de caractère est encadrée par deux doubles quotes \verb@"@. Par exemple :
+\begin{lstlisting}
+"Ceci est une chaîne de caractère !"
+\end{lstlisting}
+
+Notons qu'il est interdit, normalement, de sauter une ligne dans la définition d'une chaîne de caractère,
+car le saut à la ligne signifiera pour le C++ qu'on change d'instruction. Cela résultera alors par une erreur
+de compilation.
+
+Notons que contrairement aux caractères, les chaînes de caractères acceptent les accents et autres symboles.
+Elles utilisent pour cela les caractères étendus (codés sur seize bits).
+
+Si on veut afficher un caractère double quote dans une chaîne de caractère, il faut alors utiliser |\"|.
+Par exemple (pour citer Desproges : "Dictionnaire superflu à l'usage de l'élite et des bien nantis.") :
+\begin{lstlisting}
+"\"Alea Jacta Est\" : Ils sont bavards à la gare de l'Est !" 
+\end{lstlisting}
+
+Pour avoir un encodage spécifique de la chaîne de caractère, on rajoute les mêmes préfixes que pour un caractère.
+Ainsi :
+\begin{lstlisting}
+u8"π est un caractère très spécial !"
+\end{lstlisting}
+va coder la chaîne en UTF8.
+
+Une chaîne de caractère étant considéré comme un tableau de caractères, on utilise comme type basique pour les chaînes de caractère le type |char []| qui n'est autre que la déclaration d'un tableau statique de caractère (les tableaux statiques sont présentés plus loin). Ainsi, on peut stocker notre chaîne de caractère UTF 8 comme :
+\begin{lstlisting}
+char texte[] = u8"π est un caractère très spécial !";
+\end{lstlisting}
+
+Enfin, depuis C++ 11 qui s'est beaucoup inspiré de Python, il est possible de définir des chaînes de caractère "brutes",
+c'est à dire des chaînes de caractères où le C++ n'interprétera pas les caractères de contrôles, en particuliers le retour à la ligne ou les doubles quotes. Pour former de telles chaînes de caractères, il faut rajouter le préfixe |R| à gauche du premier double quote, puis à l'intérieur des doubles quotes, on définit un délimiteur constitué de une ou plusieurs caractères suivi d'une parenthèse ouvrante. On écrit ensuite ce que l'on veut jusqu'à ce qu'on écrit une parenthèse fermante suivie du même délimiteur que le début de la chaîne. On fermet ensuite les doubles quotes pour former la chaîne de caractère. Par exemple :
+\begin{lstlisting}
+char raw_texte[] = 
+R"DEL(Si nous prenons encadrons une formule par une ( et  par une ) ("parenthèse") alors :
+     1. Cela permet de s'assurer de l'ordre des opérations;
+     2. D'être plus clair dans le code;
+     3. Modifier l'ordre des opérations
+)DEL";
+\end{lstlisting}
+
+nous permet de définir un texte multi-ligne en UTF 8 qu'on peut ensuite afficher sur console qui affichera :
+\begin{verbatim}
+Si nous prenons encadrons une formule par une ( et  par une ) ("parenthèse") alors :
+     1. Cela permet de s'assurer de l'ordre des opérations;
+     2. D'être plus clair dans le code;
+     3. Modifier l'ordre des opérations
+\end{verbatim}
+
+Remarquer que les retours chariot sont bien pris en compte lors de l'affichage. Pour ceux d'entre vous rompus au langage C, vous serez peut-être surpris que je n'ai pas employé un pointeur sur un tableau de caractère mais un tableau statique
+de caractère. En fait, à partir de C++ 11, il n'est plus possible de définir une chaîne de caractère constant via un pointeur sur cette chaîne.
+
+\subsubsection{Les chaînes de caractères std::string}
+
+Si les chaînes basiques du C++ sont utiles pour afficher des messages à l'écran, elles ne sont guères pratiques à manipuler. Le C++ possède dans sa bibliothèque standard un type chaîne de caractère bien plus facile à manipuler : |std::string|. Pour l'utiliser, il faut inclure la bibliothèque |string| puis déclarer une variable comme étant de type |std::string|.
+
+Ainsi :
+\begin{lstlisting}[caption=Déclaration d'une std::string]
+std::string une_chaîne;
+std::string une_deuxième_chaîne = "Ceci est une chaîne de caractère";
+\end{lstlisting}
+
+Si les deux lignes ci--dessus sont valides, la seconde ligne n'est pas optimale et effectue des copies mémoires inutiles et relativement gourmandes en ressources. En effet, la chaîne de caractère à droite du signe |=| est une chaîne de caractère basique, qui doit être convertie en chaîne de caractère |std::string|. 
+Pour éviter cette copie, à partir de C++ 14, il est possible
+de directement déclarer la chaîne de caractère à droite du signe égal comme étant une |std::string|. Pour cela, il faut utiliser le suffixe littéral |s| après le dernier double quote après avoir utilisé un |using namespace| comme dans le code ci--dessous :
+\begin{lstlisting}[caption=Utilisation d'un litéral pour définir un std::string]
+using namespace std::string_literals;// Indispensable pour utiliser le suffixe s
+
+int main()
+{
+  std::string une_troisième_chaîne = "Ceci est une std::string"s; 
+}
+\end{lstlisting}
+
+\textcolor{red}{\bf Attention} :
+En ce qui concerne l'encodage UTF 8, il était facile avant le C++ 20 d'afficher et stocker de l'UTF 8.
+Depuis le C++ 20, la chaîne de caractère utilisant l'UTF 8 n'utilise plus le type |char| mais le type
+|char8_t| ce qui a pour conséquence qu'on ne peut plus ni stocker une chaîne de caractère en UTF 8, ni l'afficher
+avec |std::cout| ! Bref, il vaut mieux éviter si possible de manipuler explicitement des chaînes de caractères avec
+un encodage spécifique !
+
+\textcolor{blue}{Remarque} : Si il est préférable actuellement d'éviter en C++ de manipuler des chaînes de caractères
+explicitement en u8, il est tout à fait possible d'écrire des chaînes de caractères avec des caractères appartenent à
+l'unicode en UTF 8, qui seront pris comme des caractères ordinaires lors de la manipulation, mais pas à l'affichage.
+En outre, éviter de manipuler des chaînes de caractères en unicode ne veut pas dire que de déclarer des variables en unicode pose problème...
+
+Les |std::string| on l'avantage de pouvoir se manier facilement pour les traiter efficacement :
+\begin{lstlisting}[caption=Exemple de manipulation de std::string]
+std::string    nom   = "Dupont"s;
+std::string prénom   = "Albert"s;
+std::string    âge   = std::to_string(20);
+std::string identité = nom + " "s + prénom + " : âge "s << âge << " ans.\n"s;
+std::cout << identité;
+\end{lstlisting}
+
+Ici, on définit un nom et un prénom en |std::string|. On convertit ensuite un entier (ici 20) en chaîne de caractère
+à l'aide d'une fonction |std::to_string| puis on concatène les diverses variables pour créer une chaîne de caractère
+donnant l'identité de la personne.
+
+On peut également tester si on trouve une sous-chaîne dans une chaîne (à partir du début de la chaîne ou à partir d'une position spécifiée comme dans l'exemple ci--dessous) :
+\begin{lstlisting}[caption=Exemple de recherche d'une sous-chaîne dans une chaîne]
+std::string grosse_chaîne = "Ceci est un essai intéressant. Peut-on trouver une sous-chaîne dans une grosse chaîne ?";
+// On cherche une première occurence de chaîne dans la grosse_chaîne :
+std::size_t pos = grosse_chaîne.find("chaîne"s);
+if (pos != std::string::npos)
+    std::cout << "J'ai trouvé une première occurence de chaîne à la position : " << pos << std::endl;
+// Puis on recommence une nouvelle recherche après la première position de chaîne :
+pos = grosse_chaîne.find("chaîne"s, pos+1);
+if (pos != std::string::npos)
+    std::cout << "J'ai trouvé une seconde occurence de chaîne à la position : " << pos << std::endl;
+\end{lstlisting}
+dont la sortie obtenue est :
+\begin{verbatim}
+J'ai trouvé une première occurence de chaîne à la position : 57
+J'ai trouvé une seconde occurence de chaîne à la position : 81
+\end{verbatim}
+
+Enfin, on peut tester la longueur d'une chaîne (en octet) : 
+\begin{lstlisting}
+std::cout << "Longueur de chaîne : " << "chaîne"s.length() << std::endl;
+\end{lstlisting}
+qui nous donne en sortie:
+\begin{verbatim}
+Longueur de chaîne : 7
+\end{verbatim}
+
+Remarquons que le résultat affiché n'est pas celui \textsl{a priori} attendu, puisque "chaîne" ne contient que six
+caractère. Cela vient du fait que le caractère $î$ est stocké sur deux octets en UTF 8 (qui est ici implicite).
+
+Cela nous permet également de conclure qu'il est préférable d'éviter de manipuler, hors affichage (et encore faut-il s'assurer que notre console est capable d'afficher de l'UTF 8, ce qui n'est pas toujours le cas, surtout sous Windows !), des chaînes de caractères qui possèdent autre chose que de l'ASCII sous peine d'avoir de nombreuses surprises
+
+\subsection{Déclarations automatiques implicites et explicites}
+
+
+
+Le compilateur peut également déduire le type d'une variable lorsque cela est possible. On utilise pour cela le mot clef
+\texttt{auto}. On parle alors de \textsl{déclaration implicite} d'une variable :
+
+\begin{lstlisting}[caption=Exemple d'utilisation d'une déclaration implicite]
+void main()
+{
+    auto i = 1; // OK, i est un entier
+    auto x = 3.14; // OK, x est un double
+    auto y = 2.5f; // OK, y est un float
+    auto z = x + y; // z est un double par promotion de y en double pour le calcul
+    auto w = x + i; // w est un double par promotion de i en double pour le calcul
+
+    auto j; // Erreur de compilation ! Le compilateur ne peut pas déduire le type de j
+}
+\end{lstlisting}
+
+Nous verrons dans le cours de nombreuses utilisations des déclarations implicites, en particuliers lors du cours sur les templates, où ce type de déclaration permet de simplifier fortement le code !
+
+Il existe également un mot clef, \texttt{decltype}, permettant au compilateur de déduire \textsl{explicitement} un type de variable à partir d'une expression. Par exemple :
+
+\begin{lstlisting}[caption=déduction explicite de type]
+void main()
+{
+    int i = 1;
+    decltype(i) j; // j est du même type que i et non initialisé
+    double x = 3.14;
+    decltype(x+i) y; // y est du même type que x+i, c'est à dire un double (remarquons que y est non initialisé)
+
+    decltype(i/j+1) k  = 1+i/j; // k est un entier.
+}
+\end{lstlisting}
+
+Là encore, l'emploi de ce mot clef est particulièrement utile lors de la programmation à l'aide des templates.
+
+Enfin, si en C ou C++ 98, il n'existait qu'une façon de faire un alias de type en utilisant le mot clef |typedef|,
+
+\begin{lstlisting}
+typedef double reel; // Alias de type à la façon C
+
+reel x; // x est en fait un double
+\end{lstlisting}
+
+il existe en C++ 11 et supérieur une deuxième façon utilisant le mot clef |using| et permettant une syntaxe plus claire
+et plus souple !
+
+\begin{lstlisting}
+using reel = double;
+
+reel x; // x est en fait un double
+\end{lstlisting}
+
+De plus, lors du chapître sur les templates, nous verrons que c'est le seul moyen de faire un alias de type sur un template !
+
+\subsection{Initialisation des variables}
+
+L'initialisation des variables en C++ peut s'écrire de trois façons :
+
+\begin{itemize}
+    \item À la C
+    \begin{lstlisting}
+    int i = 0, j = 1, k = -2; // Déclaration avec initialisation
+    double x; // Déclaration uniquement
+    x = 3.1415; // Puis initialisation
+    \end{lstlisting}
+    \item Initialisation par construction : à l'aide d'une parenthèse (C++ 98)
+    \begin{lstlisting}
+    int i(0), j(1), k(-2);
+    double x(3.1415);
+    int l = int(x+0.5); // Conversion d'un réel en entier
+    std::vector<double> tableau(10,3.);// Créer un tableau de 10 réels rempli de la valeurs trois
+    \end{lstlisting}
+    Remarquer que la dernière initialisation, celle créant un tableau, est impossible à
+    faire en utilisant l'écriture du C, puisque cette initialisation demande deux paramètres
+    (un entier et un réel).
+    \item Initialisation par liste d'initialisation : à l'aide d'une accolade
+    \begin{lstlisting}
+    int i{0}, j{1}, k{-2};
+    \end{lstlisting}
+    À partir de C++ 20, les accolades permettent l'initialisation d'une structure en nommant les champs qu'on veut initialiser
+    (dans l'ordre de déclaration sinon on aura une erreur), à l'instar de la norme 99 du langage C :
+    \begin{lstlisting}
+    /* Définit le type Client : */
+    struct client
+    {
+      int age;
+      int poids
+      int taille;
+    };
+    client john{
+        .age = 35,
+        .taille = 190,
+    };// Le poids est mis par défaut à zéro car non spécifié.
+    \end{lstlisting}
+    Si elle s'avère pratique, l'usage des accolades parfois peut être aussi source de confusion :
+    \begin{lstlisting}
+    std::vector<double> tableau(10,3.);// Créer un tableau de 10 réels rempli de trois
+    std::vector<double> tableau{10,3.};// Créer un tableau de 2 réels : [10,3] !
+    \end{lstlisting}
+    Il faut donc utiliser cette dernière possibilité avec précaution !
+\end{itemize}
+
+\textbf{À partir de C++ 11} :
+
+Si l'écriture octale, décimale ou hexadécimale est autorisée depuis le C, il n'était pas possible d'écrire un nombre en binaire.
+Depuis C++ 11, cet oubli est réparé et il est  possible d'écrire un nombre en binaire à l'aide du préfixe |0b| :
+
+\begin{lstlisting}[caption=Ecriture binaire\, octale\, décimale et hexadécimale]
+    int a = 037;        // Ecriture octale (préfixe 0), a vaut 31 en décimal (8*3 + 7)
+    int b = 103;        // Ecriture décimale 
+    int c = 0xF0;       // Ecriture hexadécimale (préfixe 0x) : c vaut 240 (15*16 + 0)
+    int d = 0b01100110; // Ecriture binaire (préfixe 0b): d vaut 102 (2 + 4 + 32 + 64)
+\end{lstlisting}
+
+\textbf{À partir de C++ 14} :
+
+La lecture de grand nombres, particulièrement en binaire, peut être pénible lors de la lecture ou l'écriture d'un code et
+être sources d'erreurs difficiles à détecter !
+
+Considérons le code suivant :
+
+\begin{lstlisting}
+  double e     = 2.718281828459045;
+  long long  l = 1345652343LL;
+  long long bl = 0b11011011110110111011110111011101LL;
+\end{lstlisting}
+
+Si il est difficile de lire la valeur de |e| ou |l|, il est encore plus difficile de lire la valeur en binaire de |bl| !
+
+C++ 14 introduit le caractère simple quote (|'|) comme sépérateur de chiffres. Ainsi, en C++ 14 ou supérieur,
+il est possible de reécrire le code précédent comme suit :
+
+\begin{lstlisting}[caption=Ecriture avec séparateur de chiffre (C++ 14)]
+  double     e = 2.718'281'828'459'045;
+  long long  l = 1'345'652'343LL;
+  long long bl = 0b1101'1011'1101'1011'1011'1101'1101'1101LL;
+\end{lstlisting}
+
+ce qui permet une lecture plus aisée des valeurs de |e|, |l| et |bl| !
+
+Remarquons que le séparateur peut être mis n'importe où entre deux chiffres dans le nombre. Ainsi, il est possible (mais sans intérêt) d'écrire un nombre sous la forme |3'42'3564'3'2LL| ce qui ne facilite pas la lecture (qui est pourtant le but de ce rajout au C++)
+
+\subsection{Entrées/sorties}
+
+En C (mais aussi en C++), l'affichage sur un terminal d'un texte se fait à l'aide de la fonction \texttt{printf}
+de la bibliothèque \texttt{stdio.h} (\texttt{cstdio} en C++). Cependant, l'utilisation de cette fonction est loin d'être facile
+et peut être génératrice de bogues :
+
+\begin{lstlisting}
+#include <cstdio> // En C++, mais on peut aussi inclure stdio.h, ça marche aussi
+                  // Remarque : pas d'extension pour l'inclusion des fichiers en C++ !
+int main()
+{
+    int n1 = 3;
+    double x = 3.14;
+    // Inversion de %d et %lg => bogue attendu et affichage bizarre
+    printf("x = %d, n1 = %lg\n",x, n1);
+    return 1;
+}
+\end{lstlisting}
+
+En C++, il existe une bibliothèque d'entrée sortie simplifiant grandement l'affichage sur terminal (mais aussi sur fichier) sans se préoccuper du type de valeurs à afficher :
+
+\begin{lstlisting}
+#include <iostream> // Bibliothèque de gestion d'entrée/sortie du C++
+
+int main()
+{
+    int n1 = 3;
+    double x = 3.14;
+    // std::cout permet d'afficher sur un terminal la sortie standard
+    // std::endl permet un retour à la ligne précédé par un flush pour forcer l'affichage
+    std::cout << "Il est facile d'afficher du texte, mais aussi des variables comme x = " << x
+              << " ou encore n1 = " << n1 << std::endl;
+}
+\end{lstlisting}
+
+On peut également formater les entrées sorties pour une précision donnée, un nombre de caractère fixe, etc.
+
+Voici un exemple exhaustif des possibilités de formatage :
+\begin{lstlisting}
+#include <iostream>
+#include <iomanip> // Pour jouer avec le format des nombres
+
+int main()
+{
+    double x = 3.141516;
+    int    n = 63123;
+
+    std::cout << n << " en hexadecimal donne " << std::hex << n << std::dec << std::endl;
+    for ( int i = 5; i < 10; ++i )
+        std::cout << std::setw(i) << n << std::endl;// Modif. nbre de caractère pour afficher n
+    for ( int i = 5; i < 10; ++i )
+        std::cout << std::setfill('0') << std::setw(i) << n << std::endl; // Idem mais remplissage par des zéros
+
+    std::cout << std::setprecision(5) << x << std::endl;// Affichage de x avec une précision donnée
+    std::cout << std::setprecision(9) << x << std::endl;
+    std::cout << std::fixed;// Impose que le nombre de chiffre après la virgule soit fixe
+    std::cout << std::setprecision(5) << x << std::endl;
+    std::cout << std::setprecision(9) << x << std::endl;
+
+    return 1;
+}
+\end{lstlisting}
+
+Si on compile le programme, on trouve en sortie :
+\begin{Verbatim}[frame=single]
+63123 en hexadecimal donne f693
+6312
+ 63123
+  63123
+   63123
+    63123
+63123
+063123
+0063123
+00063123
+000063123
+3.1415
+3.141516
+3.14152
+3.141516000
+\end{Verbatim}
+
+Enfin il est possible d'écrire littéralement un booléen plutôt que d'écrire sa représentation entière (1 ou 0) :
+
+Le programme suivant :
+\begin{lstlisting}
+int number = 5;
+bool is_even = (number % 2 == 0);
+bool is_odd  = (number % 2 == 1);
+std::cout << "Affichage standard des booleens : "  << std::endl;
+std::cout << number << " est pair   ? " << is_even << std::endl;
+std::cout << number << " est impair ? " << is_odd  << std::endl;
+std::cout << "Affichage alphanumerique des booleens : " << std::endl;
+std::cout << number << " est pair   ? " << std::boolalpha << is_even << std::endl;
+std::cout << number << " est impair ? " << std::boolalpha << is_odd  << std::endl;
+\end{lstlisting}
+
+affichera :
+
+\begin{verbatim}
+Affichage standard des booleens : 
+5 est pair   ? 0
+5 est impair ? 1
+Affichage alphanumerique des booleens : 
+5 est pair   ? false
+5 est impair ? true
+\end{verbatim}
+
+\subsection{Surcharge de fonctions}
+
+Avec le langage C, il arrive souvent de devoir définir plusieurs fonctions effectuant la même fonctionnalité mais sur des types différents en les nommant avec des noms différents. Par exemple :
+
+\begin{lstlisting}[caption=Exemple de deux fonctions C effectuant la même opération sur des types différents]
+// Fonction avec flottants simple précision
+void saxpy(int N, float a, const float* x, float* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+// Fonction avec flottants double précision
+void daxpy(int N, double a, const double* x, double* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+En C++, il est possible de surcharger des fonctions, c'est à dire de nommer plusieurs fonction avec le même nom, du moment
+que les paramètres passés en arguments sont différents (en type ou en nombre) de sorte qu'à l'appel, il n'y ait aucune
+ambigüité quant à la fonction à appeler.
+
+Ainsi en C++, il est possible d'écrire les deux fonctions ci--dessus :
+\begin{lstlisting}[caption=Exemple de surcharge d'une fonction C++]
+// Fonction avec flottants simple précision
+void axpy(int N, float a, const float* x, float* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+// Fonction avec flottants double précision
+void axpy(int N, double a, const double* x, double* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+Le compilateur décidera quelle fonction appeler en fonction du type des paramètres passés, ainsi
+\begin{lstlisting}[caption=Appel à des fonctions surchargées]
+void main()
+{
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fontion avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Erreur de compilation, mélange simple et double précision !
+                        // Le compilateur ne peut décider quel fonction appeler...
+}
+\end{lstlisting}
+
+Il est important de bien respecter le type des paramètres passés à l'appel de la fonction sous peine d'avoir des erreurs de compilation parfois fort peu compréhensibles !
+
+Nous verrons au chapitre des templates qu'il peut être important d'appeler des fonctions faisant le même traitement mais avec des types différents par le même nom.
+
+\underline{\textbf{En C++ 2020}}
+
+À partir de C++ 2020, il est possible de généraliser et simplifier l'écriture d'un ensemble de fonctions surchargées
+à l'aide du mot clef |auto| :
+
+\begin{lstlisting}[caption=utilisation du mot clef auto pour déclarer les paramètres de la fonction]
+// Fonction générique pour tout type de vecteur
+void axpy(int N, auto a, const auto* x, auto* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    for (int i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+void main()
+
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fonction avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Appel la fonction avec a en simple précision, dx et dy en double
+}
+\end{lstlisting}
+
+Ici la fonction \texttt{axpy} a été généralisée pour prendre n'importe quel type pour \texttt{a, x} et \texttt{y}.
+Au fur et à mesure des différents appels à cette fonction "générique", le compilateur produire plusieurs versions de la
+fonction qui prendra en paramètre les divers types passés pour \texttt{a, x} et \texttt{y}. Ainsi, dans l'exemple ci-dessus,
+trois versions de la fonction seront générées : une avec trois réels simple précision, une avec trois réels double précision
+et la dernière avec |a| réel simple précision et |x| et |y| déclarées comme réels double précision.
+
+Les types (qui peuvent être tous différents) de \texttt{a, x} et \texttt{y}
+seront valides tant que l'opération |y[i] += a*x[i]| reste valide pour les types passés pour les trois arguments. Ainsi
+la ligne suivante ne compilera pas :
+
+\begin{lstlisting}
+void main()
+{
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, "toto", dx, dy); // Ne compile pas ! Pas de sens de faire y[i] += "toto"*x[i]  
+}
+\end{lstlisting}
+
+\underline{Remarque} : Si le mot clef |auto| en C++ 20 permet de créer facilement des fonctions génériques, il ne permet pas
+un contrôle fin des types permis contrairement aux templates que l'on verra plus tard. Néanmoins, dans beaucoup de cas, cette
+généricité est suffisante et bien plus légère à l'écriture que les templates\ldots
+
+\subsubsection{Valeur par défaut}
+
+Il arrive souvent qu'un des paramètres passés à une fonction prenne la plupart du temps la même valeur à l'appel. Par exemple,
+reprennons notre fonction |axpy| que nous allons généraliser pour prendre en compte des c{\oe}fficients régulièrement espacés
+mais plus forcément contigüs en mémoire :
+
+\begin{lstlisting}[caption=Généralisation de la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx, int incy)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(4, -4., A, A+2, N, N);
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(4, 1., A+1, &A[3][0], 4, 1]);
+}
+\end{lstlisting}
+
+Pour l'exemple donné ci--dessus, il est clair que les paramètres |incx| et |incy| sont indispensables. Néanmoins,
+la plupart du temps, cette fonction servira pour des vecteurs dont les c{\oe}fficients sont contigüs en mémoire.
+Le rajout de ces deux paramètres dans l'appel de la fonction alourdit donc le code lors de son utilisation pour des vecteurs, puisqu'il faut à chaque fois rajouter deux paramètres valant un à la fonction, sans parler du risque de bogue en rajoutant ces deux paramètres (en mettant par erreur deux au lieu de un pour l'un des paramètres par exemple).
+
+Il est possible de fournir pour ces paramètres des valeurs par défaut ce qui permettra de les omettre lors d'un appel "usuel".
+
+Dans le cas de la fonction |axpy|, la majorité des appels à cette fonction passe pour paramètres |incx| et |incy| les valeurs un. On peut donc définir notre fonction en rajoutant pour ces deux paramètres un pour valeur par défaut :
+
+\begin{lstlisting}[caption=Valeurs par défaut pour la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx = 1, int incy = 1)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    double x[N] = {1,2,3,4};
+    double y[N] = {4,3,2,1};
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(N, -4., &A[0][0], &A[0][2], N, N); // incx = N, incy = N
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(N, 1., &A[0][1], &A[3][0], N);// incx = N, incy = 1
+    // Rajout de la deuxième ligne à la quatrième colonne :
+    axpy(N, 1., &A[1][0], &A[0][3], 1, N); // incx = 1, incy = N
+    // Opération sur les vecteurs x et y :
+    axpy(4, 1., x, y); // incx = 1, incy = 1;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\underline{Remarques} :
+\begin{enumerate}
+    \item Les paramètres ayant des valeurs par défaut doivent \textbf{impérativement} être déclarée en dernier dans les paramètres de la fonction;
+    \item L'ordre des paramètres par défaut doit être respecté à l'appel : si un paramètre possédant une valeur par défaut doit être défini avec une valeur spécifique, \textbf{tous les paramètres précédents}, même ceux ayant une valeur par défaut, doivent également avoir une valeur spécifique définie par l'utilisateur. Ainsi, dans l'exemple ci--dessus, on ne peut pas définir une valeur différente de un pour |incy| sans définir explicitement la valeur un pour |incx| à l'appel !
+\end{enumerate}
+
+\subsection{Référence et passage par référence}
+
+\subsubsection{Les références}
+
+En C, il n'existe que deux manières d'accéder à une variable en mémoire, soit directement en lisant la valeur de la variable  ou via un pointeur représentant l'addresse du début de la mémoire occupée par la variable.
+
+\begin{lstlisting}
+int main()
+{
+    double x[] = {1., 2., 3. , 4.};
+    double y = x[0]; // On accède directement à la valeur de x[0];
+    double* pt_x1 = x + 1;// Pointe sur le deuxième élément du tableau x
+    double z = *pt_1; // Lis via le pointeur la valeur de deuxième élément du tableau x (déférencement)
+    return EXIT_SUCCESS;    
+}
+\end{lstlisting}
+
+En C++, il existe une troisième manière d'accéder à la valeur d'une variable : par référence. Techniquement, une référence n'est rien d'autre qu'un pointeur constant automatiquement déférencé. Plus prosaïquement, une référence est un alias (un nom) qu'on va donné à une variable en mémoire, même si elle est déjà nommée par le programme. Pour déclarée une référence, on utilise le symbole \&. Par exemple :
+
+\begin{lstlisting}[caption=Exemple de référence en C++]
+int main()
+{
+    int i = 3;
+    int& ii = i; // ii est un alias sur la variable i. C'est concrètement la même variable possédant deux noms différents
+    ii = 2; // Maintenant i et ii valent deux, puisque c'est la même variable !
+    const int& ci = i;    // Alias sur la variable, mais on ne pourra pas la changer via ci, seulement la lire.
+    ci = 3; // Erreur, ci est déclarée const.
+}
+\end{lstlisting}
+
+Puisqu'une référence crée un alias sur une variable, il est nécessaire de s'assurer que cette variable existe au moins tant que la référence sur cette variable existe. Ainsi, si il est parfaitement possible de retourner une référence à la sortie d'une fonction, il faut \textbf{que la variable retournée ne soit pas locale à la fonction sous peine de graves problèmes à l'exécution}.
+
+Ainsi, le code suivant est valide et ne pose aucun problème :
+
+\begin{lstlisting}{caption=Exemple complet et valide de retour d'une référence par une fonction}
+#include <iostream>
+
+int& max(int N, int* array)
+{   // Retourne une référence sur la valeur la plus grande du tableau
+    int imax = 0;
+    for ( int i = 1; i < N; ++i) {
+        if (array[i]>array[imax])
+            imax = i;
+    }
+    return array[imax];
+}
+
+void display_array(int N, const int* array )
+{
+    std::cout << "[ ";
+    for ( int i = 0; i < N; ++i ) std::cout << array[i] << " ";
+    std::cout << "]" << std::endl;
+}
+
+int main()
+{
+    const int N = 8;
+    int array[N] = {1,2,5,6,3,9,10,8};
+    display_array(N, array);
+
+    for ( int n = 0; n < 10; ++n ) {
+        int& a = max(N,array);
+        a = a - 1;
+        display_array(N, array);
+    }
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Par contre, le code suivant va avoir un comportement aléatoire pouvant mener presque certainement à un plantage du code :
+
+\begin{lstlisting}{caption=Exemple invalide de retour d'une référence par une fonction}
+#include <iostream>
+#include <cmath>
+
+// La fonction n'est pas valide car on retourne 
+double& max_root_quadratic_function(double a, double b, double c)
+{
+  assert(a!= 0);
+  double delta = b*b-4*a*c;
+  double sol;
+  if (delta  < 0) sol = std::nan;
+  else if (delta == 0) sol =  -b/(2*a);
+  else sol = (-b+std::sqrt(delta))/2;
+
+  return sol; // Erreur, on retourne une variable locale en référence
+}
+
+int main()
+{
+    double& root = max_root_quadratif_function(1,2,-3);
+    std::cout << "Racine max de x²+2x-3 : " << root << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+En effet, la variable |sol| est locale à la fonction |max\_root\_quadratic\_function| et sera par conséquent détruite
+à la sortie de la fonction. La référence retournée sera donc une référence sur une variable qui n'existe plus !
+
+\subsubsection{Passage par référence}
+
+En C, pour éviter une copie d'une variable contenant beaucoup de données (typiquement une grosse structure de donnée),
+ou pour modifier à la sortie d'une fonction un argument passé à la fonction, il fallait obligatoirement passer par un pointeur :
+
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+
+void iter_syracuse(int* un)
+{
+    if ((*un)%2 == 0) (*un) /= 2;
+    else (*un) = (3*(*un)+1)/2;
+}
+
+int main()
+{
+    std::cout << "Suite de syracuse : ";
+    int n = 1433;
+    std::cout << n << " ";
+    while (n != 1)
+    {
+        iter_syracuse(&n);
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Plusieurs remarques à propos du code C :
+\begin{enumerate}
+    \item La manipulation d'un pointeur dans la fonction la rend peu lisibile (confusion possible entre le signe multiplié et le symbole de déférencement);
+    \item Le code n'est pas sûr : que se passe-t'il si le pointeur est nul ? où bien pointe sur une variable qui n'existe pas ?
+\end{enumerate}
+
+On peut bien sûr vérifier que le pointeur est non nul à l'aide d'une assertion dans la fonction (valable aussi en C) :
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+#include <cassert>
+
+void iter_syracuse(int* un)
+{
+    // Précondition
+    // En mode debug, (-DDEBUG ou -g à la compilation), arrête le programme si la condition n'est pas vérifiée
+    assert(un != nullptr); 
+    assert((*un) > 0);
+
+    if ((*un)%2 == 0) (*un) /= 2;
+    else (*un) = (3*(*un)+1)/2;
+    // Postcondition
+    assert((*un) > 0);
+}
+\end{lstlisting}
+
+\underline{Remarques} : 
+\begin{enumerate}
+    \item À partir du C++ 11, la macro |NULL| du C a été remplacé avantageusement par un objet |nullptr| possédant son propre type. C'est particulièrement utile lors de l'écriture de fonctions template.
+    \item Rappelons qu'il est vivement conseillé d'utiliser des assertions dans son code, principalement pour les pré et post-conditions ! Cela permet de gagner un temps fou à la phase de débogage du code. 
+\end{enumerate}
+
+En C++, on peut remplacer avantageusement le pointeur par une référence pour le paramètre de la fonction :
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+#include <cassert
+
+void iter_syracuse(int& un)
+{
+    // Précondition
+    assert(un > 0);
+
+    if (un%2 == 0) un /= 2;
+    else un = (3*un+1)/2;
+
+    // Postcondition
+    assert(un > 0);
+}
+
+int main()
+{
+    std::cout << "Suite de syracuse : ";
+    int n = 1433;
+    std::cout << n << " ";
+    while (n != 1)
+    {
+        iter_syracuse(n);
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Lors de l'appel à la fonction, le paramètre |un| devient un alias du paramètre |n| passé à la fonction. Par contre, il est obligatoire dans le cas d'une simple référence de passer une variable et non directement une valeur à la fonction, puisque
+|un| doit devenir un alias d'une variable. Ainsi |iter_syracuse(1433)| générerait une erreur du compilateur.
+
+L'usage de la référence dans la fonction a donc permis :
+\begin{enumerate}
+    \item D'écrire un code beaucoup plus clair puisqu'on n'utilise plus de symbole de déférencement;
+    \item D'avoir un code plus sûr puisque le mécanisme de la référence nous oblige à appeler la fonction avec une variable
+    pré-existante.
+\end{enumerate}
+
+Le deuxième usage de la référence, à l'instar des pointeurs, et de pouvoir passer un paramètre dont le type contient beaucoup
+de données sans effectuer une copie de ce paramètre à l'appel (rappelons que le C passe ses paramètres par valeur). 
+Passer en référence (ou en référence constante comme nous allons le voir ci--dessous), c'est l'équivalent de passer par adresse la variable. Néanmoins, il existe plusieurs situations où on ne désire pas que le paramètre passé par référence puisse être modifié par inadvertance par le programmeur. On utilise dans ce cas là une référence constante :
+
+\begin{lstlisting}[caption=Exemple d'utilisation de la référence constante]
+#include <iostream>
+#include <cmath>
+
+struct rational
+{
+    int nom;
+    unsigned denom;
+};
+
+inline double eval(const rational& r)
+{
+    return r.nom/double(r.denom);
+}
+
+rational approx_rationnal(double x, const rational& pn, const rational& qn, double tol = 1.E-6 )
+{
+    rational median{.nom=pn.nom+qn.nom,.denom=pn.denom+qn.denom};
+    double y = eval(median);
+    if (std::abs(x-y) < tol) return median;
+    if (y < x) return approx_rationnal(x, median, qn);
+    else return approx_rationnal(x, pn, median);
+}
+
+int main()
+{
+    double x = std::acos(-1);
+
+    auto rx = approx_rationnal(x, {.nom=int(x),.denom=1}, {.nom=int(x+1),.denom=1});
+    std::cout << "Approximation de " << x << " par un rationnel -> " << rx.nom << "/" << rx.denom << std::endl;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Plusieurs commentaires à faire sur ce code :
+\begin{enumerate}
+    \item Les paramètres de type |rational| ont bien été passés par référence afin d'éviter à chaque coup une copie de deux entiers;
+    \item La fonction |eval| a été déclarée |inline|. Cela permet d'éviter la surcharge d'un appel de fonction pour une fonction ne faisant presque rien. |inline| permet de remplacer l'appel de la fonction directement par le code machine assemblé pour la fonction. 
+    \item Dans la fonction |main|, nous avons passé deux rationnels en valeur directement dans l'appel de la fonction ce qui est interdit dans le cas d'un passage par référence simple mais permis dans le cas d'un passage par référence constante ! En fait, passer par référence constante assure qu'on ne peut pas modifier ce paramètre au sein de la fonction, et donc la fonction peut donc effectuer un alias en lecture seule avec les deux valeurs mises sur la pile d'appel (qu'on ne peut pas modifier).
+\end{enumerate}
+
+\subsection{Gestion de la mémoire et des tableaux}
+
+Il existe deux types d'allocation mémoire en C et C++ : 
+\begin{itemize}
+    \item L'allocation statique : on alloue directement un tableau de taille prédéterminée dans le code. L'allocation est gérée par le compilateur. Attention, sur certains systèmes d'exploitation, la taille des tableaux pouvant être alloués 
+    statiquement est limitée par l'OS lui-même !
+    \item L'allocation dynamique : l'allocation ne se fait qu'au moment de l'exécution du programme. La taille du tableau à allouer n'est en général pas prédéterminée mais seulement connue au moment de l'exécution du programme.
+\end{itemize}
+
+\subsubsection{Gestion statique de la mémoire}
+
+En C (valable aussi en C++), un tableau statique se déclare de la manière suivante :
+\begin{lstlisting}[caption=Allocation statique d'un tableau en C/C++]
+const int N = 10;
+double array1[N]; // Déclation du tableau sans initialisation
+double array2[N] = { 1., 2., 3., 4., 5., 6., 7., 8., 9., 10. }; // Avec initialisation
+double array3[]  = { 1., 3., 7., 11. };// La taille est déterminée par la liste d'initialisation { ... }
+\end{lstlisting}
+
+Cette déclaration d'un tableau statique pose quelques problèmes. Le compilateur ne vérifie pas obligatoirement que la liste d'initialisation possède un nombre de valeurs inférieur ou égal à la taille du tableau :
+
+\begin{lstlisting}
+double array[4] = {1., 2., 3., 4., 5.};
+\end{lstlisting}
+
+Dans le cas où la taille d'un tableau est déterminée par sa liste d'initialisation, il n'est pas immédiat de trouver la taille du tableau :
+
+\begin{lstlisting}[caption=lire la taille d'un tableau statique en C/C++]
+double array3[]  = { 1., 3., 7., 11. };// La taille est déterminée par la liste d'initialisation { ... }
+int size_of_array3 = sizeof(array3)/sizeof(double); // Calcul de la taille du tableau statique
+\end{lstlisting}
+
+De plus, l'accès aux éléments du tableau n'est pas protégé et il est facile de se tromper dans les indices et lire des valeurs en dehors du tableau :
+\begin{lstlisting}[caption=Erreur d'indice]
+double array3[]  = { 1., 3., 7., 11. };// La taille est déterminée par la liste d'initialisation { ... }
+double x = 0.;
+for ( int i = 0; i < sizeof(array3); ++i )// Erreur sur la taille du tableau !!!!
+    x += array3[i];                       // Et donc dépassement du tableau et mauvais calcul...
+\end{lstlisting}
+
+\underline{Remarque 1} : L'exemple ci-dessus à permis d'introduire la liste d'initialisation, c'est à dire un ensemble de valeurs définies entre deux accolades $\{$ et $\}$ qui permettent d'initialiser une collection de valeurs (comme un tableau). La liste d'initialisation est un objet important du C++ à partir de sa version C++ permettant une grande souplesse dans l'initialisation des objets (voir le cours sur l'objet qu'on fera plus tard.)
+
+\underline{Remarque 2} : Attention, dans l'exemple ci--dessus, la variable N est bien déclarée comme \textbf{constante}, ce qui permet de définir des tableaux statiques de dimension N. Cependant, si N n'est pas constant, rien ne garantit que votre code compilera sur tous les compilateurs. C'est en fait une extension du compilateur gnu C qui permet d'allouer un tableau statique de façon dynamique (sic !) mais qui ne marchera pas sur des compilateurs comme celui de microsoft, intel, \ldots
+
+En C++, depuis C++ 11, il existe une solution plus sûre et plus conviviale, permettant de vérifier (en particuliers en mode développement) ou de protéger l'accès aux données du tableau. Il faut pour cela utiliser |array| de la bibliothèque standard du C++.
+
+La construction d'un tableau statique en C++ ressemble beaucoup à la construction faite en C, mais avec beaucoup plus de vérifications quant à la construction du tableau :
+
+\begin{lstlisting}
+#include <iostream>
+#include <array> 
+
+int main()
+{
+    // Déclaration d'un tableau statique de dimension quatre contenant des entiers non initialisés
+    std::array<int,4> iarray4;
+
+    // Déclaration d'un tableau statique de dimension cinq contenant des doubles initialisés par une liste
+    std::array<double,5> darray5({ 1.2, 2.3, 3.4, 4.3, 3.2});
+
+    // Autre écriture pour initialiser un tableau statique de dimension quatre contenant des doubles initialisés par une liste
+    std::array<double,4> darray4 = { 1.2, 2.3, 3.4, 4.3 };
+
+    // A partir de C++ 17, il est possible d'omettre le type et la taille si on donne une liste de valeurs :
+    std::array darray6 = { 1., 2., 3., 4., 5., 6.}; // Equivalent à std::array<double,6> pour le type
+
+    // Si la taille est précisée, le C++ vérifie qu'on a pas une liste contenant plus de valeurs que la dimension du tableau
+    std::array<double,4> darray4_2 = { 1.2, 2.3, 3.4, 4.3, 3.2 };// Erreur à la compilation 
+    ...
+
+}
+\end{lstlisting}
+
+On accède aux éléments du tableau de la même manière qu'un tableau statique en C, mais avec une possibilité de vérification de l'indice passé en plus :
+
+\begin{lstlisting}
+    // On lit le premier élément du tableau darray5 : x devient un alias constant sur ce premier élément
+    const double& x = darray5[0];
+    // On lit le cinquième élément d'un tableau de dimension quatre ! Si -D_GLIBCXX_DEBUG a été mis en option de compilation
+    // l'exécutable s'arrète en signalant qu'un mauvais indice a été passé au tableau !
+    double y = darray4[4];
+    // Bien sûr, on peut également modifié un élément d'un tableau :
+    darray4[2] = 3.14;
+\end{lstlisting}
+
+D'autres services non présent pour le tableau statique de type C sont disponibles. Notez la façon d'appeler ces fonctions, appelées méthodes, où on écrit le nom de l'objet sur lequel le traitement doit être effectué, suivi d'un point et du nom de la méthode à appeler sur cet objet :
+
+\begin{lstlisting}
+    // Lire la dimension du tableau (son nombre d'éléments)
+    auto sz = iarray4.size();
+    // Remplir le tableau avec une valeur donnée en paramètre :
+    iarray4.fill(-1); // Remplit le tableau iarray4 avec la valeur -1.
+    // On peut aussi comparer des tableaux lexicographiquement :
+    std::array<int,4> iarray4_2 = {-1, -2, 1, -1};
+    if (iarray4_2 < iarray4) 
+        std::cout << "iarray4_2 inférieur à iarray4" << std::endl;
+\end{lstlisting}
+
+Il est également possible de parcourir de façon ``automatique'' les éléments d'un tableau. Pour cela, on doit introduire un concept du C++ qui s'applique non seulement aux tableaux statiques, mais à un grand nombre de conteneurs : \textbf{les itérateurs}
+
+Un itérateur est un objet qui, pointant sur des éléments d'un tableau ou d'un conteneur possède la propriété d'itérer au travers des éléments du conteneur en utilisant un ensemble d'opérations (l'incrément |++| en particuliers et l'opérateur de déférencement |*|). 
+
+La forme la plus basique d'itérateur est le pointeur en C, qui pointe sur un élément d'un tableau et peut itérer en utilisant l'opérateur |++| (pré ou post) pour parcourir les éléments du tableau.. Mais d'autres types d'itérateurs sont possibles. Par exemple on peut définir un itérateur permettant de parcourir une liste dont les éléments ne sont pas contigüs en mémoire. 
+
+Il faut remarquer qu'un pointeur est un type d'itérateur, mais que ce n'est pas tous les itérateurs qui ont les mêmes fonctionnalités que les pointeurs. On peut classifier les itérateurs en cinq catégories : Les itérateurs d'entrée, de sortie, les itérateurs uni-directionnels, les itérateurs bi-directionnels et les itérateurs à accès randomisés.
+
+\begin{enumerate}
+  \item \textbf{Les itérateurs d'entrée et de sortie} : ce sont les itérateurs les plus limités. Ils ne peuvent que parcourir en lisant qu'une seule fois les éléments d'un tableau en lecture ou écriture (pensez à un itérateur sur un fichier par exemple ou des données lues sur un port série, etc.);
+  \item \textbf{Les itérateurs uni-directionnels} : Ils ont toutes les fonctionnalités d'un itérateur de sortie et d'entrée si il n'est pas constant. Il est possible de lire ou écrire plusieurs fois le même élément mais on ne peut qu'itérer que du premier ou dernier élément ou du dernier élément au premier. Tous les itérateurs des conteneurs sont au minimum des itérateurs uni-directionnels. Un exemple d'itérateur uni-direcionnel est un itérateur sur une liste simple chaînée.
+  \item \textbf{Les itérateurs bi-directionnels} : similaire aux itérateurs uni-directionnels, sauf qu'il est possible d'itérer en avant ou en arrière (avec l'opérateur |--|)
+  \item \textbf{Les itérateurs à accès randomisés} : Ce sont les itérateurs qui ressemblent aux pointeurs. Il est possible de sauter plusieurs éléments en avant ou en arrière et dont lire les éléments d'un conteneur de façon ``aléatoire'' en utilisant une arithmétique semblable à celle des pointeurs.
+\end{enumerate}
+
+Pour accéder aux itérateurs d'un conteneur, le conteneur propose de façon standard deux méthodes : |begin()| qui crée un itérateur sur le début du conteneur et |end()| qui crée un itérateur pointant sur l'adresse mémoire suivant le dernier élément du conteneur. Ainsi, dans le cas d'un objet de type |array|, on peut parcourir tous ces éléments comme dans l'exemple suivant :
+
+\begin{lstlisting}[caption=utilisation explicite des itérateurs pour array]
+    std::cout << "darray4 : ";
+    for ( auto iter = darray4.begin(); iter != darray4.end(); ++iter )
+        std::cout << *iter << " ";// <-- notez le déférencement
+    std::cout << std::endl;
+\end{lstlisting}
+
+Depuis le C++ 11, on peut ``cacher'' l'utilisation de ces itérateurs à l'aide d'une écriture plus simple de la boucle |for| (et cela est valable pour tout objet possédant des itérateurs). La boucle de l'exemple suivant parcourt automatiquement tous les éléments de |darray5| (en prenant chaque élément en référence constante pour éviter une copie) :
+\begin{lstlisting}[caption=utilisation implicite des itérateurs pour array]
+    std::cout << "darray5 : ";
+    for ( const double& val : darray5 ) std::cout << val << " ";
+    std::cout << std::endl;
+}
+\end{lstlisting}
+
+\subsubsection{Gestion dynamique de la mémoire}
+
+En C, il n'y a guère le choix : on alloue dynamiquement un tableau à l'aide de l'instruction |malloc| dont on reçoit l'adresse de début dans un pointeur. Il faut ensuite libérer cet espace mémoire lorsqu'on n'en a plus besoin à l'aide de l'instruction |free| :
+
+\begin{lstlisting}
+int n;
+...
+double* pt_array = (double*)malloc(n*sizeof(double));
+...
+free(pt_array);
+\end{lstlisting}
+
+En C++, pour des raisons d'initialisation de certains objets, il est déconseillé d'utiliser |malloc| et |free|. Il est préférable d'utiliser leur équivalent (à l'initialisation des objets près) : |new| et |delete| dont l'écriture est moins lourde :
+\begin{lstlisting}[caption=Exemple d'utilisation de new et delete]
+int * pt_n = new int; // On réserve une variable entière
+int& n = *pt_n;
+
+double* pt_pi = new double(3.1415); // Réserve un double et l'initialise à 3.1415
+...
+double* pt_array = new double[n];// On réserve un tableau de n doubles
+...
+delete [] pt_array; // On libère un tableau dynamique
+delete pt_n;        // On libère une variable dynamique
+\end{lstlisting}
+
+\textbf{\textcolor{red}{Attention}} : Il est interdit de désallouer un tableau allouer avec |malloc| avec un |delete| sous peine d'erreurs mémoires lors de l'éxécution. De même il ne faut pas libérer à l'aide de |free| un tableau alloué avec |new|.
+
+Néanmoins, principalement à partir du C++ 11, l'utilisation de |new| et |delete| n'est utile que dans certains contextes particuliers. On préférera pour créer un tableau dynamique utiliser l'objet |vector| de la bibliothèque du même nom qui permet une gestion automatique de la mémoire sans avoir à s'occuper de la libération de la mémoire (qui se fera automatiquement lors de la sortie du bloc d'instruction où a été déclaré le tableau) :
+
+\begin{lstlisting}
+// Réserve un tableau dynamique de trente entiers qui se détruira quand il ne sera plus visible
+std::vector<int> indices(30); 
+// Déclare un tableau de doubles :
+std::vector<double> tableau;
+// Et réserve ensuite 10 éléments :
+tableau.resize(10);
+// Autre possibilité pour réserver une nouvelle taille
+// en perdant les éléments déjà contenus mais c'est plus rapide que resize :
+std::vector<double>(20).swap(tableau);
+// Créer dynamiquement un tableau de 10 réels donnés dans une liste d'initialisation
+// Notez que le type n'a pas besoin d'être précisé puisque la liste contient des doubles (déduction automatique : C++ 17)
+std::vector tab2 = {1., 2., 3., 4., 5., 6., 7., 8., 9., 10. };
+// On realloue le tableau tab2 à ving éléments (en conservant les dix premiers éléments)
+tab2.resize(20);
+// Alloue un tableau d'entiers de dimension 100 rempli de -1:
+// Là encore, on ne précise pas le type car on passe un entier pour valeur de remplissage (déduction automatique) :
+std::vector ind2(100,-1);
+// Et là on alloue un tableau de réel rempli de 3.14
+std::vector pi_array(100,3.14);
+// Création d'un tableau recopiant les données d'un autre conteneur via les itérateurs :
+std::vector<double> copie(tab2.begin(), tab2.end());
+// Et plus simple encore, copie du tableau ind2 dans un nouveau tableau d'entier
+std::vector<int> ind3(ind2);
+\end{lstlisting}
+
+Pour interagir avec des librairies C ou d'autres langage, il est possible de lire l'adresse du premier élément (valable aussi pour |array| ! ) :
+\begin{lstlisting}
+double* pt_tab2 = tab2.data();
+\end{lstlisting}
+
+Il est bien sûr possible de lire ou écrire dans un tableau de type |vector| :
+\begin{lstlisting}
+// Lit le quatrième élément
+double x = tab2[3];
+// Ecrit le cinquième élément
+tab2[5] = 3.14;
+// Lit le premier élément (on peut aussi écrire dessus)
+double p = tab2.front();
+// Ecrit le dernier élément (on peut aussi seulement le lire)
+tab2.back() = -3.14;
+\end{lstlisting}
+
+On peut également changer les données de deux pointeurs à condition qu'ils aient des éléments de même type :
+\begin{lstlisting}
+// Echange des données entre tab2 et tableau :
+tab2.swap(tableau);
+\end{lstlisting}
+
+La gestion mémoire étant optimiser au mieux, il se peut que le tableau que vous manipulez ait une taille inférieure à la réservation mémoire effectivement faite. Pour connaître la taille du tableau ou reallouer le tableau de sorte que la réservation mémoire corresponde à la taille.
+On peut également préréserver une taille mémoire pour remplir ensuite le tableau élément par élément sans avoir à faire de reallocation.
+
+\begin{lstlisting}
+// Lire le nombre d'éléments contenus dans le tableau :
+auto sz = tab2.size();
+// Realloue le tableau de sorte que la mémoire soit optimisée (C++ 11) :
+tab2.shrink_to_fit(); 
+// Création tableau vide :
+std::vector<double> an_array;
+// Réservation de 10 doubles dans le tableau (mais toujours avec 0 éléments)
+an_array.reserve(10);
+// Puis on rajoute les éléments un à un :
+for ( int i = 0; i < 10; ++i )
+    // En rajoutant chaque élément à la fin du tableau :
+    an_array.push_back(3.1415*i);
+// Le tableau aura bien 10 éléments à la fin avec une seule allocation avec l'appel à reserve
+\end{lstlisting}
+
+Enfin, le retour par une fonction d'un tableau de type |vector| n'effectue une copie du tableau retourné
+que si la variable de type |vector| retournée n'est pas locale à la fonction, sinon
+elle effectue un \textsl{déplacement}, c'est à dire que la variable recevant le retour de la fonction ``vole'' le pointeur et la mémoire réservée par la variable retournée (ce qui n'a pas d'incidence puisque cette variable aurait dû être détruite de toute façon\ldots :
+
+\begin{lstlisting}[caption=retour d'une variable de type vector]
+#include <vector>
+
+// Retourne le plus grand des vecteurs :
+vector bad_max(const vector& u, const vector& v)
+{
+  if (u>v) return u; else return v;
+}
+
+// Idem. Notez qu'on retourne une référence, valide ici puisque u et v ne sont pas local à cette fonction
+const vector& good_max(const vector& u, const vector& v)
+{
+  if (u>v) return u; else return v;
+}
+
+
+// Retourne l'addition de deux vecteurs
+vector add(const vector& u, const vector& v)
+{
+  assert(u.size() == v.size());
+  vector w(u.size());
+  for ( std::size_t i = 0; i < u.size(); ++i )
+  {
+    w[i] = u[i] + v[i];
+  }
+  return w;
+}
+
+int main()
+{
+  vector u  = {1., 2., 3., 4., 5.};
+  vector v  = {2., 3., 4., 5., 1.};
+  // L'appel de bad_max provoque une copie au retour de la fonction car u et v ne sont
+  // pas locaux à la fonction bad_max.
+  auto   w1 = bad_max(u,v);
+  // Ici, pas de copie puisqu'on a retourné une référence constante par la foncton good_max;
+  auto   w2 = good_max(u,v);
+  // Et ici pas de copie puisqu'on le vecteur retourné est local à la fonction add
+  auto   w3 = add(u,v);
+}
+\end{lstlisting}
+
+Comme on voit sur l'exemple ci--dessus, si on ne veut pas avoir une copie effectuée lors du retour d'une variable global d'une fonction, il suffit de retourner une référence (constante ou non, ou les deux en surchargeant la fonction pour les tableaux constants et les tableaux non constants) :
+
+\begin{lstlisting}
+// Surcharge de la fonction good_max pour avoir une référence si les deux tableaux ne sont pas constants
+vector& good_max( vector& u, vector& v )
+{
+  if (u>v) return u; else return v;
+}
+\end{lstlisting}
+
+
+Il existe bien d'autres méthodes pour les objets de type |vector|, dont vous pouvez trouver la documentation dans les deux sites  \verb@cppreference@et \verb@cplusplus.com@. La chose importante à retenir est surtout que la libération de la mémoire se fait de façon automatique dès que l'objet de type vecteur cesse d'être visible.
+
+\subsection{Surcharge des opérateurs}
+
+De même qu'il est possible de surcharger des fonctions avec de nouveaux types définis par l'utilisateur, il est également possible
+de redéfinir les symboles 
+
+\begin{center}
+\verb@+ += - -= * *= / /= ++ -- () [] ! ~ & | ^ = == < > <= >= << >>@
+\end{center} 
+
+et d'autres encore, moins courants. Néanmoins, l'ordre 
+des opérateurs restent celui imposé par le C et le C++, impossible de redéfinir les priorités sur les opérateurs !
+
+Notons de plus un opérateur supplémentaire en C++ 20, l'opérateur "vaisseau spatial" |<=>| qui permet de regrouper en un seul opérateur tous les opérateurs de comparaison. Pour des soucis d'efficacité, il est néanmoins possible de surcharger cet opérateur par certains des opérateurs standards du C++ qui prendront la priorité sur l'opérateur "vaisseau spatial".
+
+Pour apprendre à manipuler la redéfinition des opérateurs, concevons une petite bibliothèque manipulant des vecteurs dans $\mathbb{R}^{3}$, avec laquelle on pourra :
+\begin{itemize}
+  \item Additionner et soustraire
+  \item Effectuer un produit scalaire ou vectoriel
+  \item Effectuer une homothétie
+  \item Afficher le vecteur
+  \item Pouvoir lire une composante du vecteur de deux manières :
+  \begin{itemize}
+    \item Par composante : |double x = u.x;| par exemple
+    \item Sous la manière d'un tableau : |double x = u[0];| par exemple
+  \end{itemize}
+\end{itemize}
+
+On verra ainsi au fur et à mesure comment redéfinir certains opérateurs. Commençons par définir notre vecteur et la façon d'accéder aux composantes du vecteur :
+
+\begin{lstlisting}[caption=définition d'un vecteur en trois dimensions]
+struct vecteur
+{
+  double x, y, z;
+};
+
+int main()
+{
+    vecteur u{.x = 3, .y = 5, .z = -1};
+    vecteur v{.x = 5, .y = 1, .z =  7};
+    std::cout << "vecteur u : " << u.x << ", " << u.y << ", " << u.z << std::endl;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+On peut donc déjà avec cette simple définition définir des vecteurs et accéder à leurs composantes. Pour accéder à la manière d'un tableau aux composantes des vecteurs, nous allons utiliser l'opérateur |[]|, un des rares opérateurs qui doit être impérativement être défini à l'intérieur de la structure avec l'opérateur |()| (opérateur d'évaluation) :
+
+\begin{lstlisting}[caption=définition d'un vecteur en trois dimensions avec opérateur d'accés]
+struct vecteur
+{
+    double x, y, z;
+
+    // Le const à la fin de la ligne ci--dessous signifie que cet opérateur marchera pour
+    // un vecteur constant (ce qui n'est pas le cas si on ne met pas const à la fin)
+    double operator [] ( int i ) const
+    {
+        assert(i>=0);
+        assert(i <3);
+        if (i==0) return x;
+        if (i==1) return y;
+        assert(i==2);// Normalement toujours vrai !
+        return z;
+    }
+
+    // Remarque: le C++ sait distingué les deux car celui au dessus est défini pour
+    // un vecteur constant et celui ci--dessous pour un vecteur non constant.
+    // Notez que dans le cas non constant, on renvoie une référence sur l'élément du
+    // vecteur afin qu'il puisse être modifiable (par exemple en écrivant u[0] = 3.; )
+    double& operator [] ( int i )
+    {
+        assert(i>=0);
+        assert(i <3);
+        if (i==0) return x;
+        if (i==1) return y;
+        assert(i==2);// Normalement toujours vrai !
+        return z;        
+    }
+};
+
+int main()
+{
+    vecteur u{.x = 3, .y = 5, .z = -1};
+    vecteur v{.x = 5, .y = 1, .z =  7};
+    std::cout << "vecteur u : " << u.x << ", " << u.y << ", " << u.z << std::endl;
+    std::cout << "vecteur v : ";
+    for (int i = 0; i < 3; ++i ) std::cout << v[i] << " ";
+    std::cout << std::endl;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Rajoutons maintenant l'addition de deux vecteurs à l'aide du symbole |+| et la soustraction de deux vecteurs
+à l'aide du symbole |-| :
+
+\begin{lstlisting}
+vecteur operator + ( const vecteur& u, const vecteur& v )
+{
+  return vecteur{.x = u.x + v.x, 
+                 .y = u.y + v.y, 
+                 .z = u.z + v.z };
+}
+
+vecteur operator - ( const vecteur& u, const vecteur& v )
+{
+  return vecteur{.x = u.x - v.x, 
+                 .y = u.y - v.y, 
+                 .z = u.z - v.z };
+}
+
+int main()
+{
+  ...
+  vecteur w;
+  w = u + v;
+  vecteur t;
+  t = u - v;
+}
+\end{lstlisting}
+
+Remarquons que le premier paramètre représente le vecteur à gauche du symbole |+| ou du symbole |-|, et le second celui à droite. Lorsqu'on écrit dans le |main| une ligne comme |w = u + v;|, cette ligne est directement traduite par le C++ en
+|w = operator + (u,v);|.
+
+De même, il est aussi facile de définir le produit scalaire à l'aide du symbole \verb@|@, le produit vectoriel à l'aide du symbole \verb@^@  et l'homothétie à l'aide du symbole \verb@*@ :
+\begin{lstlisting}
+double operator | ( const vecteur& u, const vecteur& v )
+{
+  return u.x*v.x + u.y*v.y + u.z*v.z;
+}
+
+vecteur operator ^ ( const vecteur& u, const vecteur& v )
+{
+  vecteur w;
+  w.x = u.y*v.z - u.z*v.y;
+  w.y = u.z*v.x - u.x*v.z;
+  w.z = y.x*v.y - u.y*v.x;
+  return w;
+}
+
+vecteur operator * ( double alpha, const vecteur& u )
+{
+  return vecteur{ .x = alpha * u.x,
+                  .y = alpha * u.y,
+                  .z = alpha * u.z };
+}
+
+int main()
+{
+  ...
+  double scal = (u|v);
+  vecteur orth = u^v;
+  vecteur double_u = 2. * u;
+  ...
+}
+\end{lstlisting}
+
+Il ne nous reste plus qu'à afficher le vecteur de la même manière qu'on affichera un entier, un double, etc.
+
+\begin{lstlisting}
+std::ostream& operator << ( std::ostream& out, const vecteur& u )
+{
+  out << "< " << u.x << ", " << u.y << ", " << u.z << " >";
+  return out;
+}
+
+int main()
+{
+  ...
+  std::cout << "Le vecteur u vaut : " << u << std::endl;
+  ...
+}
+\end{lstlisting}
+
+Le symbole |<<| est le symbole utilisé en C++ pour décrire un flux vers un périphérique de sortie (on aura le même type
+d'écriture si on dirige le flux vers un fichier, une imprimante, etc.). Ce symbol utilisé comme opérateur de flux (il peut
+également servir à d'autre choses), prend à gauche de l'opérateur une sortie (fichier, console, etc.) qui sera en C++
+de type |std::ostream| et qui sera modifié (en avançant dans le fichier par exemple), et à droite par le type d'objet qu'on
+veut utiliser. Le fait de renvoyer en retour de la fonction la sortie |out| permet de chaîner les opérateurs de flux.
+
+En effet, si on décompose la ligne |std::cout << "Le vecteur u vaut : " << u << std::endl;|, cette ligne est traduite
+comme suit par le C++ :
+\begin{lstlisting}
+  operator << ( operator <<  ( operator <<  (std::cout, "Le vecteur u vaut"), u     ), std::endl);
+//                   |            |          std::ostream&,    char*          |            |
+//                   |         std::ostream&                                ,vecteur       |
+//              std::ostream&                                                        ,   char
+\end{lstlisting}
+
+ce qui montre que retourner une variable de type |std::ostream&| est nécessaire puisque l'opérateur attend à gauche un objet de ce type.
+
+Vous trouverez un exemple complet de ce qu'on vient d'exposer (avec un ou deux opérateur en plus) dans 
+\href{run:./Exemples/exemple_vecteur_3d_struct.cpp}{\texttt{exemple\_vecteur\_3d\_struct.cpp}}.
+
+
+Enfin, la variable itérée lors d'une boucle peut être déclarée dans la partie d'initialisation de la boucle :
+\begin{lstlisting}[caption=Initialisation d'une boucle]
+for ( int i = 0; i < 10; ++i )
+    for ( int j = 0; j < 10; ++j )
+        ...
+for ( int i = 0; i < 20; ++i )
+    ...
+\end{lstlisting}
+
+Noter que si la variable d'indice en C++ est déclarée à l'initialisation de la boucle, cette dernière est déclarée localement et n'est visible qu'au sein de la boucle :
+
+\begin{lstlisting}[caption=localité de l'indice de boucle en C++]
+    for ( int i = 0; i < 20; ++i )
+    {
+        ...
+        int k  = i + 1; // OK, i est visible à ce niveau
+    }
+    int j = i; // Erreur de compilation ! i n'existe plus
+\end{lstlisting}
+
+Nous verrons également qu'il existe d'autres types de boucles en C++ permettant de s'affranchir de la gestion des indices.
+
+\underline{\textbf{À partir du C++ 11}}:
+
+Il est autorisé de définir des structures, des classes ou des unions dans un corps de fonction. La visibilité de la structure sera celle du bloc dans laquelle elle a été définie.
+
+\begin{lstlisting}[caption=déclaration d'une structure au sein d'une fonction (C++ 11 ou supérieur)]
+void f()
+{
+    struct triplet { double x,y,z; };
+
+    triplet t{.x=2,.y=4,.z=5};// initialisation structure C++ 20 ou supérieur
+
+}
+\end{lstlisting}

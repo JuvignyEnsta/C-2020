@@ -3,8 +3,8 @@
 
 Pour choisir a,b, c, on va utiliser nargs et argv :*/
 #include <iostream>
-#include <cmath>
-#include <complex>
+#include <cmath> // Pour std::sqrt
+#include <complex> // Pour gérer les complexes
 #include <string> // Pour utiliser std::stod
 
 int main(int nargs, char* argv[])
@@ -12,7 +12,11 @@ int main(int nargs, char* argv[])
     double a,b,c;
     if (nargs < 4)
     {
-        std::cerr << "Usage : ./equation <a> <b> <c>" << std::endl;
+        std::cerr << R"DOC(
+Usage : ./equation <a> <b> <c>
+     Attention, a doit être non nul !
+     Le programme retourne les racines de l'équation de second degré
+        )DOC" << std::endl;
         return EXIT_FAILURE;
     }
     a = std::stod(argv[1]);// std::stod : Transforme une chaîne de caractère en réel double précision

@@ -136,19 +136,20 @@ Une variable ne doit pas également commencer par un chiffre.
 
 Par contre, un caractère peut contenir toute lettre de l'alphabet (accents compris), ainsi qu'une grande partie des caractères unicodes (alphabet grecque, japonais, indou, etc. ).
 
-Ainsi, les noms suivants sont valides : \verb@a, _a, π, ζ, clé, périmètre@,\ldots
+Ainsi, les noms suivants sont valides : \texttt{a, \_a, $\pi$, $\zeta$, clé, périmètre},\ldots
 
 Les noms suivants \textcolor{red}{\bf ne sont pas valides} : \verb@3a, {z, !b, la clef@
 
-Utiliser des lettres autres que les lettres anglosaxonnes ne posent aucun soucis de portabilité, car cela fait partie de la norme C++ depuis 2011, tant que l'éditeur que vous utilisez supporte l'édition en unicode, ce qui est le cas de la grande majorité des éditeurs de texte aujourd'hui. Les compilateurs Intel, Gnu, Clang et Microsoft supportent les variables nommées avec des caractères unicode.
+Utiliser des lettres autres que les lettres anglosaxonnes ne posent aucun soucis de portabilité, car cela fait partie de la norme C++ depuis 2011, tant que l'éditeur que vous utilisez supporte l'édition en unicode, ce qui est le cas de la grande majorité des éditeurs de texte aujourd'hui. Les compilateurs Intel, Gnu, Clang et Microsoft supportent les variables nommées avec des caractères unicode (pour gcc, ce n'est que depuis la version 10 du compilateur !).
 
 \underline{Ce qui dit exactement la norme C++ 11 :}
 Un identifieur pour une variable est une séquence arbitrairement longue de lettres et de chiffres. Chaque caractère universel dans un identifieur devra être une lettre qui respecte la norme ISO 10646 et être un caractère comme spécifié dans E.1. L'élément inital ne devra pas être un caractère universel qui appartient aux ensembles désignés par E.2. Les lettres minuscules et majuscules sont différentes. Tout les caractères sont spécifiques.
 
-\textbf{E.1} liste les caractères permis dont font parti les lettres grecques, les lettres accentuées mais aussi des caractères comme \verb@ª ¯ ² ³ ´ µ ·  ¹ º ¼ ½ ¾ Ø ° Ö  𐀀@ 
+\textbf{E.1} liste les caractères permis dont font parti les lettres grecques, les lettres accentuées mais aussi des caractères comme \verb@ª ¯ ² ³ ´ µ ·  ¹ º ¼ ½ ¾ Ø ° Ö  𐀀@ \\
 \textbf{E.2} liste les caractères qui ne sont pas permis en première lettre dans l'identifieur d'une variable, à savoir les chiffres, et ce qui peut ressembler à des quotes.
 
 Pour plus de précision, voir le draft ISO C++ 11 (\url{https://isocpp.org/files/papers/n4296.pdf} à la page 1265).
+
 
 \subsection{Déclaration}
 
@@ -659,22 +660,22 @@ la bibliothèque |cmath|, comme des polynômes de Laguerre, Legendre, la fonctio
 À partir de C++ 20, il existe également une bibliothèque de constantes mathématiques |numbers| qui défini $\pi$, l'exponentielle, la racine de deux ou de trois et leurs inverses, le nombre d'or, la constante d'Euler $\gamma$, etc. (voir le lien  \url{https://en.cppreference.com/w/cpp/numeric/constants}).
 
 
-\begin{lstlisting}[caption=Exemple d'utilisation des constantes en C++ 20]
+\begin{lstlisting}[caption=Exemple d'utilisation des constantes en C++ 20,mathescape=true]
 #include <cmath>
 #include <numbers>
 #include <iostream>
 
 int main()
 {
-  float  π_f = std::numbers::pi_v<float>;
-  double π   = std::numbers::pi;
-  long double π_lf = std::numbers::pi_v<long double>;
-  double π⁻¹ = std::numbers::inv_pi;
+  float $\pi$_f = std::numbers::pi_v<float>;
+  double $\pi$   = std::numbers::pi;
+  long double $\pi$_lf = std::numbers::pi_v<long double>;
+  double $\pi^{-1}$ = std::numbers::inv_pi;
 
-  std::cout << "π_f  = " << std::setprecision(std::numeric_limits<float>::digits10+1) << π_f << std:endl;
-  std::cout << "π    = " << std::setprecision(std::numeric_limits<double>::digits10+1) << π << std:endl;
-  std::cout << "π_lf = " << std::setprecision(std::numeric_limits<long double>::digits10+1) << π_lf << std:endl;
-  std::cout << "π⁻¹  = " << std::setprecision(std::numeric_limits<double>::digits10+1) << π⁻¹ << std::endl;
+  std::cout << "$\pi$_f  = " << std::setprecision(std::numeric_limits<float>::digits10+1) << $\pi$_f << std:endl;
+  std::cout << "$\pi$    = " << std::setprecision(std::numeric_limits<double>::digits10+1) << $\pi$ << std:endl;
+  std::cout << "$\pi$_lf = " << std::setprecision(std::numeric_limits<long double>::digits10+1) << $\pi$_lf << std:endl;
+  std::cout << "$\pi^{-1}$  = " << std::setprecision(std::numeric_limits<double>::digits10+1) << $\pi^{-1}$ << std::endl;
 
   return EXIT_SUCCESS;
 }
@@ -830,8 +831,8 @@ u8"π est un caractère très spécial !"
 va coder la chaîne en UTF8.
 
 Une chaîne de caractère étant considéré comme un tableau de caractères, on utilise comme type basique pour les chaînes de caractère le type |char []| qui n'est autre que la déclaration d'un tableau statique de caractère (les tableaux statiques sont présentés plus loin). Ainsi, on peut stocker notre chaîne de caractère UTF 8 comme :
-\begin{lstlisting}
-char texte[] = u8"π est un caractère très spécial !";
+\begin{lstlisting}[mathescape=true]
+char texte[] = u8"$\pi$ est un caractère très spécial !";
 \end{lstlisting}
 
 Enfin, depuis C++ 11 qui s'est beaucoup inspiré de Python, il est possible de définir des chaînes de caractère "brutes",
@@ -846,12 +847,13 @@ R"DEL(Si nous prenons encadrons une formule par une ( et  par une ) ("parenthès
 \end{lstlisting}
 
 nous permet de définir un texte multi-ligne en UTF 8 qu'on peut ensuite afficher sur console qui affichera :
-\begin{verbatim}
+
+\begin{inverseverbatim}
 Si nous prenons encadrons une formule par une ( et  par une ) ("parenthèse") alors :
      1. Cela permet de s'assurer de l'ordre des opérations;
      2. D'être plus clair dans le code;
      3. Modifier l'ordre des opérations
-\end{verbatim}
+\end{inverseverbatim}
 
 Remarquer que les retours chariot sont bien pris en compte lors de l'affichage. Pour ceux d'entre vous rompus au langage C, vous serez peut-être surpris que je n'ai pas employé un pointeur sur un tableau de caractère mais un tableau statique
 de caractère. En fait, à partir de C++ 11, il n'est plus possible de définir une chaîne de caractère constant via un pointeur sur cette chaîne.
@@ -916,19 +918,19 @@ if (pos != std::string::npos)
     std::cout << "J'ai trouvé une seconde occurence de chaîne à la position : " << pos << std::endl;
 \end{lstlisting}
 dont la sortie obtenue est :
-\begin{verbatim}
+\begin{inverseverbatim}
 J'ai trouvé une première occurence de chaîne à la position : 57
 J'ai trouvé une seconde occurence de chaîne à la position : 81
-\end{verbatim}
+\end{inverseverbatim}
 
 Enfin, on peut tester la longueur d'une chaîne (en octet) : 
 \begin{lstlisting}
 std::cout << "Longueur de chaîne : " << "chaîne"s.length() << std::endl;
 \end{lstlisting}
 qui nous donne en sortie:
-\begin{verbatim}
+\begin{inverseverbatim}
 Longueur de chaîne : 7
-\end{verbatim}
+\end{inverseverbatim}
 
 Remarquons que le résultat affiché n'est pas celui \textsl{a priori} attendu, puisque "chaîne" ne contient que six
 caractère. Cela vient du fait que le caractère $î$ est stocké sur deux octets en UTF 8 (qui est ici implicite).
@@ -1080,548 +1082,387 @@ ce qui permet une lecture plus aisée des valeurs de |e|, |l| et |bl| !
 
 Remarquons que le séparateur peut être mis n'importe où entre deux chiffres dans le nombre. Ainsi, il est possible (mais sans intérêt) d'écrire un nombre sous la forme |3'42'3564'3'2LL| ce qui ne facilite pas la lecture (qui est pourtant le but de ce rajout au C++)
 
-\subsection{Entrées/sorties}
+\subsection{Le qualificateur const}
 
-En C (mais aussi en C++), l'affichage sur un terminal d'un texte se fait à l'aide de la fonction \texttt{printf}
-de la bibliothèque \texttt{stdio.h} (\texttt{cstdio} en C++). Cependant, l'utilisation de cette fonction est loin d'être facile
-et peut être génératrice de bogues :
+Considérons une variable telle que $\pi$. De toute évidence, cette variable sera fixée à une certaine valeur (qui sera une bonne approximation de la valeur exacte !) tout le long
+de l'exécution du programme.
+
+En effet, imaginons le programme suivant :
+\begin{lstlisting}[mathescape=true]
+double $\pi$ = 3.141592653589793;
+...
+// Bien plus loin dans le code
+$\pi$ = -1.;
+...
+// Et encore bien plus loin
+int rayon = 3;
+// Calcul de la circonférence du cercle
+double circonférence = 2*$\pi$*rayon;
+\end{lstlisting}
+
+Manifestement, le résultat à la fin sera faux ! Pourquoi avoir changé $\pi$, me direz-vous ?
+Hé bien, cela peut arriver pour moultes raisons ! On a voulu changer la valeur d'une autre
+variable et on a malencontreusement pris $\pi$ à la place (à cause d'une complétion
+malheureuse, par exemple), ou encore, dans un contexte de programmation embarquée,
+on voulait reutiliser une variable déjà existante pour limiter la mémoire prise par le programme, etc\ldots Bref, cela arrive bien plus fréquemment qu'on pourrait se l'imaginer.
+
+Puisque de toute évidence, la valeur de $\pi$ n'est pas destinée à être modifiée, il est nécessaire de la protéger contre toute modification éventuelle après son initialisation.
+C'est le rôle du mot clef |const|.
+
+C'est un qualificateur, car il ne modifie pas le type fondamental de la variable. Simplement il lui rajoute une propriété supplémentaire : celle d'être immuable.
+Il se rajoute avant ou après le type de la variable.
+
+Par exemple :
+\begin{lstlisting}[mathescape=true]
+const double $\pi$ = 3.141592653589793;
+double const e = 2.718281828459045;
+\end{lstlisting}
+
+Tenter de modifier la valeur d'une variable constante déclenche une erreur de compilation.
+C'est bien ce que l'on veut !
+
+\subsection{Pointeurs et adresse mémoire}
+
+\subsubsection{Les pointeurs natifs}
+
+Nous avons vu, sans le dire, un pointeur lorsque nous avons parlé des chaînes de caractères : |char *|.
+Un pointeur n'est rien d'autre qu'une adresse mémoire, c'est à dire un nombre donnant un emplacement dans la mémoire. Il peut bien entendu être initialisé à n'importe quel nombre, mais son intérêt est de prendre une valeur correspondant à l'emplacement mémoire d'une variable ! Remarquons qu'un pointeur ne permet pas directement de stocker une valeur, il ne fait que stocker l'adresse où se trouve cette valeur (qui aura donc déjà été stockée dans un espace réservé en mémoire).
+
+Une pointeur se déclare avec un type, et une |*| accolée au nom de la variable. Attention, dans le cas d'une multi-déclaration, chaque variable de type pointeur doit avoir une |*| accolée à son nom. Ainsi :
+\begin{lstlisting}[caption=Déclaration de pointeurs]
+int *pt_1, *pt2; // Pointeur sur des entiers
+double * pt_3, *pt_4; // Pointeur sur des doubles
+char *pt_5, ch; // Attention ch est un char, pas un pointeur !
+\end{lstlisting}
+
+Pour trouver l'adresse d'une variable ( son emplacement mémoire ), il suffit d'utiliser le symbole \verb@&\verb@ :
 
 \begin{lstlisting}
-#include <cstdio> // En C++, mais on peut aussi inclure stdio.h, ça marche aussi
-                  // Remarque : pas d'extension pour l'inclusion des fichiers en C++ !
-int main()
-{
-    int n1 = 3;
-    double x = 3.14;
-    // Inversion de %d et %lg => bogue attendu et affichage bizarre
-    printf("x = %d, n1 = %lg\n",x, n1);
-    return 1;
-}
+int une_valeur = 3;
+int *pt_valeur = &une_valeur; // Adresse de une_valeur
 \end{lstlisting}
 
-En C++, il existe une bibliothèque d'entrée sortie simplifiant grandement l'affichage sur terminal (mais aussi sur fichier) sans se préoccuper du type de valeurs à afficher :
+Il est également possible de faire de l'arithmétique avec les pointeurs. Dans ce cas, le pointeur tient compte du type de donnée sur lequel il pointe. Par exemple, si un pointeur |pt_tab| pointe  sur le premier élément d'un tableau |tab| de |double|, alors |pt_tab+1| pointera sur le deuxième, et plus généralement |pt_tab+i| pointera sur le $(i+1)^{e}$ élément du tableau |tab| qui correspond à
+|tab[i]| (n'oublions pas que les indices commencent à zéro en C/C++, voir plus loin pour les tableaux).
 
-\begin{lstlisting}
-#include <iostream> // Bibliothèque de gestion d'entrée/sortie du C++
-
-int main()
-{
-    int n1 = 3;
-    double x = 3.14;
-    // std::cout permet d'afficher sur un terminal la sortie standard
-    // std::endl permet un retour à la ligne précédé par un flush pour forcer l'affichage
-    std::cout << "Il est facile d'afficher du texte, mais aussi des variables comme x = " << x
-              << " ou encore n1 = " << n1 << std::endl;
-}
+Pour accéder à une valeur se trouvant à l'adresse stockée dans le pointeur, il suffit d'utiliser l'opérateur de déférencement |*| :
+\begin{lstlisting}[caption=Exemple d'utilisation du déférencement]
+int une_valeur = 3;
+int *pt_valeur = &une_valeur; // On pointe sur une_valeur
+*pt_valeur += 1; // On incrémente une_valeur pointée par pt_valeur
 \end{lstlisting}
 
-On peut également formater les entrées sorties pour une précision donnée, un nombre de caractère fixe, etc.
+Les pointeurs sont très utiles pour divers contextes, en particuliers pour parcourir ou stocker des tableaux dynamiquement (voir plus loin).
 
-Voici un exemple exhaustif des possibilités de formatage :
-\begin{lstlisting}
-#include <iostream>
-#include <iomanip> // Pour jouer avec le format des nombres
+Il est possible que deux pointeurs pointent sur la même variable. Si on utilise ces deux pointeurs pour lire ou modifier la valeur pointée, cela ne pose pas de soucis en séquentiel. Par contre, si on veut utiliser les deux pointeurs pour libérer l'espace mémoire occupée par la valeur (on verra comment faire plus loin), cela peut être problématique, car on ne peut pas libérer deux fois la même zone mémoire sans obtenir une erreur fatale durant l'exécution du programme.
 
-int main()
-{
-    double x = 3.141516;
-    int    n = 63123;
+Enfin, il existe un pointeur spécial, le pointeur nul, qui ne pointe sur aucune valeur. En C++, ce pointeur est défini dans la bibliothèque |<memory>| et se nomme |std::ptr_null|. Pour ceux qui ont fait du C, attention, ce n'est pas du tout l'équivalent de |NULL| en C (qui existe également pour la compatibilité avec le C) !
 
-    std::cout << n << " en hexadecimal donne " << std::hex << n << std::dec << std::endl;
-    for ( int i = 5; i < 10; ++i )
-        std::cout << std::setw(i) << n << std::endl;// Modif. nbre de caractère pour afficher n
-    for ( int i = 5; i < 10; ++i )
-        std::cout << std::setfill('0') << std::setw(i) << n << std::endl; // Idem mais remplissage par des zéros
-
-    std::cout << std::setprecision(5) << x << std::endl;// Affichage de x avec une précision donnée
-    std::cout << std::setprecision(9) << x << std::endl;
-    std::cout << std::fixed;// Impose que le nombre de chiffre après la virgule soit fixe
-    std::cout << std::setprecision(5) << x << std::endl;
-    std::cout << std::setprecision(9) << x << std::endl;
-
-    return 1;
-}
-\end{lstlisting}
-
-Si on compile le programme, on trouve en sortie :
-\begin{Verbatim}[frame=single]
-63123 en hexadecimal donne f693
-6312
- 63123
-  63123
-   63123
-    63123
-63123
-063123
-0063123
-00063123
-000063123
-3.1415
-3.141516
-3.14152
-3.141516000
-\end{Verbatim}
-
-Enfin il est possible d'écrire littéralement un booléen plutôt que d'écrire sa représentation entière (1 ou 0) :
-
-Le programme suivant :
-\begin{lstlisting}
-int number = 5;
-bool is_even = (number % 2 == 0);
-bool is_odd  = (number % 2 == 1);
-std::cout << "Affichage standard des booleens : "  << std::endl;
-std::cout << number << " est pair   ? " << is_even << std::endl;
-std::cout << number << " est impair ? " << is_odd  << std::endl;
-std::cout << "Affichage alphanumerique des booleens : " << std::endl;
-std::cout << number << " est pair   ? " << std::boolalpha << is_even << std::endl;
-std::cout << number << " est impair ? " << std::boolalpha << is_odd  << std::endl;
-\end{lstlisting}
-
-affichera :
-
-\begin{verbatim}
-Affichage standard des booleens : 
-5 est pair   ? 0
-5 est impair ? 1
-Affichage alphanumerique des booleens : 
-5 est pair   ? false
-5 est impair ? true
-\end{verbatim}
-
-\subsection{Surcharge de fonctions}
-
-Avec le langage C, il arrive souvent de devoir définir plusieurs fonctions effectuant la même fonctionnalité mais sur des types différents en les nommant avec des noms différents. Par exemple :
-
-\begin{lstlisting}[caption=Exemple de deux fonctions C effectuant la même opération sur des types différents]
-// Fonction avec flottants simple précision
-void saxpy(int N, float a, const float* x, float* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-
-// Fonction avec flottants double précision
-void daxpy(int N, double a, const double* x, double* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-\end{lstlisting}
-
-En C++, il est possible de surcharger des fonctions, c'est à dire de nommer plusieurs fonction avec le même nom, du moment
-que les paramètres passés en arguments sont différents (en type ou en nombre) de sorte qu'à l'appel, il n'y ait aucune
-ambigüité quant à la fonction à appeler.
-
-Ainsi en C++, il est possible d'écrire les deux fonctions ci--dessus :
-\begin{lstlisting}[caption=Exemple de surcharge d'une fonction C++]
-// Fonction avec flottants simple précision
-void axpy(int N, float a, const float* x, float* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-
-// Fonction avec flottants double précision
-void axpy(int N, double a, const double* x, double* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-\end{lstlisting}
-
-Le compilateur décidera quelle fonction appeler en fonction du type des paramètres passés, ainsi
-\begin{lstlisting}[caption=Appel à des fonctions surchargées]
-void main()
-{
-    float fx[] = {1.f, 2.f, 3., 4.f};
-    float fy[] = {0.f, -1.f, -2.f, -3.f};
-    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
-
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, 2., dx, dy); // Appel la fontion avec les flottants double précision
-
-    axpy(4,2.f, dx, dy);// Erreur de compilation, mélange simple et double précision !
-                        // Le compilateur ne peut décider quel fonction appeler...
-}
-\end{lstlisting}
-
-Il est important de bien respecter le type des paramètres passés à l'appel de la fonction sous peine d'avoir des erreurs de compilation parfois fort peu compréhensibles !
-
-Nous verrons au chapitre des templates qu'il peut être important d'appeler des fonctions faisant le même traitement mais avec des types différents par le même nom.
-
-\underline{\textbf{En C++ 2020}}
-
-À partir de C++ 2020, il est possible de généraliser et simplifier l'écriture d'un ensemble de fonctions surchargées
-à l'aide du mot clef |auto| :
-
-\begin{lstlisting}[caption=utilisation du mot clef auto pour déclarer les paramètres de la fonction]
-// Fonction générique pour tout type de vecteur
-void axpy(int N, auto a, const auto* x, auto* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    for (int i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-
-void main()
-
-    float fx[] = {1.f, 2.f, 3., 4.f};
-    float fy[] = {0.f, -1.f, -2.f, -3.f};
-    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
-
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, 2., dx, dy); // Appel la fonction avec les flottants double précision
-
-    axpy(4,2.f, dx, dy);// Appel la fonction avec a en simple précision, dx et dy en double
-}
-\end{lstlisting}
-
-Ici la fonction \texttt{axpy} a été généralisée pour prendre n'importe quel type pour \texttt{a, x} et \texttt{y}.
-Au fur et à mesure des différents appels à cette fonction "générique", le compilateur produire plusieurs versions de la
-fonction qui prendra en paramètre les divers types passés pour \texttt{a, x} et \texttt{y}. Ainsi, dans l'exemple ci-dessus,
-trois versions de la fonction seront générées : une avec trois réels simple précision, une avec trois réels double précision
-et la dernière avec |a| réel simple précision et |x| et |y| déclarées comme réels double précision.
-
-Les types (qui peuvent être tous différents) de \texttt{a, x} et \texttt{y}
-seront valides tant que l'opération |y[i] += a*x[i]| reste valide pour les types passés pour les trois arguments. Ainsi
-la ligne suivante ne compilera pas :
-
-\begin{lstlisting}
-void main()
-{
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, "toto", dx, dy); // Ne compile pas ! Pas de sens de faire y[i] += "toto"*x[i]  
-}
-\end{lstlisting}
-
-\underline{Remarque} : Si le mot clef |auto| en C++ 20 permet de créer facilement des fonctions génériques, il ne permet pas
-un contrôle fin des types permis contrairement aux templates que l'on verra plus tard. Néanmoins, dans beaucoup de cas, cette
-généricité est suffisante et bien plus légère à l'écriture que les templates\ldots
-
-\subsubsection{Valeur par défaut}
-
-Il arrive souvent qu'un des paramètres passés à une fonction prenne la plupart du temps la même valeur à l'appel. Par exemple,
-reprennons notre fonction |axpy| que nous allons généraliser pour prendre en compte des c{\oe}fficients régulièrement espacés
-mais plus forcément contigüs en mémoire :
-
-\begin{lstlisting}[caption=Généralisation de la fonction axpy]
-void axpy(int N, auto a, const auto* x, auto* y, int incx, int incy)
-{
-    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
-}
-
-int main()
-{
-    const int N = 4;
-    double A[N][N] = { {1,2, 4,  8}, 
-                       {1,3, 9, 27},
-                       {1,4,16, 64},
-                       {1,5,25,125} };
-    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
-    axpy(4, -4., A, A+2, N, N);
-    // Rajout de la deuxième colonne à la quatrième ligne :
-    axpy(4, 1., A+1, &A[3][0], 4, 1]);
-}
-\end{lstlisting}
-
-Pour l'exemple donné ci--dessus, il est clair que les paramètres |incx| et |incy| sont indispensables. Néanmoins,
-la plupart du temps, cette fonction servira pour des vecteurs dont les c{\oe}fficients sont contigüs en mémoire.
-Le rajout de ces deux paramètres dans l'appel de la fonction alourdit donc le code lors de son utilisation pour des vecteurs, puisqu'il faut à chaque fois rajouter deux paramètres valant un à la fonction, sans parler du risque de bogue en rajoutant ces deux paramètres (en mettant par erreur deux au lieu de un pour l'un des paramètres par exemple).
-
-Il est possible de fournir pour ces paramètres des valeurs par défaut ce qui permettra de les omettre lors d'un appel "usuel".
-
-Dans le cas de la fonction |axpy|, la majorité des appels à cette fonction passe pour paramètres |incx| et |incy| les valeurs un. On peut donc définir notre fonction en rajoutant pour ces deux paramètres un pour valeur par défaut :
-
-\begin{lstlisting}[caption=Valeurs par défaut pour la fonction axpy]
-void axpy(int N, auto a, const auto* x, auto* y, int incx = 1, int incy = 1)
-{
-    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
-}
-
-int main()
-{
-    const int N = 4;
-    double A[N][N] = { {1,2, 4,  8}, 
-                       {1,3, 9, 27},
-                       {1,4,16, 64},
-                       {1,5,25,125} };
-    double x[N] = {1,2,3,4};
-    double y[N] = {4,3,2,1};
-    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
-    axpy(N, -4., &A[0][0], &A[0][2], N, N); // incx = N, incy = N
-    // Rajout de la deuxième colonne à la quatrième ligne :
-    axpy(N, 1., &A[0][1], &A[3][0], N);// incx = N, incy = 1
-    // Rajout de la deuxième ligne à la quatrième colonne :
-    axpy(N, 1., &A[1][0], &A[0][3], 1, N); // incx = 1, incy = N
-    // Opération sur les vecteurs x et y :
-    axpy(4, 1., x, y); // incx = 1, incy = 1;
-
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-\underline{Remarques} :
-\begin{enumerate}
-    \item Les paramètres ayant des valeurs par défaut doivent \textbf{impérativement} être déclarée en dernier dans les paramètres de la fonction;
-    \item L'ordre des paramètres par défaut doit être respecté à l'appel : si un paramètre possédant une valeur par défaut doit être défini avec une valeur spécifique, \textbf{tous les paramètres précédents}, même ceux ayant une valeur par défaut, doivent également avoir une valeur spécifique définie par l'utilisateur. Ainsi, dans l'exemple ci--dessus, on ne peut pas définir une valeur différente de un pour |incy| sans définir explicitement la valeur un pour |incx| à l'appel !
-\end{enumerate}
-
-\subsection{Référence et passage par référence}
-
-\subsubsection{Les références}
-
-En C, il n'existe que deux manières d'accéder à une variable en mémoire, soit directement en lisant la valeur de la variable  ou via un pointeur représentant l'addresse du début de la mémoire occupée par la variable.
-
-\begin{lstlisting}
-int main()
-{
-    double x[] = {1., 2., 3. , 4.};
-    double y = x[0]; // On accède directement à la valeur de x[0];
-    double* pt_x1 = x + 1;// Pointe sur le deuxième élément du tableau x
-    double z = *pt_1; // Lis via le pointeur la valeur de deuxième élément du tableau x (déférencement)
-    return EXIT_SUCCESS;    
-}
-\end{lstlisting}
-
-En C++, il existe une troisième manière d'accéder à la valeur d'une variable : par référence. Techniquement, une référence n'est rien d'autre qu'un pointeur constant automatiquement déférencé. Plus prosaïquement, une référence est un alias (un nom) qu'on va donné à une variable en mémoire, même si elle est déjà nommée par le programme. Pour déclarée une référence, on utilise le symbole \&. Par exemple :
-
-\begin{lstlisting}[caption=Exemple de référence en C++]
-int main()
-{
-    int i = 3;
-    int& ii = i; // ii est un alias sur la variable i. C'est concrètement la même variable possédant deux noms différents
-    ii = 2; // Maintenant i et ii valent deux, puisque c'est la même variable !
-    const int& ci = i;    // Alias sur la variable, mais on ne pourra pas la changer via ci, seulement la lire.
-    ci = 3; // Erreur, ci est déclarée const.
-}
-\end{lstlisting}
-
-Puisqu'une référence crée un alias sur une variable, il est nécessaire de s'assurer que cette variable existe au moins tant que la référence sur cette variable existe. Ainsi, si il est parfaitement possible de retourner une référence à la sortie d'une fonction, il faut \textbf{que la variable retournée ne soit pas locale à la fonction sous peine de graves problèmes à l'exécution}.
-
-Ainsi, le code suivant est valide et ne pose aucun problème :
-
-\begin{lstlisting}{caption=Exemple complet et valide de retour d'une référence par une fonction}
-#include <iostream>
-
-int& max(int N, int* array)
-{   // Retourne une référence sur la valeur la plus grande du tableau
-    int imax = 0;
-    for ( int i = 1; i < N; ++i) {
-        if (array[i]>array[imax])
-            imax = i;
-    }
-    return array[imax];
-}
-
-void display_array(int N, const int* array )
-{
-    std::cout << "[ ";
-    for ( int i = 0; i < N; ++i ) std::cout << array[i] << " ";
-    std::cout << "]" << std::endl;
-}
-
-int main()
-{
-    const int N = 8;
-    int array[N] = {1,2,5,6,3,9,10,8};
-    display_array(N, array);
-
-    for ( int n = 0; n < 10; ++n ) {
-        int& a = max(N,array);
-        a = a - 1;
-        display_array(N, array);
-    }
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-Par contre, le code suivant va avoir un comportement aléatoire pouvant mener presque certainement à un plantage du code :
-
-\begin{lstlisting}{caption=Exemple invalide de retour d'une référence par une fonction}
-#include <iostream>
-#include <cmath>
-
-// La fonction n'est pas valide car on retourne 
-double& max_root_quadratic_function(double a, double b, double c)
-{
-  assert(a!= 0);
-  double delta = b*b-4*a*c;
-  double sol;
-  if (delta  < 0) sol = std::nan;
-  else if (delta == 0) sol =  -b/(2*a);
-  else sol = (-b+std::sqrt(delta))/2;
-
-  return sol; // Erreur, on retourne une variable locale en référence
-}
-
-int main()
-{
-    double& root = max_root_quadratif_function(1,2,-3);
-    std::cout << "Racine max de x²+2x-3 : " << root << std::endl;
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-En effet, la variable |sol| est locale à la fonction |max\_root\_quadratic\_function| et sera par conséquent détruite
-à la sortie de la fonction. La référence retournée sera donc une référence sur une variable qui n'existe plus !
-
-\subsubsection{Passage par référence}
-
-En C, pour éviter une copie d'une variable contenant beaucoup de données (typiquement une grosse structure de donnée),
-ou pour modifier à la sortie d'une fonction un argument passé à la fonction, il fallait obligatoirement passer par un pointeur :
-
-\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
-#include <iostream>
-
-void iter_syracuse(int* un)
-{
-    if ((*un)%2 == 0) (*un) /= 2;
-    else (*un) = (3*(*un)+1)/2;
-}
-
-int main()
-{
-    std::cout << "Suite de syracuse : ";
-    int n = 1433;
-    std::cout << n << " ";
-    while (n != 1)
-    {
-        iter_syracuse(&n);
-        std::cout << n << " ";
-    }
-    std::cout << std::endl;
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-Plusieurs remarques à propos du code C :
-\begin{enumerate}
-    \item La manipulation d'un pointeur dans la fonction la rend peu lisibile (confusion possible entre le signe multiplié et le symbole de déférencement);
-    \item Le code n'est pas sûr : que se passe-t'il si le pointeur est nul ? où bien pointe sur une variable qui n'existe pas ?
-\end{enumerate}
-
-On peut bien sûr vérifier que le pointeur est non nul à l'aide d'une assertion dans la fonction (valable aussi en C) :
-\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
-#include <iostream>
-#include <cassert>
-
-void iter_syracuse(int* un)
-{
-    // Précondition
-    // En mode debug, (-DDEBUG ou -g à la compilation), arrête le programme si la condition n'est pas vérifiée
-    assert(un != nullptr); 
-    assert((*un) > 0);
-
-    if ((*un)%2 == 0) (*un) /= 2;
-    else (*un) = (3*(*un)+1)/2;
-    // Postcondition
-    assert((*un) > 0);
-}
-\end{lstlisting}
-
-\underline{Remarques} : 
-\begin{enumerate}
-    \item À partir du C++ 11, la macro |NULL| du C a été remplacé avantageusement par un objet |nullptr| possédant son propre type. C'est particulièrement utile lors de l'écriture de fonctions template.
-    \item Rappelons qu'il est vivement conseillé d'utiliser des assertions dans son code, principalement pour les pré et post-conditions ! Cela permet de gagner un temps fou à la phase de débogage du code. 
-\end{enumerate}
-
-En C++, on peut remplacer avantageusement le pointeur par une référence pour le paramètre de la fonction :
-\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
-#include <iostream>
-#include <cassert
-
-void iter_syracuse(int& un)
-{
-    // Précondition
-    assert(un > 0);
-
-    if (un%2 == 0) un /= 2;
-    else un = (3*un+1)/2;
-
-    // Postcondition
-    assert(un > 0);
-}
-
-int main()
-{
-    std::cout << "Suite de syracuse : ";
-    int n = 1433;
-    std::cout << n << " ";
-    while (n != 1)
-    {
-        iter_syracuse(n);
-        std::cout << n << " ";
-    }
-    std::cout << std::endl;
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-Lors de l'appel à la fonction, le paramètre |un| devient un alias du paramètre |n| passé à la fonction. Par contre, il est obligatoire dans le cas d'une simple référence de passer une variable et non directement une valeur à la fonction, puisque
-|un| doit devenir un alias d'une variable. Ainsi |iter_syracuse(1433)| générerait une erreur du compilateur.
-
-L'usage de la référence dans la fonction a donc permis :
-\begin{enumerate}
-    \item D'écrire un code beaucoup plus clair puisqu'on n'utilise plus de symbole de déférencement;
-    \item D'avoir un code plus sûr puisque le mécanisme de la référence nous oblige à appeler la fonction avec une variable
-    pré-existante.
-\end{enumerate}
-
-Le deuxième usage de la référence, à l'instar des pointeurs, et de pouvoir passer un paramètre dont le type contient beaucoup
-de données sans effectuer une copie de ce paramètre à l'appel (rappelons que le C passe ses paramètres par valeur). 
-Passer en référence (ou en référence constante comme nous allons le voir ci--dessous), c'est l'équivalent de passer par adresse la variable. Néanmoins, il existe plusieurs situations où on ne désire pas que le paramètre passé par référence puisse être modifié par inadvertance par le programmeur. On utilise dans ce cas là une référence constante :
-
-\begin{lstlisting}[caption=Exemple d'utilisation de la référence constante]
-#include <iostream>
-#include <cmath>
-
-struct rational
-{
-    int nom;
-    unsigned denom;
-};
-
-inline double eval(const rational& r)
-{
-    return r.nom/double(r.denom);
-}
-
-rational approx_rationnal(double x, const rational& pn, const rational& qn, double tol = 1.E-6 )
-{
-    rational median{.nom=pn.nom+qn.nom,.denom=pn.denom+qn.denom};
-    double y = eval(median);
-    if (std::abs(x-y) < tol) return median;
-    if (y < x) return approx_rationnal(x, median, qn);
-    else return approx_rationnal(x, pn, median);
-}
-
-int main()
-{
-    double x = std::acos(-1);
-
-    auto rx = approx_rationnal(x, {.nom=int(x),.denom=1}, {.nom=int(x+1),.denom=1});
-    std::cout << "Approximation de " << x << " par un rationnel -> " << rx.nom << "/" << rx.denom << std::endl;
-
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-Plusieurs commentaires à faire sur ce code :
-\begin{enumerate}
-    \item Les paramètres de type |rational| ont bien été passés par référence afin d'éviter à chaque coup une copie de deux entiers;
-    \item La fonction |eval| a été déclarée |inline|. Cela permet d'éviter la surcharge d'un appel de fonction pour une fonction ne faisant presque rien. |inline| permet de remplacer l'appel de la fonction directement par le code machine assemblé pour la fonction. 
-    \item Dans la fonction |main|, nous avons passé deux rationnels en valeur directement dans l'appel de la fonction ce qui est interdit dans le cas d'un passage par référence simple mais permis dans le cas d'un passage par référence constante ! En fait, passer par référence constante assure qu'on ne peut pas modifier ce paramètre au sein de la fonction, et donc la fonction peut donc effectuer un alias en lecture seule avec les deux valeurs mises sur la pile d'appel (qu'on ne peut pas modifier).
-\end{enumerate}
-
-\subsection{Gestion de la mémoire et des tableaux}
-
-Il existe deux types d'allocation mémoire en C et C++ : 
+Pour les pointeurs, attention à l'usage du qualificateur |const| avec les pointeurs :
 \begin{itemize}
-    \item L'allocation statique : on alloue directement un tableau de taille prédéterminée dans le code. L'allocation est gérée par le compilateur. Attention, sur certains systèmes d'exploitation, la taille des tableaux pouvant être alloués 
-    statiquement est limitée par l'OS lui-même !
-    \item L'allocation dynamique : l'allocation ne se fait qu'au moment de l'exécution du programme. La taille du tableau à allouer n'est en général pas prédéterminée mais seulement connue au moment de l'exécution du programme.
+  \item Placé \textbf{avant le symbole} \verb@*@ désignant le pointeur, il signifie que le pointeur pointe sur une valeur
+        qu'il considère comme constant (même si elle ne l'est pas)
+  \item Placé \textbf{après le symbole} \verb@*@ désignant le pointeur, il signifie que le pointeur lui-même est constant,
+        il ne peut pas pointer par la suite sur une autre valeur. Par contre on peut modifier la valeur pointée.
+  \item Il est possible de placer le qualificateur |const| avant et après le symbole \verb@*@. Dans ce cas, on déclare
+        un pointeur constant qui pointe sur une valeur qu'il considère comme constant !
 \end{itemize}
+
+Ainsi :
+
+\begin{lstlisting}
+int a = 3, b = 4;
+const int c = 5;
+
+const int * pt_a = &a;
+*pt_a = -a; // Erreur de compilation ! a considéré constant par le pointeur
+pt_a = &b;  // Correct, le pointeur n'est pas constant
+
+int * const pt_b = &b;
+*pt_b = -b; // Correct, pt_b pointe sur une valeur considérée comme non constant
+pt_b = &a; // Erreur de compilation ! pt_b est un pointeur constant.
+
+int const* const pt_c = &a;
+*pt_c = -a; // Erreur de compilation ! a considéré constant par le pointeur
+pt_c = &b;  // Erreur de compilation ! le pointeur est constant
+
+int* pt_d = &c; // Erreur de compilation, on ne peut pas crée un pointeur sur une valeur non constante
+                // si la valeur pointée est constante. 
+\end{lstlisting}
+
+On peut voir qu'il est interdit de crée un pointeur sur une valeur non constant si on initialise ce pointeur sur une valeur constante. 
+
+Nous allons voir que C++ possède dans sa bibliothèque standard des pointeurs intelligents qui permettent d'allouer facilement un espace mémoire pour y stocker dynamiquement (c'est à dire durant l'exécution du programme) une valeur, mais aussi garantir qu'on ne peut pas libérer deux fois le même espace mémoire.
+
+\subsubsection{Pointeurs partagés}
+
+Les pointeurs partagés sont des pointeurs qui "comptent" le nombre de pointeurs qui pointent sur la même variable à l'aide d'une compteur de référence. 
+Lorsqu'on quitte un bloc d'instructions contenant un tel pointeur, ce pointeur décrémente le compteur de référence, et si le compteur atteint la valeur zéro (plus aucun pointeur ne pointe sur cette valeur), il libère l'espace mémoire réservée pour cette variable.
+
+On crée un tel pointeur en utilisant la fonction |std::make_shared| et en  spécifiant entre $<$ et $>$ le type de valeur pointée. La fonction réserve l'espace mémoire et initialise dans la foulée la valeur voulue en fonction des paramètres mis entre ses parenthèses.
+
+\begin{lstlisting}[caption=Exemple de création de pointeurs partagés]
+struct ficheEtudiant
+{
+    std::string prénom, nom;
+    std::int32_t âge, numéro_carte_étudiant, promotion;
+};
+...
+int main()
+{
+    auto pt_i1 = std::make_shared<int>(-4);
+    auto pt_fiche1 = std::make_shared<ficheEtudiant>("Gérard","Chambier", 32, 132493, 2022);
+    auto pt_fiche2 = std::make_shared<ficheEtudiant>();
+
+\end{lstlisting}
+
+Notons dans le cas de l'initialisation d'une structure pointée par un pointeur partagé, qu'on peut
+initialiser complètement ou pas du tout les champs de la structure mais qu'il est impossible 
+d'utiliser une initialisation partielle en désignant les champs initialisés. On verra 
+dans le chapître consacré à la programmation objet comment faire pour permettre de ne faire qu'une initialisation partielle.
+
+Notons également que dans ce cadre, le mot clef |auto| est utilisé à bon escient puisque
+|std::make_shared| renvoie bien un pointeur partagé et que respécifier, par exemple, que
+|pt_i1| est un pointeur partagé sur un entier ne ferait qu'alourdir et rendre le code moins lisible :
+\begin{lstlisting}[caption=Même exemple sans auto]
+int main()
+{
+    std::shared_ptr<int> pt_i1 = std::make_shared<int>(-4);
+    std::shared_ptr<ficheEtudiant> pt_fiche1 = 
+         std::make_shared<ficheEtudiant>("Gérard","Chambier", 32, 132493, 2022);
+    std::shared_ptr<ficheEtudiant> pt_fiche2 = std::make_shared<ficheEtudiant>();
+
+\end{lstlisting}
+
+Pour connaître le nombre de pointeurs faisant référence à une valeur pointée par un vecteur partagé,
+on utilise la méthode |use_count|. Voici un exemple d'utilisation :
+\begin{lstlisting}[caption=Lire le nombre de pointeur faisant référence à une valeur]
+auto pt_i = std::make_shared<int>(-4);
+std::cout << "Nombre de pointeur se référant à -4 : " << pt_i.use_count() << std::endl;
+{
+  auto pt_j = pt_i;
+  std::cout << "Nombre de pointeur se référant à -4 : " << pt_i.use_count() << std::endl;
+  {
+    auto pt_k = pt_j;
+    std::cout << "Nombre de pointeur se référant à -4 : " << pt_i.use_count() << std::endl;
+  }
+  std::cout << "Nombre de pointeur se référant à -4 : " << pt_i.use_count() << std::endl;
+}
+std::cout << "Nombre de pointeur se référant à -4 : " << pt_i.use_count() << std::endl;
+\end{lstlisting}
+
+qui affichera
+\begin{inverseverbatim}
+Nombre de pointeur se référant à -4 : 1
+Nombre de pointeur se référant à -4 : 2
+Nombre de pointeur se référant à -4 : 3
+Nombre de pointeur se référant à -4 : 2
+Nombre de pointeur se référant à -4 : 1
+\end{inverseverbatim}
+
+Vous pouvez trouver l'exemple complet dans \verb@Exemples/Pointeurs/shared_pointers.cpp\verb@.
+
+Signalons enfin qu'il est impossible de faire de l'arithmétique de pointeurs avec les pointeurs partagés.
+
+\subsubsection{Pointeurs uniques}
+
+Les pointeurs uniques sont des pointeurs qui garantissent qu'un et un seul pointeur à la fois peut pointer sur une valeur spécifique en mémoire. Il est ainsi impossible d'avoir une copie d'un vecteur unique. Un pointeur unique en C++ est de type |std::unique_ptr| et comme pour les pointeurs partagés,
+on spécifie le type de la variable pointée entre $<$ et $>$. 
+
+Comme pour le pointeur partagé, il est possible à la fois de réserver et d'initialiser la variable
+qui sera pointée par le pointeur unique grâce à la fonction |std::make_unique|.
+
+\begin{lstlisting}[caption=Exemple d'utilisation des pointeurs uniques]
+struct ficheEtudiant
+{
+    std::string prénom, nom;
+    std::int32_t âge, numéro_carte_étudiant, promotion;
+};
+...
+int main()
+{
+    auto pt_i = std::make_unique<int>(-4);
+    auto pt_j = std::make_unique<int>();
+    auto pt_fiche1 = std::make_unique<ficheEtudiant>("Robert", "Chambier", 24, 135395, 2022);
+    auto pt_fiche2 = std::make_unique<ficheEtudiant>();
+}
+\end{lstlisting}
+
+Là encore, il est possible d'initialiser une structure à condition d'initialiser tout ses champs.
+
+Comme dit plus haut, il est impossible de recopier un pointeur unique dans un autre pointeur unique.
+Il est par contre possible de \textsl{déplacer} les données d'un pointeur dans un autre pointeur unique. Cela veut dire que le pointeur \textsl{déplacé} perdra sa référence sur la valeur pointée.
+Ainsi :
+\begin{lstlisting}
+std::unique_ptr<int> pt_k = pt_i; // Erreur de compilation, copie interdite !
+std::unique_ptr<int> pt_l = std::move(pt_i);// OK, on déplace les données de pt_i dans pt_l
+\end{lstlisting}
+
+Nous avons introduit ici une nouvelle fonction qui permet, non pas de copier la valeur d'une variable
+dans une autre variable, mais de \textsl{déplacer} la valeur d'une variable dans une autre. Ici, après appel de la fonction |std::move|, |pt_i| a perdu sa référence sur la variable |i|. C'est maintenant |pt_l| qui contient la référence. 
+
+Nous reviendrons plus en détail sur ces opérations de déplacement qui permettent depuis C++ 11
+de simplifier l'interface et de mieux optimiser les codes C++.
+
+\subsection{Les références}
+
+Nous avons vu deux manières de lire ou modifier une valeur : soit un stockant directement cette valeur
+en mémoire à l'aide d'une variable, soit en stockant dans un pointeur l'adresse du début de la mémoire occupée par cette valeur. Remarquons que dans le deuxième cas, il faut d'une manière ou d'une autre (à l'aide d'une variable ou bien avec l'allocation dynamique qu'on verra plus loin ) qu'on ait réservé
+de la mémoire pour stocker cette valeur avant de pointer dessus.
+
+Il existe une troisième façon d'accéder à une valeur : par référence. Cette manière d'accèder à une valeur peut-être vu comme un "mixte" des deux autres accès : une référence ne permet pas de réserver et de stocker une valeur directement, elle doit pour cela faire référence à une variable ou un emplacement mémoire où la valeur est stockée (comme pour un pointeur), mais elle permet également d'accéder directement à la valeur à la manière d'une variable sans devoir passer par un opérateur de déférencement. Comme son nom l'indique, une référence fait référence à une valeur, en aucun cas elle ne la stocke. De plus, une référence ne peut pas changer de valeur à référer, contrairement à un pointeur !
+
+Le symbole pour définir une référence est le symbole |&|, accolé (ou non) au type. Elle doit être obligatoirement initialisée à sa déclaration sur la valeur dont elle doit faire référence.
+
+\begin{lstlisting}
+int i = 3;
+int& j = i; // j fait référence à i
+j = 4;      // i et j valent maintenant 4 !
+\end{lstlisting}
+
+Il est possible de définir des références avec une déduction automatique du type.
+Dans le cadre des déductions implicites, il suffit de rajouter le symbole |&| juste après |auto|.
+Dans le cadre des déductions explicites, il faut rajouter des parenthèses autour de l'expression
+qui permet de déduire le type :
+
+\begin{lstlisting}[caption=Exemple de référence avec déduction de type automatique]
+int i = 3;
+auto& j = i; // j fait référence à i et est de même type
+decltype(i) k = i; // k est une variable recopiant la valeur de i
+decltype((i)) l = i; // l est une référence à i.
+\end{lstlisting}
+
+Comme on peut le constater, il est important de ne pas mettre de parenthèse en moins ou en trop
+lors de la déclaration explicite d'un type ! 
+
+Attention, il ne faut pas croire qu'une référence est attachée à une variable ! Elle est attachée à une valeur à une certaine
+position dans la mémoire.
+
+Ainsi, considérons le code suivant :
+\begin{lstlisting}
+auto pt_x = std::make_unique<double>(0.303);
+auto pt_y = std::make_unique<double>(0.0);
+double& x = *pt_x;
+
+std::cout << "*pt_x = " << *pt_x << ", *pt_y = " << *pt_y << " et x = " << x << std::endl;
+x = -0.303;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+*pt_x = 0.404;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+*pt_y = -1.;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+std::swap(pt_x,pt_y);
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+x = 1.414;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+*pt_x = 2.15;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+*pt_y = 2.28;
+std::cout << "*pt_x = " << *pt_x << ", pt_y = " << *pt_y << " et x = " << x << std::endl;
+\end{lstlisting}
+
+On aura pour résultat à l'affichage :
+
+\begin{inverseverbatim}
+*pt_x = 0.303, *pt_y = 0 et x = 0.303
+*pt_x = -0.303, *pt_y = 0 et x = -0.303
+*pt_x = 0.404, *pt_y = 0 et x = 0.404
+*pt_x = 0.404, *pt_y = -1 et x = 0.404
+*pt_x = -1, *pt_y = 0.404 et x = 0.404
+*pt_x = -1, *pt_y = 1.414 et x = 1.414
+*pt_x = 2.15, *pt_y = 1.414 et x = 1.414
+*pt_x = 2.15, *pt_y = 2.28 et x = 2.28
+\end{inverseverbatim}
+
+ce qui montre bien que la référence |x| ici est bien attachée à une valeur en mémoire (qui peut être modifiée)
+et non à une variable !
+
+Nous verrons une utilisation des références lors de l'appel de fonctions.
+
+\section{Les tableaux}
+
+\subsection{Gestion statique contre gestion dynamique}
+
+En C++, il existe deux façon de réserver de la mémoire sur un ordinateur :
+\begin{itemize}
+  \item \textbf{L'allocation statique} : la place mémoire nécessaire aux données qu'on veut stocker (variable ou autre) est connu à la compilation. C'est donc le compilateur qui lors de la création de l'exécutable, réservera l'espace nécessaire pour stocker les données dans l'exécutable lui-même;
+  \item \textbf{L'allocation dynamique} : la place mémoire nécessaire aux données qu'on veut stocker n'est pas connu au moment de la compilation. La réservation de l'espace mémoire se fera donc durant l'exécution du programme, à l'aide d'instructions spécifiques permettant cette allocation. 
+\end{itemize}
+
+L'allocation statique ne coûte rien en terme de temps d'exécution, au contraire de l'allocation dynamique qui doit faire appel aux services du système d'exploitation pour obtenir un espace mémoire réservé et protégé (des autres applications).
+
+Par contre, sur certains systèmes d'exploitation (en particuliers Windows\ldots), l'allocation statique est limitée à une taille mémoire qui dépend du système d'exploitation (sous Windows, selon la version du processeur et de Windows, cette limitation est entre 256ko et 512ko). Il est donc préférable d'utiliser l'allocation statique que pour de petites quantités !
+
+\subsection{Gestion dynamique de la mémoire}
+
+Il est possible de gérer dynamiquement la réservation et l'initialisation de variables.
+Pour cela on utilise l'instruction |new| qui permet d'allouer et d'éventuellement initialiser une variable.
+
+La syntaxe de |new| est très simple : |pointeur = new type_name;| où |type_name| est le type de variable qu'on
+veut réserver dynamiquement.
+
+Il est également possible d'initialiser la variable. Dans ce cas, la syntaxe de |new| est : |pointeur = new type_name(arguments)| où |arguments| sont les arguments permettant d'initialiser la valeur.
+
+Par exemple :
+\begin{lstlisting}
+auto pt_int = new int; // On crée dynamiquement un entier pointé par pt_int
+auto pt_float = new float; // Idem pour un float pointé par pt_float
+auto pt_fiche = new ficheEtudiant; // On crée dynamiquement une valeur de type ficheEtudiant
+
+auto pt_int2  = new int(3);// Crée dynamiquement entier valant 3 pointé par pt_int2
+auto pt_float2= new float(3.14);// idem float valant 3.14 pointé par pt_float2
+// Initialisation dynamique d'une nouvelle fiche d'étudiant
+auto pt_fiche2= new ficheEtudiant("Robert"s, "Chambier"s, 32, 345341, 2022);
+\end{lstlisting}
+
+Qui dit création dynamique dit également destruction dynamique ! Une variable créée dynamiquement ne se détruira
+pas et ne libérera pas la mémoire automatiquement. C'est à la charge du programmeur de détruire cette variable.
+C'est le rôle de l'instruction |delete|.
+
+Ainsi, en prenant l'exemple de création dynamique ci-dessus, on peut détruire et libérer la mémoire prise par ses
+variables par :
+\begin{lstlisting}
+delete pt_fiche2;
+delete pt_float2;
+delete pt_int2;
+delete pt_fiche;
+delete pt_float;
+delete pt_int;
+\end{lstlisting}
+
+Remarquons que la destruction des variables a été sciemment faite dans le sens contraire de leur création. Ce n'est
+bien sûr par obligatoire, mais c'est conseillé pour ne pas laisser de "trous" inutiles en mémoire qui pénaliserait
+la place mémoire occupée par l'exécutable (mais c'est un sujet un peu complexe à aborder).
+
+Attention à bien libérer la place mémoire avant de perdre le dernier pointeur sur cette valeur. Sinon, il est impossible
+d'accèder à la valeur en mémoire qui restera en mémoire jusqu'à la fin de l'exécution du programme. C'est ce qu'on appelle
+une fuite mémoire (memory leak en anglais). Si cette "fuite mémoire" se fait dans une partie du code appelée très souvent et
+régulièrement, la place mémoire prise par l'exécutable deviendra de plus en plus grande jusqu'à ce que le programme "plante" faute de place mémoire. Ce type d'erreur est très difficile à trouver, et des utilitaires comme |valgrind| sous Linux sont une aide très précieuse pour détecter ce type d'erreur !
+
+\subsection{Autre façon de gérer la mémoire dynamiquement}
+
+Si les instructions |new| et |delete| étaient indispensables avant le C++ 11, elles le sont bien moins depuis !
+En effet, nous avons vu qu'il existait des pointeurs partagés et uniques qui s'occupent de la réservation mémoire
+et de l'initialisation des variables.
+
+L'avantage de ces pointeurs est qu'ils vous garantissent qu'il ne peut y avoir de fuite mémoire dans votre programme si vous les utilisez. En effet, ils détruisent et libèrent automatiquement une valeur dès qu'il n'y a plus de pointeurs sur cette valeur !
+
+Ainsi, on aurait pu avantageusement remplacer l'allocation vu précédemment avec |new| par :
+\begin{lstlisting}
+auto pt_int = std::make_shared<int>(); 
+auto pt_float = std::make_shared<float>();
+auto pt_fiche = std::make_shared<ficheEtudiant>;
+
+auto pt_int2  = std::make_shared<int>(3);
+auto pt_float2= std::make_shared<float>(3.14);
+auto pt_fiche2= std::make_shared<ficheEtudiant>("Robert"s, "Chambier"s, 32, 345341, 2022);
+\end{lstlisting}
+
+La désallocation de ces variables se fera automatiquement et permet ainsi une simplification du code tout en le rendant
+moins sensibles aux fuites mémoires !
+
+\underline{Remarque} : On aurait pu remplacer |std::make_shared| par |std::make_unique| si on sait qu'un seul pointeur
+
 
 \subsubsection{Gestion statique de la mémoire}
 
@@ -1840,6 +1681,510 @@ for ( int i = 0; i < 10; ++i )
     an_array.push_back(3.1415*i);
 // Le tableau aura bien 10 éléments à la fin avec une seule allocation avec l'appel à reserve
 \end{lstlisting}
+
+\section{Les fonctions}
+
+Une fonction est une entité qui peut prendre en entrée des paramètres, 
+exécute un algorithme et retourne éventuellement une valeur. La syntaxe
+pour déclarer une fonction est \verb@[type retour] [nom fonction]([liste de paramètres]);@.
+On déclare typiquement une fonction dans un header (un fichier avec l'extension |.hpp|).
+Pour définir une fonction, c'est à dire mettre en {\oe}uvre l'algorithme permettant à la fonction
+de remplir son contrat, la syntaxe ressemblera à
+\begin{verbatim}
+[type retour] [nom fonction]([liste paramètres])
+{
+  // Bloc d'instructions
+}
+\end{verbatim}
+
+La définition sera écrite dans le fichier |.cpp| correspondant au fichier contenant la déclaration.
+
+Ainsi, si on a écrit une fonction permettant de calculer la racine d'un entier en renvoyant l'entier le plus proche de la racine de ce nombre, on déclarera la fonction dans un header, par exemple
+|imath.hpp| :
+\begin{lstlisting}[caption=Fichier imath.hpp]
+#ifndef _IMATH_HPP_
+#define _IMATH_HPP_
+
+int sqrt(int i);
+
+#endif
+\end{lstlisting}
+et le corps de la fonction dans le fichier |imath.cpp| :
+\begin{lstlisting}[caption=Fichier imath.cpp]
+#include "imath.hpp"
+
+int sqrt(int i)
+{
+  ... // L'algorithme pour calculer la racine entière
+}
+\end{lstlisting}
+
+Le include dans le fichier |imath.cpp| n'est pas nécessaire mais permet néanmoins
+de s'assurer que la signature de la fonction (ses arguments) est la même dans le
+header que dans le fichier de mise en {\oe}uvre.
+
+Le corps de la fonction, aux arguments près, ressemble beaucoup au |main| vu depuis le début. |main| est en fait une fonction, la fonction principale qui sera toujours appelée
+en premier à l'exécution.
+
+En général, un header ne va pas contenir une seule fonction, mais plusieurs fonctions
+regroupée autour d'un même thème. Par exemple, on pourra déclarer et mettre en {\oe}uvre
+dans |imath| toutes les fonctions effectuant des calculs sur les entiers : puissance nième d'un entier, test de primalité, développement p-adique d'un entier, résolution d'équations sur $\mathbb{N}$, etc.
+
+On pourra également regrouper une structure et toutes les fonctions effectuant des traitements sur cette structure au sein d'un même fichier d'entête.
+
+\subsection{Surcharge de fonctions}
+
+Il arrive souvent, en calcul scientifique en particuliers, de devoir écrire plusieurs versions d'une même fonction pour des types différents. Par exemple, en algébre linéaire, il est utile d'avoir une fonction permettant de faire l'opération $y\leftarrow y + a.x$
+où $x$ et $y$ sont des vecteurs d'un certain espace vectoriel $\mathbb{K}^{n}$ (où
+$\mathbb{K}$ est un corps tel que les rationnels, les réels, les complexes,
+$\mathbb{Z}/p.\mathbb{Z}$ ($p$ premier), etc. et $a$ un scalaire appartenant au corps 
+$\mathbb{K}$.
+
+On aimerait pouvoir écrire des fonctions pour cette opérations pour au moins trois types de scalaires différents en C++ : les réels simple précision, les réels double précision, les complexes simple précision et les complexes double précision. Dans un langage tel que le Fortran ou le C, nous serions obligé d'appeler ces quatre fontions par des noms différents ( et de fait, dans la bibliothèque d'algébre linéaire BLAS, les quatre fonctions effectuant cette opération sur les quatre types de scalaires suscités sont nommées saxpy, daxpy, caxpy et zaxpy). En C++, il est possible d'appeler ces quatre fonctions par le même nom, du moment que le type ou le nombre de paramètre est différent. Lors de l'appel de la fonction, le type ou le nombre de paramètres passés permettra sans ambigüité au compilateur de savoir quel fonction appelée.
+
+Ainsi en C++, il est possible d'écrire les deux fonctions ci--dessus :
+
+\begin{lstlisting}[caption=Exemple de surcharge d'une fonction C++]
+// Fonction avec flottants simple précision
+void axpy(int N, float a, const float* x, float* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+// Fonction avec flottants double précision
+void axpy(int N, double a, const double* x, double* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+Ici, le compilateur décidera quelle fonction appeler en fonction du type des paramètres passés, ainsi
+\begin{lstlisting}[caption=Appel à des fonctions surchargées]
+void main()
+{
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fontion avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Erreur de compilation, mélange simple et double précision !
+                        // Le compilateur ne peut décider quel fonction appeler...
+}
+\end{lstlisting}
+
+Il est important de bien respecter le type des paramètres passés à l'appel de la fonction sous peine d'avoir des erreurs de compilation parfois fort peu compréhensibles !
+
+Nous verrons au chapitre des templates qu'il peut être important d'appeler des fonctions faisant le même traitement mais avec des types différents par le même nom.
+
+\subsection{Fonction générique (C++ 2020)}
+
+Si on observe attentivement les codes écrits dans leurs versions simple ou double précision
+(mais également en complexe), on se fera vite la remarque que ces fonctions possèdent exactement le même code, au type de variable près !
+
+Une possibilité serait de définir un type en amont de la fonction, qu'on pourrait changer selon le besoin :
+\begin{lstlisting}
+using scalar_t = double;
+
+...
+
+void axpy(int N, scalar_t a, const scalar_t* x, scalar_t* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+Tant que le code utilisant cette fonction ne s'en sert que pour un type de scalaire, c'est une solution viable, bien que peu pratique (il faut penser à modifier le type de |scalar_t| pour chaque nouveau programme qu'on veut compiler), mais comment faire dès lors qu'une application a besoin de la fonction pour différents types de scalaires ?
+
+C'est là que la notion de fonction générique intervient. Une fonction générique est une sorte de patron (template) de fonction, sur lequel le compilateur va s'appuyer pour générer des fonctions selon les types de paramètres passés à la fonction. Si on passe des réels simple précision, une fonction sera générée pour considérer des réels simples précisions,
+si des doubles sont employées, une fonction sera générée pour considérer des réels double précisions, etc.
+
+Nous verrons plus loin dans le cours un moyen de faire cela en C++, depuis la première norme de C++, à l'aide des patrons (template) qui sont un concept donnant une grande puissance au langage C++ mais aussi les plus beaux mal de tête du monde ! (On peut faire des choses très (trop ?) complexes avec les templates). Mais depuis C++ 20, il est possible
+à l'aide d'une écriture bien plus simple d'écrire des fonctions génériques, et cela grâce
+au mot clef |auto| !
+
+\begin{lstlisting}[caption=utilisation du mot clef auto pour déclarer les paramètres de la fonction]
+// Fonction générique pour tout type de vecteur
+void axpy(int N, auto a, const auto x, auto y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    for (int i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+void main()
+
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fonction avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Appel la fonction avec a en simple précision, dx et dy en double
+}
+\end{lstlisting}
+
+Ici la fonction \texttt{axpy} a été généralisée pour prendre n'importe quel type pour \texttt{a, x} et \texttt{y}.
+Au fur et à mesure des différents appels à cette fonction "générique", le compilateur produire plusieurs versions de la fonction qui prendra en paramètre les divers types passés pour \texttt{a, x} et \texttt{y}. Ainsi, dans l'exemple ci-dessus,
+trois versions de la fonction seront générées : une avec trois réels simple précision, une avec trois réels double précision et la dernière avec |a| réel simple précision et |x| et |y| déclarées comme réels double précision.
+
+Les types (qui peuvent être tous différents) de \texttt{a, x} et \texttt{y}
+seront valides tant que l'opération |y[i] += a*x[i]| reste valide pour les types passés pour les trois arguments. Ainsi la ligne suivante ne compilera pas :
+
+\begin{lstlisting}
+void main()
+{
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, "toto", dx, dy); // Ne compile pas ! Pas de sens de faire y[i] += "toto"*x[i]  
+}
+\end{lstlisting}
+
+\underline{Remarque} : Si le mot clef |auto| en C++ 20 permet de créer facilement des fonctions génériques, il ne permet pas un contrôle fin des types permis contrairement aux templates que l'on verra plus tard. Néanmoins, dans beaucoup de cas, cette
+généricité est suffisante et bien plus légère à l'écriture que les templates\ldots
+
+Par contre, si vous avez défini ce que veut dire par exemple la multiplication d'un entier
+avec une chaîne de caractère (ce qui est possible en C++, on verra cela plus loin lorsqu'on parlera des opérateurs), il est tout à fait légitime d'écrire la ligne suivante :
+\begin{lstlisting}
+axpy(4, 3, "toto"s, "titi"s);
+\end{lstlisting}
+
+Bien sûr, il est déconseillé de le faire, car cela rajoute plus de confusion au code qu'autre chose...
+
+\subsubsection{Valeur par défaut}
+
+Si nous pouvons déjà être satisfait de notre fonction "générique", on pourra vous faire
+néanmoins remarquer que si votre fonction s'applique bien à des vecteurs dont les c{\oe}fficients sont contigüs en mémoire, votre fonction ne pourra effectuer son opération dès lors que les c{\oe}fficients de votre vecteur sont espacés régulièrement en mémoire. Par exemple, si vous avez une matrice rangée par ligne (l'indice des colonnes varie le plus vite), vous pouvez souhaiter effectuer votre opération |axpy| sur deux colonnes de votre matrice. Seulement, les coefficients sont alors espacés du nombre de colonnes que possède votre matrice ! Pour généraliser votre fonction aux vecteurs lignes ou colonnes des matrices, il suffit donc de rajouter deux paramètres, |incx| et |incy| qui vous donnent
+le nombre d'éléments à "sauter" pour trouver le prochain c{\oe}fficient d'un des deux vecteurs.
+
+Votre fonction devient donc :
+\begin{lstlisting}[caption=Généralisation de la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx, int incy)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(4, -4., A, A+2, N, N);
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(4, 1., A+1, &A[3][0], N, 1]);
+}
+\end{lstlisting}
+
+Pour l'exemple donné ci--dessus, il est clair que les paramètres |incx| et |incy| sont indispensables. 
+Néanmoins, cela alourdit votre code, principalement pour les vecteurs dont les éléments sont contigüs en mémoire, ce qui représente la majorité des cas rencontrés. En effet, 
+il faut à chaque fois pour ce dernier cas, rajouter deux paramètres valant un à la fonction, sans parler du risque de bogue en rajoutant ces deux paramètres (en mettant par erreur deux au lieu de un pour l'un des paramètres par exemple).
+
+Heureusement, C++ prévoit ces cas, et il est possible de fournir pour ces paramètres des valeurs par défaut ce qui permettra de les omettre lors d'un appel "usuel".
+
+Dans le cas de la fonction |axpy|, on vient de voir que dans la majorité des appels à cette fonction, les paramètres |incx| et |incy| valent un. On peut donc définir notre fonction en rajoutant pour ces deux paramètres un pour valeur par défaut :
+\begin{lstlisting}[caption=Valeurs par défaut pour la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx = 1, int incy = 1)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    double x[N] = {1,2,3,4};
+    double y[N] = {4,3,2,1};
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(N, -4., &A[0][0], &A[0][2], N, N); // incx = N, incy = N
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(N, 1., &A[0][1], &A[3][0], N);// incx = N, incy = 1
+    // Rajout de la deuxième ligne à la quatrième colonne :
+    axpy(N, 1., &A[1][0], &A[0][3], 1, N); // incx = 1, incy = N
+    // Opération sur les vecteurs x et y :
+    axpy(4, 1., x, y); // incx = 1, incy = 1;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\underline{Remarques} :
+\begin{enumerate}
+    \item Les paramètres ayant des valeurs par défaut doivent \textbf{impérativement} être déclarée en dernier dans les paramètres de la fonction;
+    \item L'ordre des paramètres par défaut doit être respecté à l'appel : si un paramètre possédant une valeur par défaut doit être défini avec une valeur spécifique, \textbf{tous les paramètres précédents}, même ceux ayant une valeur par défaut, doivent également avoir une valeur spécifique définie par l'utilisateur. Ainsi, dans l'exemple ci--dessus, on ne peut pas définir une valeur différente de un pour |incy| sans définir explicitement la valeur un pour |incx| à l'appel !
+\end{enumerate}
+
+\subsection{Passage par référence}
+
+CONTINUER ICI, SEPARER PASSAGE ET RETOUR PAR REFERENCE
+
+Nous avons vu deux manières de lire ou modifier une valeur : soit un stockant directement   cette valeur
+en mémoire à l'aide d'une variable, soit en stockant dans un pointeur l'adresse du début de la mémoire occupée par cette valeur. Remarquons que dans le deuxième cas, il faut d'une manière ou d'une autre (à l'aide d'une variable ou bien avec l'allocation dynamique qu'on verra plus loin ) qu'on ait réservé
+de la mémoire pour stocker cette valeur avant de pointer dessus.
+
+Il existe une troisième façon d'accéder à une valeur : par référence. Cette manière d'accèder à une valeur peut-être vu comme un "mixte" des deux autres accès : une référence ne permet pas de réserver et de stocker une valeur directement, elle doit pour cela faire référence à une variable ou un emplacement mémoire où la valeur est stockée (comme pour un pointeur), mais elle permet également d'accéder directement à la valeur à la manière d'une variable sans devoir passer par un opérateur de déférencement. 
+
+En C, il n'existe que deux manières d'accéder à une variable en mémoire, soit directement en lisant la valeur de la variable  ou via un pointeur représentant l'addresse du début de la mémoire occupée par la variable.
+
+\begin{lstlisting}
+int main()
+{
+    double x[] = {1., 2., 3. , 4.};
+    double y = x[0]; // On accède directement à la valeur de x[0];
+    double* pt_x1 = x + 1;// Pointe sur le deuxième élément du tableau x
+    double z = *pt_1; // Lis via le pointeur la valeur de deuxième élément du tableau x (déférencement)
+    return EXIT_SUCCESS;    
+}
+\end{lstlisting}
+
+En C++, il existe une troisième manière d'accéder à la valeur d'une variable : par référence. 
+
+Techniquement, une référence n'est rien d'autre qu'un pointeur constant automatiquement déférencé. Plus prosaïquement, une référence est un alias (un nom) qu'on va donner à une variable en mémoire, même si elle est déjà nommée par le programme. Pour déclarer une référence, on utilise le symbole \&. Par exemple :
+
+\begin{lstlisting}[caption=Exemple de référence en C++]
+int main()
+{
+    int i = 3;
+    // ii est un alias sur la variable i.
+    int& ii = i; 
+    /********************************************************
+     *   ii et i représentent concrètement la même variable *
+     * qui posséde deux noms différents                     *
+     ********************************************************/
+    ii = 2; // Maintenant i et ii valent deux, puisque c'est la même variable !
+    /************************************************
+     * Alias sur la variable, mais on ne pourra pas *
+     * la changer via ci, seulement la lire.        *
+     ************************************************/
+    const int& ci = i;    
+    ci = 3; // Erreur, ci est déclarée const.
+}
+\end{lstlisting}
+
+Puisqu'une référence crée un alias sur une variable, il est nécessaire de s'assurer que cette variable existe au moins tant que la référence sur cette variable existe. Ainsi, si il est parfaitement possible de retourner une référence à la sortie d'une fonction, il faut \textbf{que la variable retournée ne soit pas locale à la fonction sous peine de graves problèmes à l'exécution}.
+
+Ainsi, le code suivant est valide et ne pose aucun problème :
+
+\begin{lstlisting}{caption=Exemple complet et valide de retour d'une référence par une fonction}
+#include <iostream>
+
+int& max(int N, int* array)
+{   // Retourne une référence sur la valeur la plus grande du tableau
+    int imax = 0;
+    for ( int i = 1; i < N; ++i) {
+        if (array[i]>array[imax])
+            imax = i;
+    }
+    return array[imax];
+}
+
+void display_array(int N, const int* array )
+{
+    std::cout << "[ ";
+    for ( int i = 0; i < N; ++i ) std::cout << array[i] << " ";
+    std::cout << "]" << std::endl;
+}
+
+int main()
+{
+    const int N = 8;
+    int array[N] = {1,2,5,6,3,9,10,8};
+    display_array(N, array);
+
+    for ( int n = 0; n < 10; ++n ) {
+        int& a = max(N,array);
+        a = a - 1;
+        display_array(N, array);
+    }
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Par contre, le code suivant va avoir un comportement aléatoire pouvant mener presque certainement à un plantage du code :
+
+\begin{lstlisting}{caption=Exemple invalide de retour d'une référence par une fonction}
+#include <iostream>
+#include <cmath>
+
+// La fonction n'est pas valide car on retourne 
+double& max_root_quadratic_function(double a, double b, double c)
+{
+  assert(a!= 0);
+  double delta = b*b-4*a*c;
+  double sol;
+  if (delta  < 0) sol = std::nan;
+  else if (delta == 0) sol =  -b/(2*a);
+  else sol = (-b+std::sqrt(delta))/2;
+
+  return sol; // Erreur, on retourne une variable locale en référence
+}
+
+int main()
+{
+    double& root = max_root_quadratif_function(1,2,-3);
+    std::cout << "Racine max de x²+2x-3 : " << root << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+En effet, la variable |sol| est locale à la fonction |max\_root\_quadratic\_function| et sera par conséquent détruite à la sortie de la fonction. La référence retournée sera donc une référence sur une variable qui n'existe plus !
+
+\subsubsection{Passage par référence}
+
+En C, pour éviter une copie d'une variable contenant beaucoup de données (typiquement une grosse structure de donnée), ou pour modifier à la sortie d'une fonction un argument passé à la fonction, il fallait obligatoirement passer par un pointeur :
+
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+
+void iter_syracuse(int* un)
+{
+    if ((*un)%2 == 0) (*un) /= 2;
+    else (*un) = (3*(*un)+1)/2;
+}
+
+int main()
+{
+    std::cout << "Suite de syracuse : ";
+    int n = 1433;
+    std::cout << n << " ";
+    while (n != 1)
+    {
+        iter_syracuse(&n);
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Plusieurs remarques à propos du code C :
+\begin{enumerate}
+    \item La manipulation d'un pointeur dans la fonction la rend peu lisibile (confusion possible entre le signe multiplié et le symbole de déférencement);
+    \item Le code n'est pas sûr : que se passe-t'il si le pointeur est nul ? où bien pointe sur une variable qui n'existe pas ?
+\end{enumerate}
+
+On peut bien sûr vérifier que le pointeur est non nul à l'aide d'une assertion dans la fonction (valable aussi en C) :
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+#include <cassert>
+
+void iter_syracuse(int* un)
+{
+    // Précondition
+    // En mode debug, (-DDEBUG ou -g à la compilation), arrête le programme si la condition n'est pas vérifiée
+    assert(un != nullptr); 
+    assert((*un) > 0);
+
+    if ((*un)%2 == 0) (*un) /= 2;
+    else (*un) = (3*(*un)+1)/2;
+    // Postcondition
+    assert((*un) > 0);
+}
+\end{lstlisting}
+
+\underline{Remarques} : 
+\begin{enumerate}
+    \item À partir du C++ 11, la macro |NULL| du C a été remplacé avantageusement par un objet |nullptr| possédant son propre type. C'est particulièrement utile lors de l'écriture de fonctions template.
+    \item Rappelons qu'il est vivement conseillé d'utiliser des assertions dans son code, principalement pour les pré et post-conditions ! Cela permet de gagner un temps fou à la phase de débogage du code. 
+\end{enumerate}
+
+En C++, on peut remplacer avantageusement le pointeur par une référence pour le paramètre de la fonction :
+\begin{lstlisting}[caption=fonction C avec modification des arguments d'entrée]
+#include <iostream>
+#include <cassert
+
+void iter_syracuse(int& un)
+{
+    // Précondition
+    assert(un > 0);
+
+    if (un%2 == 0) un /= 2;
+    else un = (3*un+1)/2;
+
+    // Postcondition
+    assert(un > 0);
+}
+
+int main()
+{
+    std::cout << "Suite de syracuse : ";
+    int n = 1433;
+    std::cout << n << " ";
+    while (n != 1)
+    {
+        iter_syracuse(n);
+        std::cout << n << " ";
+    }
+    std::cout << std::endl;
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Lors de l'appel à la fonction, le paramètre |un| devient un alias du paramètre |n| passé à la fonction. Par contre, il est obligatoire dans le cas d'une simple référence de passer une variable et non directement une valeur à la fonction, puisque
+|un| doit devenir un alias d'une variable. Ainsi |iter_syracuse(1433)| générerait une erreur du compilateur.
+
+L'usage de la référence dans la fonction a donc permis :
+\begin{enumerate}
+    \item D'écrire un code beaucoup plus clair puisqu'on n'utilise plus de symbole de déférencement;
+    \item D'avoir un code plus sûr puisque le mécanisme de la référence nous oblige à appeler la fonction avec une variable
+    pré-existante.
+\end{enumerate}
+
+Le deuxième usage de la référence, à l'instar des pointeurs, et de pouvoir passer un paramètre dont le type contient beaucoup
+de données sans effectuer une copie de ce paramètre à l'appel (rappelons que le C passe ses paramètres par valeur). 
+Passer en référence (ou en référence constante comme nous allons le voir ci--dessous), c'est l'équivalent de passer par adresse la variable. Néanmoins, il existe plusieurs situations où on ne désire pas que le paramètre passé par référence puisse être modifié par inadvertance par le programmeur. On utilise dans ce cas là une référence constante :
+
+\begin{lstlisting}[caption=Exemple d'utilisation de la référence constante]
+#include <iostream>
+#include <cmath>
+
+struct rational
+{
+    int nom;
+    unsigned denom;
+};
+
+inline double eval(const rational& r)
+{
+    return r.nom/double(r.denom);
+}
+
+rational approx_rationnal(double x, const rational& pn, const rational& qn, double tol = 1.E-6 )
+{
+    rational median{.nom=pn.nom+qn.nom,.denom=pn.denom+qn.denom};
+    double y = eval(median);
+    if (std::abs(x-y) < tol) return median;
+    if (y < x) return approx_rationnal(x, median, qn);
+    else return approx_rationnal(x, pn, median);
+}
+
+int main()
+{
+    double x = std::acos(-1);
+
+    auto rx = approx_rationnal(x, {.nom=int(x),.denom=1}, {.nom=int(x+1),.denom=1});
+    std::cout << "Approximation de " << x << " par un rationnel -> " << rx.nom << "/" << rx.denom << std::endl;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+Plusieurs commentaires à faire sur ce code :
+\begin{enumerate}
+    \item Les paramètres de type |rational| ont bien été passés par référence afin d'éviter à chaque coup une copie de deux entiers;
+    \item La fonction |eval| a été déclarée |inline|. Cela permet d'éviter la surcharge d'un appel de fonction pour une fonction ne faisant presque rien. |inline| permet de remplacer l'appel de la fonction directement par le code machine assemblé pour la fonction. 
+    \item Dans la fonction |main|, nous avons passé deux rationnels en valeur directement dans l'appel de la fonction ce qui est interdit dans le cas d'un passage par référence simple mais permis dans le cas d'un passage par référence constante ! En fait, passer par référence constante assure qu'on ne peut pas modifier ce paramètre au sein de la fonction, et donc la fonction peut donc effectuer un alias en lecture seule avec les deux valeurs mises sur la pile d'appel (qu'on ne peut pas modifier).
+\end{enumerate}
 
 Enfin, le retour par une fonction d'un tableau de type |vector| n'effectue une copie du tableau retourné
 que si la variable de type |vector| retournée n'est pas locale à la fonction, sinon
@@ -2129,3 +2474,111 @@ void f()
 
 }
 \end{lstlisting}
+
+\subsection{Entrées/sorties}
+
+En C (mais aussi en C++), l'affichage sur un terminal d'un texte se fait à l'aide de la fonction \texttt{printf}
+de la bibliothèque \texttt{stdio.h} (\texttt{cstdio} en C++). Cependant, l'utilisation de cette fonction est loin d'être facile
+et peut être génératrice de bogues :
+
+\begin{lstlisting}
+#include <cstdio> // En C++, mais on peut aussi inclure stdio.h, ça marche aussi
+                  // Remarque : pas d'extension pour l'inclusion des fichiers en C++ !
+int main()
+{
+    int n1 = 3;
+    double x = 3.14;
+    // Inversion de %d et %lg => bogue attendu et affichage bizarre
+    printf("x = %d, n1 = %lg\n",x, n1);
+    return 1;
+}
+\end{lstlisting}
+
+En C++, il existe une bibliothèque d'entrée sortie simplifiant grandement l'affichage sur terminal (mais aussi sur fichier) sans se préoccuper du type de valeurs à afficher :
+
+\begin{lstlisting}
+#include <iostream> // Bibliothèque de gestion d'entrée/sortie du C++
+
+int main()
+{
+    int n1 = 3;
+    double x = 3.14;
+    // std::cout permet d'afficher sur un terminal la sortie standard
+    // std::endl permet un retour à la ligne précédé par un flush pour forcer l'affichage
+    std::cout << "Il est facile d'afficher du texte, mais aussi des variables comme x = " << x
+              << " ou encore n1 = " << n1 << std::endl;
+}
+\end{lstlisting}
+
+On peut également formater les entrées sorties pour une précision donnée, un nombre de caractère fixe, etc.
+
+Voici un exemple exhaustif des possibilités de formatage :
+\begin{lstlisting}
+#include <iostream>
+#include <iomanip> // Pour jouer avec le format des nombres
+
+int main()
+{
+    double x = 3.141516;
+    int    n = 63123;
+
+    std::cout << n << " en hexadecimal donne " << std::hex << n << std::dec << std::endl;
+    for ( int i = 5; i < 10; ++i )
+        std::cout << std::setw(i) << n << std::endl;// Modif. nbre de caractère pour afficher n
+    for ( int i = 5; i < 10; ++i )
+        std::cout << std::setfill('0') << std::setw(i) << n << std::endl; // Idem mais remplissage par des zéros
+
+    std::cout << std::setprecision(5) << x << std::endl;// Affichage de x avec une précision donnée
+    std::cout << std::setprecision(9) << x << std::endl;
+    std::cout << std::fixed;// Impose que le nombre de chiffre après la virgule soit fixe
+    std::cout << std::setprecision(5) << x << std::endl;
+    std::cout << std::setprecision(9) << x << std::endl;
+
+    return 1;
+}
+\end{lstlisting}
+
+Si on compile le programme, on trouve en sortie :
+\begin{inverseverbatim}
+63123 en hexadecimal donne f693
+6312
+ 63123
+  63123
+   63123
+    63123
+63123
+063123
+0063123
+00063123
+000063123
+3.1415
+3.141516
+3.14152
+3.141516000
+\end{inverseverbatim}
+
+Enfin il est possible d'écrire littéralement un booléen plutôt que d'écrire sa représentation entière (1 ou 0) :
+
+Le programme suivant :
+\begin{lstlisting}
+int number = 5;
+bool is_even = (number % 2 == 0);
+bool is_odd  = (number % 2 == 1);
+std::cout << "Affichage standard des booleens : "  << std::endl;
+std::cout << number << " est pair   ? " << is_even << std::endl;
+std::cout << number << " est impair ? " << is_odd  << std::endl;
+std::cout << "Affichage alphanumerique des booleens : " << std::endl;
+std::cout << number << " est pair   ? " << std::boolalpha << is_even << std::endl;
+std::cout << number << " est impair ? " << std::boolalpha << is_odd  << std::endl;
+\end{lstlisting}
+
+affichera :
+
+\begin{inverseverbatim}
+Affichage standard des booleens : 
+5 est pair   ? 0
+5 est impair ? 1
+Affichage alphanumerique des booleens : 
+5 est pair   ? false
+5 est impair ? true
+\end{inverseverbatim}

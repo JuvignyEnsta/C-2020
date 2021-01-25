@@ -24,6 +24,7 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{verbatim}
 
 \theoremstyle{plain}
 \newtheorem{thm}{Th{\'e}or{\`e}me}[chapter] % reset theorem numbering for each chapter
@@ -34,13 +35,32 @@
 
 \newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
 
+\makeatletter
+\def\inverseverbatim{%
+  \color{white}\scriptsize
+  \def\verbatim@processline{%
+    {\setbox0=\hbox{\the\verbatim@line}%
+    \hsize=\wd0 \the\verbatim@line\par}}%
+  \@minipagetrue
+  \@tempswatrue
+  \@totalleftmargin\z@
+  \setbox0=\vbox\bgroup \verbatim
+}
+\def\endinverseverbatim{%
+  \endverbatim
+  \unskip\setbox0=\lastbox
+  \egroup
+  \colorbox{black}{\box0}%
+}
+\makeatother
+
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 \definecolor{darkgreen}{rgb}{0.,0.3,0.}
 
 \begin{document}
-\lstset{inputencoding=utf8/latin1}
+\lstset{inputencoding=utf8}
 \lstset{language=C++}
 \lstset{ 
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument

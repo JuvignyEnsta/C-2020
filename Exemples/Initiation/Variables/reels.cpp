@@ -3,14 +3,22 @@
 #include <iostream>
 #include <iomanip>
 #include <numbers>
+#if defined(WIN32)
+#  include <windows.h>
+#endif
 
 int main()
 {
+    // La ligne ci-dessous permet sous WINDOWS de pouvoir afficher de l'UTF8 sur les consoles de Windows
+    // Ne pas me demander des précisions là dessus, c'est directement pompé d'un forum code-blocks
+#if defined(_WIN32)
+  system("chcp 65001  > nul");
+#endif // defined
     std::cout << "Caractéristique d'un réel simple précision : " << std::endl;
     std::cout << "\t Nombre de bits : " << 8*sizeof(float) << std::endl;
-    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? " 
+    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? "
               << std::numeric_limits<float>::has_infinity << std::endl;
-    std::cout << "\t Peut avoir un NaN silencieux ? " 
+    std::cout << "\t Peut avoir un NaN silencieux ? "
               << std::numeric_limits<float>::has_quiet_NaN << std::endl;
     std::cout << "\t Peut avoir un NaN levant une erreur ? "
               << std::numeric_limits<float>::has_signaling_NaN << std::endl;
@@ -23,9 +31,9 @@ int main()
 
     std::cout << "Caractéristique d'un réel double précision : " << std::endl;
     std::cout << "\t Nombre de bits : " << 8*sizeof(double) << std::endl;
-    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? " 
+    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? "
               << std::numeric_limits<double>::has_infinity << std::endl;
-    std::cout << "\t Peut avoir un NaN silencieux ? " 
+    std::cout << "\t Peut avoir un NaN silencieux ? "
               << std::numeric_limits<double>::has_quiet_NaN << std::endl;
     std::cout << "\t Peut avoir un NaN levant une erreur ? "
               << std::numeric_limits<double>::has_signaling_NaN << std::endl;
@@ -38,9 +46,9 @@ int main()
 
     std::cout << "Caractéristique d'un réel long double precision : " << std::endl;
     std::cout << "\t Nombre de bits : " << 8*sizeof(long double) << std::endl;
-    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? " 
+    std::cout << std::boolalpha << "\t Peut avoir une valeur infinie ? "
               << std::numeric_limits<long double>::has_infinity << std::endl;
-    std::cout << "\t Peut avoir un NaN silencieux ? " 
+    std::cout << "\t Peut avoir un NaN silencieux ? "
               << std::numeric_limits<long double>::has_quiet_NaN << std::endl;
     std::cout << "\t Peut avoir un NaN levant une erreur ? "
               << std::numeric_limits<long double>::has_signaling_NaN << std::endl;
@@ -74,6 +82,9 @@ int main()
     std::cout << "π⁻¹  = " << std::setprecision(std::numeric_limits<double>::digits10+1) << π⁻¹ << std::endl;
 #   endif
 
+    const double e = std::numbers::e;
+    float const e_f = std::numbers::e_v<float>;
+
     std::cout << "zeta(-1) = " << std::riemann_zeta(-1.) << std::endl;
     return EXIT_SUCCESS;
-}   
+}

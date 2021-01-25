@@ -2,7 +2,7 @@
 ##Cours sur le C++ 2020
 
 Encore en construction, ce cours vous servira de support tout le long du second semestre. Pensez à utiliser git pour
-le mettr sur votre ordinateur :
+le mettre sur votre ordinateur :
 
 Pour Windows : https://git-scm.com/download/win
 Pour linux   : natif avec le système

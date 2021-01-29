@@ -1732,244 +1732,342 @@ dans |imath| toutes les fonctions effectuant des calculs sur les entiers : puiss
 
 On pourra également regrouper une structure et toutes les fonctions effectuant des traitements sur cette structure au sein d'un même fichier d'entête.
 
-\subsection{Surcharge de fonctions}
+On voit dans la syntaxe d'une fonction qu'on doit préciser le type de valeur qu'elle renvoit. Mais
+comment fait-on si on veut une fonction qui ne renvoit aucune valeur ? C'est là que le type |void|
+va intervenir. En effet, pour une fonction ne renvoyant aucune valeur, on précise simplement que
+le type de valeur renvoyer par la fonction est de type vide (|void|).
 
-Il arrive souvent, en calcul scientifique en particuliers, de devoir écrire plusieurs versions d'une même fonction pour des types différents. Par exemple, en algébre linéaire, il est utile d'avoir une fonction permettant de faire l'opération $y\leftarrow y + a.x$
-où $x$ et $y$ sont des vecteurs d'un certain espace vectoriel $\mathbb{K}^{n}$ (où
-$\mathbb{K}$ est un corps tel que les rationnels, les réels, les complexes,
-$\mathbb{Z}/p.\mathbb{Z}$ ($p$ premier), etc. et $a$ un scalaire appartenant au corps 
-$\mathbb{K}$.
+Ainsi, on a deux possibilités pour une fonction :
+\begin{itemize}
+  \item Soit elle retourne une valeur et dans ce cas, il faut préciser le type de la valeur retournée,
+  puis retourner une valeur de ce type dans le code de la fonction. On récupère ensuite cette valeur
+  dans une nouvelle variable... ou non ! (mais dans ce cas, la valeur retournée est perdue pour la suite).
+  Par exemple :
+  \begin{lstlisting}
+  int iracine(int val)
+  {
+     int irac;
+     irac = ... // Algorithme calculant l'entier le plus proche de la racine de val
+     return irac;// On renvoit le résultat (une valeur entière)
+  }
 
-On aimerait pouvoir écrire des fonctions pour cette opérations pour au moins trois types de scalaires différents en C++ : les réels simple précision, les réels double précision, les complexes simple précision et les complexes double précision. Dans un langage tel que le Fortran ou le C, nous serions obligé d'appeler ces quatre fontions par des noms différents ( et de fait, dans la bibliothèque d'algébre linéaire BLAS, les quatre fonctions effectuant cette opération sur les quatre types de scalaires suscités sont nommées saxpy, daxpy, caxpy et zaxpy). En C++, il est possible d'appeler ces quatre fonctions par le même nom, du moment que le type ou le nombre de paramètre est différent. Lors de l'appel de la fonction, le type ou le nombre de paramètres passés permettra sans ambigüité au compilateur de savoir quel fonction appelée.
-
-Ainsi en C++, il est possible d'écrire les deux fonctions ci--dessus :
-
-\begin{lstlisting}[caption=Exemple de surcharge d'une fonction C++]
-// Fonction avec flottants simple précision
-void axpy(int N, float a, const float* x, float* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-
-// Fonction avec flottants double précision
-void axpy(int N, double a, const double* x, double* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-\end{lstlisting}
-
-Ici, le compilateur décidera quelle fonction appeler en fonction du type des paramètres passés, ainsi
-\begin{lstlisting}[caption=Appel à des fonctions surchargées]
-void main()
-{
-    float fx[] = {1.f, 2.f, 3., 4.f};
-    float fy[] = {0.f, -1.f, -2.f, -3.f};
-    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
-
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, 2., dx, dy); // Appel la fontion avec les flottants double précision
-
-    axpy(4,2.f, dx, dy);// Erreur de compilation, mélange simple et double précision !
-                        // Le compilateur ne peut décider quel fonction appeler...
-}
-\end{lstlisting}
-
-Il est important de bien respecter le type des paramètres passés à l'appel de la fonction sous peine d'avoir des erreurs de compilation parfois fort peu compréhensibles !
-
-Nous verrons au chapitre des templates qu'il peut être important d'appeler des fonctions faisant le même traitement mais avec des types différents par le même nom.
-
-\subsection{Fonction générique (C++ 2020)}
-
-Si on observe attentivement les codes écrits dans leurs versions simple ou double précision
-(mais également en complexe), on se fera vite la remarque que ces fonctions possèdent exactement le même code, au type de variable près !
-
-Une possibilité serait de définir un type en amont de la fonction, qu'on pourrait changer selon le besoin :
+  ...
+  // Ok, on récupère et on stocke le résultat dans une nouvelle variable
+  int isq177 = iracine(177);
+  // On affiche le résultat, mais celui-ci est perdu par la suite. Impossible à le récupérer !
+  std::cout << "racine entière de 193 est : " << iracine(193) << std::endl; 
+  \end{lstlisting}
+  \item Soit elle ne retourne pas de valeur. Pas de retour d'une valeur à faire. On peut néanmoins appeler
+  return sans donner de valeur si on veut quitter la fonction sans exécuter ce qui peut suivre dans la
+  fonction :
 \begin{lstlisting}
-using scalar_t = double;
+void affiche_valeur(double x)
+{
+  if (x<0)
+  {
+    std::cout << std::set_precision(5) << std::setw(9) << x;
+    return;
+  }
+  std::cout << std::set_precision(5) << std::setw(8) << x;
+}
+
+...
+// Appel de la fonction affiche_valeur
+affiche_valeur(3.1415);
+affiche_valeur(-3.1415);
+...
+\end{lstlisting}
+
+Les paramètres d'une fonction sont une copie des valeurs passées lors de l'appel. Il est
+donc impossible de conserver un paramètre avec une valeur prise dans la fonction après être sorti
+de cette fonction.Prenons par exemple le code suivant :
+
+\begin{lstlisting}
+# include <iostream>
+  void produit_par_deux(double x)
+  {
+    x = 2*x;
+  }
+
+  int main()
+  {
+      double val = 1.5;
+      std::cout << "val => " << val << std::endl;
+      produit_par_deux(val);
+      std::cout << "val => " << val << std::endl;
+      return EXIT_SUCCESS;      
+  }
+\end{lstlisting}
+
+Si on compile et exécute le code, on obtient la sortie suivante :
+
+\begin{inverseverbatim}
+val => 1.5
+val => 1.5
+\end{inverseverbatim}
+
+Visiblement, la fonction |produit_par_deux| n'a pas modifié |val| ! L'explication est simple : au
+moment de l'appel de la fonction, le C++ va copier la valeur de val dans un autre emplacement mémoire
+et utiliser cette copie pour exécuter le code de la fonction. Ainsi, c'est une copie de |val| pour qui
+on multipliera la valeur par deux, et non la valeur de |val| elle-même.
+
+Ici, pour pouvoir obtenir le résultat de la multiplication par deux, le plus simple est de retourner la
+valeur résultante de l'opération et de récupérer à nouveau le résultat dans |val| :
+\begin{lstlisting}
+# include <iostream>
+double produit_par_deux(double x)
+{
+  return 2*x;
+}
+
+int main()
+{
+  double val = 1.5;
+  std::cout << "val => " << val << std::endl;
+  val = produit_par_deux(val);
+  std::cout << "val => " << val << std::endl;
+  return EXIT_SUCCESS;      
+}
+\end{lstlisting}
+
+Cette fois-ci on obtient bien la sortie suivante :
+\begin{inverseverbatim}
+val => 1.5
+val => 3
+\end{inverseverbatim}
+
+\subsection{Retour de plusieurs valeurs}
+
+Mais que fait-on si on doit retourner plusieurs valeurs ? Par exemple, supposons que nous voulons
+écrire une fonction qui calcule la division euclidienne de deux entiers et qui doit renvoyer 
+le résultat et le reste de la division (donc deux entiers).
+
+Une première solution serait, comme en C, de passer un pointeur (natif, partagé ou unique).
+Par exemple :
+\begin{lstlisting}
+int division_euclidienne(int p, int q, int* reste)
+{
+  int résultat = p/q;
+  *reste = p - q*résultat;
+  return résultat;
+}
+...
+int a = 7, b = 3;
+int reste;
+int quotient = division_euclidienne(a,b,&reste);
+std::cout << "Division de a par b : " << quotient << " avec pour reste : " << reste << std::endl;
+...
+\end{lstlisting}
+
+Si cette solution répond à notre besoin, elle est tout de même peu commode et fragile :
+\begin{itemize}
+  \item Passer un pointeur pour modifier une valeur passée en paramètre n'a rien "de naturel";
+  \item Cela alourdit le code, car on est obligé de déférencer la variable dans la fonction et
+        passer l'adresse d'une variable en paramètre;
+  \item Que se passe-t'il si on passe |nullptr| à la fonction ? Ou bien l'adresse de |quotient| ?
+\end{itemize}
+
+Il existe en fait dans la bibliothèque standard du C++ des types de données permettant de renvoyer
+plusieurs valeurs.
+
+À commencer par le tableau statique |std::array| ! En effet, pour notre fonction plus haut, rien ne
+nous interdit de renvoyer un tableau statique de deux entiers :
+\begin{lstlisting}
+std::array<int,2> division_euclidienne(int p, int q)
+{
+  int résultat = p/q;
+  return {résultat, p - q*résultat};
+}
+\end{lstlisting}
+
+Pour récuper les deux valeurs (le résultat et le reste de la division), on doit normalement recevoir
+les deux valeur dans un tableau, ce qui est lourd et peu expressif/compréhensible :
+\begin{lstlisting}
+auto résultat = division_euclidienne(7,3);
+std::cout << "Résultat de la division : " << résultat[0] 
+          << " et le reste : " << résultat[1] << std::endl;
+\end{lstlisting}
+
+Il n'est en effet pas facile de comprendre à la première lecture que le premier élément du tableau
+est le résultat de la division et le deuxième élément le reste lors de l'appel de la fonction.
+Néanmoins, depuis le C++ 17, tant qu'on renvoie certains types de valeurs, il est possible de
+récupérer les valeurs directement dans des variables. Ainsi, le code ci--dessus devient :
+\begin{lstlisting}
+auto [résultat, reste] = division_euclidienne(7,3);
+std::cout << "Résultat de la division : " << résultat 
+          << " et le reste : " << reste << std::endl;
+\end{lstlisting}
+
+Le code a nettement gagné en expressivité ! Nous avons renvoyé ici deux valeurs entières, mais il est
+parfaitement possible avec cette technique d'en renvoyer plus. Par exemple, imaginons que nous voulons
+écrire une fonction qui renvoie toutes les racines cubiques d'un nombre complexe $z$ : en écrivant
+sous forme polaire $z=|z|e^{i\theta}$, les racines cubiques sont : 
+$$
+|z|^{\frac{1}{3}}e^{i\frac{theta}{3}}, |z|^{\frac{1}{3}}e^{i\frac{theta}{3}+\frac{2\pi}{3}},
+|z|^{\frac{1}{3}}e^{i\frac{theta}{3}+\frac{4\pi}{3}}
+$$
+
+On peut donc écrire la fonction sous la forme suivante :
+
+\begin{lstlisting}
+std::array<std::complex<double>,3> racines_cubique(std::complex<double> z)
+{
+    const double π_2s3 = 2*std::numbers::pi/3.;
+    const double π_4s3 = 4*std::numbers::pi/3.;
+    double argument = std::arg(z)/3.;
+    double module   = std::cbrt(std::abs(z));// std::cbrt => Racine cubique
+
+    return {
+        module * std::exp(1.i*argument), module * std::exp(1.i*(argument + π_2s3)),
+        module * std::exp(1.i*(argument + π_4s3))
+    };
+}
+\end{lstlisting}
+
+et l'appeler de la manière suivante pour récupérer les trois racines :
+\begin{lstlisting}
+auto [z1,z2,z3] = racines_cubique(1.+1.i);
+std::cout << "\tRacines cubiques de 1+i : " << z1.real() << "+" << z1.imag() << "i, "
+          << z2.real() << "+" << z2.imag() << "i, " << z3.real() << "+" << z3.imag() << "i"
+          << std::endl;
+\end{lstlisting}
+
+Cependant, cette solution ne peut marcher que si les données \textsl{sont de type homogène}. En effet,
+un |std::array| n'accepte que des valeurs de même type. Comment faire alors si on veut retourner deux
+valeurs de type différent ?
+
+La bibliothèque du C++ propose dans ce cas le type |std::pair| de la bibliothèque <utility> qui permet
+de gérer une paire de valeur :
+\begin{lstlisting}
+#include <utility>
 
 ...
 
-void axpy(int N, scalar_t a, const scalar_t* x, scalar_t* y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    int i;
-    for (i = 0; i < N; ++i ) y[i] += a*x[i];
-}
+std::pair<int,double> values; // Une paire int/double
+values.first = 1;
+values.second= 2.45;
 \end{lstlisting}
 
-Tant que le code utilisant cette fonction ne s'en sert que pour un type de scalaire, c'est une solution viable, bien que peu pratique (il faut penser à modifier le type de |scalar_t| pour chaque nouveau programme qu'on veut compiler), mais comment faire dès lors qu'une application a besoin de la fonction pour différents types de scalaires ?
-
-C'est là que la notion de fonction générique intervient. Une fonction générique est une sorte de patron (template) de fonction, sur lequel le compilateur va s'appuyer pour générer des fonctions selon les types de paramètres passés à la fonction. Si on passe des réels simple précision, une fonction sera générée pour considérer des réels simples précisions,
-si des doubles sont employées, une fonction sera générée pour considérer des réels double précisions, etc.
-
-Nous verrons plus loin dans le cours un moyen de faire cela en C++, depuis la première norme de C++, à l'aide des patrons (template) qui sont un concept donnant une grande puissance au langage C++ mais aussi les plus beaux mal de tête du monde ! (On peut faire des choses très (trop ?) complexes avec les templates). Mais depuis C++ 20, il est possible
-à l'aide d'une écriture bien plus simple d'écrire des fonctions génériques, et cela grâce
-au mot clef |auto| !
-
-\begin{lstlisting}[caption=utilisation du mot clef auto pour déclarer les paramètres de la fonction]
-// Fonction générique pour tout type de vecteur
-void axpy(int N, auto a, const auto x, auto y)
-{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
-    for (int i = 0; i < N; ++i ) y[i] += a*x[i];
-}
-
-void main()
-
-    float fx[] = {1.f, 2.f, 3., 4.f};
-    float fy[] = {0.f, -1.f, -2.f, -3.f};
-    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
-
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, 2., dx, dy); // Appel la fonction avec les flottants double précision
-
-    axpy(4,2.f, dx, dy);// Appel la fonction avec a en simple précision, dx et dy en double
-}
-\end{lstlisting}
-
-Ici la fonction \texttt{axpy} a été généralisée pour prendre n'importe quel type pour \texttt{a, x} et \texttt{y}.
-Au fur et à mesure des différents appels à cette fonction "générique", le compilateur produire plusieurs versions de la fonction qui prendra en paramètre les divers types passés pour \texttt{a, x} et \texttt{y}. Ainsi, dans l'exemple ci-dessus,
-trois versions de la fonction seront générées : une avec trois réels simple précision, une avec trois réels double précision et la dernière avec |a| réel simple précision et |x| et |y| déclarées comme réels double précision.
-
-Les types (qui peuvent être tous différents) de \texttt{a, x} et \texttt{y}
-seront valides tant que l'opération |y[i] += a*x[i]| reste valide pour les types passés pour les trois arguments. Ainsi la ligne suivante ne compilera pas :
-
+Le type de chacune des deux valeurs est précisé entre les chevrons $<$ et $>$. Ce type est très utile
+pour retourner une paire de valeurs de type hétérogène. Prenons par exemple une fonction retournant
+dans un tableau de réels passé par pointeur l'élément maximal et sa position. La fonction doit
+bien retourner un |double| (la valeur maximale) et un |std::int64_t| (la position de cet élément).
+Voici une possibilité pour écrire cette fonction :
 \begin{lstlisting}
-void main()
+std::pair<double,int> 
+trouve_et_localise_valeur_maximale( int n, const double * valeurs)
 {
-    double dx[] = {1., 2., 3., 4.};
-    double dy[] = {0., -1., -2., -3.};
-    axpy(4, "toto", dx, dy); // Ne compile pas ! Pas de sens de faire y[i] += "toto"*x[i]  
+    int index = 0;
+    int valeur_max = valeurs[0];
+    for ( int i = 1; i < n; ++i )
+    {
+        if (valeur_max < valeurs[i])
+        {
+            valeur_max = valeurs[i];
+            index    = i;
+        }
+    }
+    return {valeur_max,index};
 }
 \end{lstlisting}
 
-\underline{Remarque} : Si le mot clef |auto| en C++ 20 permet de créer facilement des fonctions génériques, il ne permet pas un contrôle fin des types permis contrairement aux templates que l'on verra plus tard. Néanmoins, dans beaucoup de cas, cette
-généricité est suffisante et bien plus légère à l'écriture que les templates\ldots
-
-Par contre, si vous avez défini ce que veut dire par exemple la multiplication d'un entier
-avec une chaîne de caractère (ce qui est possible en C++, on verra cela plus loin lorsqu'on parlera des opérateurs), il est tout à fait légitime d'écrire la ligne suivante :
+L'appel de cette fonction va ressembler à celle renvoyant un tableau statique :
 \begin{lstlisting}
-axpy(4, 3, "toto"s, "titi"s);
+std::array tableau = {1., -3., 5., 7., 2., -8., 6.};
+auto [valeur_max, position] = trouve_et_localise_valeur_maximale(tableau.size(), tableau.data());
+std::cout << "Valeur maximale trouvée : " << valeur_max 
+          << " pour l'index " << position << std::endl;
 \end{lstlisting}
 
-Bien sûr, il est déconseillé de le faire, car cela rajoute plus de confusion au code qu'autre chose...
+\underline{Remarque 1} : On peut voir que pour le retour de la fonction, nous n'avons retourner qu'une 
+liste d'initialisation. En fait, le C++ connaissant par la partie déclarative de la fonction le type
+de la valeur de retour, va automatiquement convertir la liste d'initialisation dans le type 
+|std::pair<double,int>|. Une erreur de compilation aurait eu lieu si on avait mis trois valeurs au lieu
+de deux dans la liste d'initialisation.
 
-\subsubsection{Valeur par défaut}
+\underline{Remarque 2} : Pour l'instant, on se contente pour la fonction de prendre un pointeur natif
+et le nombre d'éléments. On verra au fur et à mesure du cours, comment coder cette fonction d'une façon
+plus élégante et bien plus sûre sans perdre la généralité de la fonction (et en la généralisant plutôt !).
 
-Si nous pouvons déjà être satisfait de notre fonction "générique", on pourra vous faire
-néanmoins remarquer que si votre fonction s'applique bien à des vecteurs dont les c{\oe}fficients sont contigüs en mémoire, votre fonction ne pourra effectuer son opération dès lors que les c{\oe}fficients de votre vecteur sont espacés régulièrement en mémoire. Par exemple, si vous avez une matrice rangée par ligne (l'indice des colonnes varie le plus vite), vous pouvez souhaiter effectuer votre opération |axpy| sur deux colonnes de votre matrice. Seulement, les coefficients sont alors espacés du nombre de colonnes que possède votre matrice ! Pour généraliser votre fonction aux vecteurs lignes ou colonnes des matrices, il suffit donc de rajouter deux paramètres, |incx| et |incy| qui vous donnent
-le nombre d'éléments à "sauter" pour trouver le prochain c{\oe}fficient d'un des deux vecteurs.
+Le seul cas encore non traité est le cas où on doit renvoyer plus de deux valeurs de type hétérogène.
+Là encore, on peut utiliser un type générique |tuple| proposé dans la bibliothèque |tuple|.
 
-Votre fonction devient donc :
-\begin{lstlisting}[caption=Généralisation de la fonction axpy]
-void axpy(int N, auto a, const auto* x, auto* y, int incx, int incy)
-{
-    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
-}
+Un tuple en C++ ressemble beaucoup au tuple de python. C'est une collection fixée de valeurs hétérogènes.
+Par contre, deux tuples ne contenant pas la même liste de type différents ne sont pas considérés de même type en C++. Le tuple est principalement utilisé pour retourner justement plusieurs données hétérogènes. Prenons par exemple approchant un nombre réel $x\geq 0$ par une fraction (continue mais réduite) et retournant l'erreur faite sur le réel. Cette fonction renvoie donc deux entiers $p$ et $q$  (le diviseur et le dividende de la fraction obtenue) et un réel donnant l'erreur d'approximation relative $\varepsilon$ faite sur le réel :
+\[
+\varepsilon = \frac{|x - \frac{p}{q}|}{|x|}
+\]
 
-int main()
-{
-    const int N = 4;
-    double A[N][N] = { {1,2, 4,  8}, 
-                       {1,3, 9, 27},
-                       {1,4,16, 64},
-                       {1,5,25,125} };
-    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
-    axpy(4, -4., A, A+2, N, N);
-    // Rajout de la deuxième colonne à la quatrième ligne :
-    axpy(4, 1., A+1, &A[3][0], N, 1]);
-}
-\end{lstlisting}
-
-Pour l'exemple donné ci--dessus, il est clair que les paramètres |incx| et |incy| sont indispensables. 
-Néanmoins, cela alourdit votre code, principalement pour les vecteurs dont les éléments sont contigüs en mémoire, ce qui représente la majorité des cas rencontrés. En effet, 
-il faut à chaque fois pour ce dernier cas, rajouter deux paramètres valant un à la fonction, sans parler du risque de bogue en rajoutant ces deux paramètres (en mettant par erreur deux au lieu de un pour l'un des paramètres par exemple).
-
-Heureusement, C++ prévoit ces cas, et il est possible de fournir pour ces paramètres des valeurs par défaut ce qui permettra de les omettre lors d'un appel "usuel".
-
-Dans le cas de la fonction |axpy|, on vient de voir que dans la majorité des appels à cette fonction, les paramètres |incx| et |incy| valent un. On peut donc définir notre fonction en rajoutant pour ces deux paramètres un pour valeur par défaut :
-\begin{lstlisting}[caption=Valeurs par défaut pour la fonction axpy]
-void axpy(int N, auto a, const auto* x, auto* y, int incx = 1, int incy = 1)
-{
-    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
-}
-
-int main()
-{
-    const int N = 4;
-    double A[N][N] = { {1,2, 4,  8}, 
-                       {1,3, 9, 27},
-                       {1,4,16, 64},
-                       {1,5,25,125} };
-    double x[N] = {1,2,3,4};
-    double y[N] = {4,3,2,1};
-    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
-    axpy(N, -4., &A[0][0], &A[0][2], N, N); // incx = N, incy = N
-    // Rajout de la deuxième colonne à la quatrième ligne :
-    axpy(N, 1., &A[0][1], &A[3][0], N);// incx = N, incy = 1
-    // Rajout de la deuxième ligne à la quatrième colonne :
-    axpy(N, 1., &A[1][0], &A[0][3], 1, N); // incx = 1, incy = N
-    // Opération sur les vecteurs x et y :
-    axpy(4, 1., x, y); // incx = 1, incy = 1;
-
-    return EXIT_SUCCESS;
-}
-\end{lstlisting}
-
-\underline{Remarques} :
-\begin{enumerate}
-    \item Les paramètres ayant des valeurs par défaut doivent \textbf{impérativement} être déclarée en dernier dans les paramètres de la fonction;
-    \item L'ordre des paramètres par défaut doit être respecté à l'appel : si un paramètre possédant une valeur par défaut doit être défini avec une valeur spécifique, \textbf{tous les paramètres précédents}, même ceux ayant une valeur par défaut, doivent également avoir une valeur spécifique définie par l'utilisateur. Ainsi, dans l'exemple ci--dessus, on ne peut pas définir une valeur différente de un pour |incy| sans définir explicitement la valeur un pour |incx| à l'appel !
-\end{enumerate}
-
-\subsection{Passage par référence}
-
-CONTINUER ICI, SEPARER PASSAGE ET RETOUR PAR REFERENCE
-
-Nous avons vu deux manières de lire ou modifier une valeur : soit un stockant directement   cette valeur
-en mémoire à l'aide d'une variable, soit en stockant dans un pointeur l'adresse du début de la mémoire occupée par cette valeur. Remarquons que dans le deuxième cas, il faut d'une manière ou d'une autre (à l'aide d'une variable ou bien avec l'allocation dynamique qu'on verra plus loin ) qu'on ait réservé
-de la mémoire pour stocker cette valeur avant de pointer dessus.
-
-Il existe une troisième façon d'accéder à une valeur : par référence. Cette manière d'accèder à une valeur peut-être vu comme un "mixte" des deux autres accès : une référence ne permet pas de réserver et de stocker une valeur directement, elle doit pour cela faire référence à une variable ou un emplacement mémoire où la valeur est stockée (comme pour un pointeur), mais elle permet également d'accéder directement à la valeur à la manière d'une variable sans devoir passer par un opérateur de déférencement. 
-
-En C, il n'existe que deux manières d'accéder à une variable en mémoire, soit directement en lisant la valeur de la variable  ou via un pointeur représentant l'addresse du début de la mémoire occupée par la variable.
-
+Le tuple étant une type un peu long à écrire, nous allons utiliser une fonction générique |make_tuple|
+ainsi qu'une déduction automatique du type de retour de la fonction :
 \begin{lstlisting}
-int main()
+auto convertion_en_fraction(double valeur, int nombre_iter_max)
 {
-    double x[] = {1., 2., 3. , 4.};
-    double y = x[0]; // On accède directement à la valeur de x[0];
-    double* pt_x1 = x + 1;// Pointe sur le deuxième élément du tableau x
-    double z = *pt_1; // Lis via le pointeur la valeur de deuxième élément du tableau x (déférencement)
-    return EXIT_SUCCESS;    
+    std::int64_t dividende, diviseur;
+    assert(valeur>=0.);
+    std::int64_t partie_entière = std::int64_t(valeur);
+    double reste = valeur - partie_entière;
+    if (std::abs(reste)<1.E-14)
+    {
+        return std::make_tuple(partie_entière, 1LL, 0.);
+    }
+    if (nombre_iter_max == 0)
+    {
+        dividende = partie_entière;
+        diviseur  = 1LL;
+        return std::make_tuple(dividende, diviseur, reste);
+    }
+    auto [p,q,r] = convertion_en_fraction(1./reste, nombre_iter_max-1);
+    dividende = partie_entière*p+q;
+    diviseur  = p;
+    reste = std::abs(valeur-double(dividende)/double(diviseur));
+    return std::make_tuple(dividende, diviseur, reste);
 }
 \end{lstlisting}
 
-En C++, il existe une troisième manière d'accéder à la valeur d'une variable : par référence. 
+\underline{Remarque 1} : La déduction automatique du type de retour existe depuis le C++ 14. Dans le cadre
+d'un retour de tuple (parmi d'autres cas), cela s'avère très pratique et permet un allègement du code
+non négligeable sans pour autant nuire à sa lisibilité. Il ne faut cependant pas abuser de cette déduction
+si le type de la fonction retournée n'est pas "verbeux" à écrire.
 
-Techniquement, une référence n'est rien d'autre qu'un pointeur constant automatiquement déférencé. Plus prosaïquement, une référence est un alias (un nom) qu'on va donner à une variable en mémoire, même si elle est déjà nommée par le programme. Pour déclarer une référence, on utilise le symbole \&. Par exemple :
+\underline{Remarque 2} : Si on utilise la déduction automatique du type de retour, il n'est plus possible
+de laisser le C++ deviner le type de retour en ne renvoyant qu'une simple liste d'initialisation !
 
-\begin{lstlisting}[caption=Exemple de référence en C++]
-int main()
-{
-    int i = 3;
-    // ii est un alias sur la variable i.
-    int& ii = i; 
-    /********************************************************
-     *   ii et i représentent concrètement la même variable *
-     * qui posséde deux noms différents                     *
-     ********************************************************/
-    ii = 2; // Maintenant i et ii valent deux, puisque c'est la même variable !
-    /************************************************
-     * Alias sur la variable, mais on ne pourra pas *
-     * la changer via ci, seulement la lire.        *
-     ************************************************/
-    const int& ci = i;    
-    ci = 3; // Erreur, ci est déclarée const.
-}
+L'usage de cette fonction peut ressembler là encore à celui d'une fonction revoyant un tableau statique :
+\begin{lstlisting}
+auto [dividende,diviseur,erreur] = convertion_en_fraction(std::sqrt(2.), 20);
 \end{lstlisting}
+
+Dans le cadre d'un tuple, si on veut recopier le résultat dans des variables déjà déclarées
+ou si on veut ignorer certaines valeurs renvoyer, on peut utiliser la fonction |std::tie| :
+\begin{lstlisting}
+std::int64_t dividende, diviseur;
+double erreur;
+std::tie(dividende, diviseur, erreur) = convertion_en_fraction(std::sqrt(2.), 20);
+std::tie(dividende, diviseur, std::ignore) = convertion_en_fraction(4./3., 20);
+\end{lstlisting}
+
+Le mot clef |std::ignore| permet d'ignorer une des valeurs de retour. Il n'est malheureusement pas
+utilisable avec la syntaxe avec les crochets $[$ et $]$ où on doit recevoir les trois valeurs.
+
+Il est néanmoins possible d'ignorer par la suite une des valeurs avec cette syntaxe, mais pour éviter
+d'avoir un message de prévention (warning), il faut utiliser la directive de compilation
+|[[maybe_unused]]| :
+\begin{lstlisting}
+[[maybe_unused]] auto [dividende,diviseur,erreur] = convertion_en_fraction(4./3., 20);
+\end{lstlisting}
+
+
+\subsubsection{Passage par référence}
+
+Nous avons vu dans une section précédente la notion de référence. Il s'avère que cette notion est
+très utile pour le passage de certains paramètres, à savoir :
+\begin{itemize}
+  \item des paramètres dont la valeur doit être modifiée en sortie de la fonction;
+  \item des paramètres prenant beaucoup de place mémoire ou prenant du temps à être copiés.
+\end{itemize}
+
+
 
 Puisqu'une référence crée un alias sur une variable, il est nécessaire de s'assurer que cette variable existe au moins tant que la référence sur cette variable existe. Ainsi, si il est parfaitement possible de retourner une référence à la sortie d'une fonction, il faut \textbf{que la variable retournée ne soit pas locale à la fonction sous peine de graves problèmes à l'exécution}.
 
@@ -2244,6 +2342,194 @@ vector& good_max( vector& u, vector& v )
 
 
 Il existe bien d'autres méthodes pour les objets de type |vector|, dont vous pouvez trouver la documentation dans les deux sites  \verb@cppreference@et \verb@cplusplus.com@. La chose importante à retenir est surtout que la libération de la mémoire se fait de façon automatique dès que l'objet de type vecteur cesse d'être visible.
+
+
+\subsection{Surcharge de fonctions}
+
+Il arrive souvent, en calcul scientifique en particuliers, de devoir écrire plusieurs versions d'une même fonction pour des types différents. Par exemple, en algébre linéaire, il est utile d'avoir une fonction permettant de faire l'opération $y\leftarrow y + a.x$
+où $x$ et $y$ sont des vecteurs d'un certain espace vectoriel $\mathbb{K}^{n}$ (où
+$\mathbb{K}$ est un corps tel que les rationnels, les réels, les complexes,
+$\mathbb{Z}/p.\mathbb{Z}$ ($p$ premier), etc. et $a$ un scalaire appartenant au corps 
+$\mathbb{K}$.
+
+On aimerait pouvoir écrire des fonctions pour cette opérations pour au moins trois types de scalaires différents en C++ : les réels simple précision, les réels double précision, les complexes simple précision et les complexes double précision. Dans un langage tel que le Fortran ou le C, nous serions obligé d'appeler ces quatre fontions par des noms différents ( et de fait, dans la bibliothèque d'algébre linéaire BLAS, les quatre fonctions effectuant cette opération sur les quatre types de scalaires suscités sont nommées saxpy, daxpy, caxpy et zaxpy). En C++, il est possible d'appeler ces quatre fonctions par le même nom, du moment que le type ou le nombre de paramètre est différent. Lors de l'appel de la fonction, le type ou le nombre de paramètres passés permettra sans ambigüité au compilateur de savoir quel fonction appelée.
+
+Ainsi en C++, il est possible d'écrire les deux fonctions ci--dessus :
+
+\begin{lstlisting}[caption=Exemple de surcharge d'une fonction C++]
+// Fonction avec flottants simple précision
+void axpy(int N, float a, const float* x, float* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+// Fonction avec flottants double précision
+void axpy(int N, double a, const double* x, double* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+Ici, le compilateur décidera quelle fonction appeler en fonction du type des paramètres passés, ainsi
+\begin{lstlisting}[caption=Appel à des fonctions surchargées]
+void main()
+{
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fontion avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Erreur de compilation, mélange simple et double précision !
+                        // Le compilateur ne peut décider quel fonction appeler...
+}
+\end{lstlisting}
+
+Il est important de bien respecter le type des paramètres passés à l'appel de la fonction sous peine d'avoir des erreurs de compilation parfois fort peu compréhensibles !
+
+Nous verrons au chapitre des templates qu'il peut être important d'appeler des fonctions faisant le même traitement mais avec des types différents par le même nom.
+
+\subsection{Fonction générique (C++ 2020)}
+
+Si on observe attentivement les codes écrits dans leurs versions simple ou double précision
+(mais également en complexe), on se fera vite la remarque que ces fonctions possèdent exactement le même code, au type de variable près !
+
+Une possibilité serait de définir un type en amont de la fonction, qu'on pourrait changer selon le besoin :
+\begin{lstlisting}
+using scalar_t = double;
+
+...
+
+void axpy(int N, scalar_t a, const scalar_t* x, scalar_t* y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    int i;
+    for (i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+\end{lstlisting}
+
+Tant que le code utilisant cette fonction ne s'en sert que pour un type de scalaire, c'est une solution viable, bien que peu pratique (il faut penser à modifier le type de |scalar_t| pour chaque nouveau programme qu'on veut compiler), et comment faire dès lors qu'une application a besoin de la fonction pour différents types de scalaires ?
+
+C'est là que la notion de fonction générique intervient. Une fonction générique est une sorte de patron (template) de fonction, sur lequel le compilateur va s'appuyer pour générer des fonctions selon les types de paramètres passés à la fonction. Si on passe des réels simple précision, une fonction sera générée pour considérer des réels simples précisions,
+si des doubles sont employées, une fonction sera générée pour considérer des réels double précisions, etc.
+
+Nous verrons plus loin dans le cours un moyen de faire cela en C++, avec contrôle des types permis, à l'aide des patrons (template) qui sont un concept donnant une grande puissance au langage C++ mais aussi les plus beaux mal de tête du monde ! (On peut faire des choses très (trop ?) complexes avec les templates). Mais depuis C++ 20, il est possible à l'aide d'une écriture bien plus simple d'écrire des fonctions génériques, et cela grâce au mot clef |auto| !
+
+\begin{lstlisting}[caption=utilisation du mot clef auto pour déclarer les paramètres de la fonction]
+// Fonction générique pour tout type de vecteur
+void axpy(int N, auto a, const auto x, auto y)
+{   // Opération y <- y + a.x sur des vecteurs x,y avec a scalaire
+    for (int i = 0; i < N; ++i ) y[i] += a*x[i];
+}
+
+void main()
+
+    float fx[] = {1.f, 2.f, 3., 4.f};
+    float fy[] = {0.f, -1.f, -2.f, -3.f};
+    axpy(4, 2.f, fx, fy);// Appel la fonction avec les flottants simple précision
+
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, 2., dx, dy); // Appel la fonction avec les flottants double précision
+
+    axpy(4,2.f, dx, dy);// Appel la fonction avec a en simple précision, dx et dy en double
+}
+\end{lstlisting}
+
+Ici la fonction \texttt{axpy} a été généralisée pour prendre n'importe quel type pour \texttt{a, x} et \texttt{y}. Au fur et à mesure des différents appels à cette fonction "générique", le compilateur produire plusieurs versions de la fonction qui prendra en paramètre les divers types passés pour \texttt{a, x} et \texttt{y}. Ainsi, dans l'exemple ci-dessus, trois versions de la fonction seront générées : une avec trois réels simple précision, une avec trois réels double précision et la dernière avec |a| réel simple précision et |x| et |y| déclarées comme réels double précision.
+
+Les types (qui peuvent être tous différents) de \texttt{a, x} et \texttt{y} seront valides tant que l'opération |y[i] += a*x[i]| reste valide pour les types passés pour les trois arguments. Ainsi le programme suivant ne compilera pas :
+
+\begin{lstlisting}
+void main()
+{
+    double dx[] = {1., 2., 3., 4.};
+    double dy[] = {0., -1., -2., -3.};
+    axpy(4, "toto", dx, dy); // Ne compile pas ! Pas de sens de faire y[i] += "toto"*x[i]  
+}
+\end{lstlisting}
+
+\underline{Remarque} : Si le mot clef |auto| en C++ 20 permet de créer facilement des fonctions génériques, il ne permet pas un contrôle fin des types permis contrairement aux templates que l'on verra plus tard. Néanmoins, dans beaucoup de cas, cette généricité est suffisante et bien plus légère à l'écriture que les templates\ldots
+
+Par contre, si vous avez défini ce que veut dire par exemple la multiplication d'un entier
+avec une chaîne de caractère (ce qui est possible en C++, on verra cela plus loin lorsqu'on parlera des opérateurs), il est tout à fait légitime d'écrire la ligne suivante :
+\begin{lstlisting}
+axpy(4, 3, "toto"s, "titi"s);
+\end{lstlisting}
+
+Bien sûr, il est déconseillé de le faire, car cela rajoute plus de confusion au code qu'autre chose...
+
+\subsubsection{Valeur par défaut}
+
+Si nous pouvons déjà être satisfait de notre fonction "générique", on pourra vous faire
+néanmoins remarquer que si votre fonction s'applique bien à des vecteurs dont les c{\oe}fficients sont contigüs en mémoire, votre fonction ne pourra effectuer son opération dès lors que les c{\oe}fficients de votre vecteur sont espacés régulièrement en mémoire. Par exemple, si vous avez une matrice rangée par ligne (l'indice des colonnes varie le plus vite), vous pouvez souhaiter effectuer votre opération |axpy| sur deux colonnes de votre matrice. Seulement, les coefficients sont alors espacés du nombre de colonnes que possède votre matrice ! Pour généraliser votre fonction aux vecteurs lignes ou colonnes des matrices, il suffit donc de rajouter deux paramètres, |incx| et |incy| qui vous donnent le nombre d'éléments à "sauter" pour trouver le prochain c{\oe}fficient d'un des deux vecteurs.
+
+Votre fonction devient donc :
+
+\begin{lstlisting}[caption=Généralisation de la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx, int incy)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(4, -4., A, A+2, N, N);
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(4, 1., A+1, &A[3][0], N, 1]);
+}
+\end{lstlisting}
+
+Pour l'exemple donné ci--dessus, il est clair que les paramètres |incx| et |incy| sont indispensables. 
+Néanmoins, cela alourdit votre code, principalement pour les vecteurs dont les éléments sont contigüs en mémoire, ce qui représente la majorité des cas rencontrés. En effet, 
+il faut à chaque fois pour ce dernier cas, rajouter deux paramètres valant un à la fonction, sans parler du risque de bogue en rajoutant ces deux paramètres (en mettant par erreur deux au lieu de un pour l'un des paramètres par exemple).
+
+Heureusement, C++ prévoit ces cas, et il est possible de fournir pour ces paramètres des valeurs par défaut ce qui permettra de les omettre lors d'un appel "usuel".
+
+Dans le cas de la fonction |axpy|, on vient de voir que dans la majorité des appels à cette fonction, les paramètres |incx| et |incy| valent un. On peut donc définir notre fonction en rajoutant pour ces deux paramètres un pour valeur par défaut :
+\begin{lstlisting}[caption=Valeurs par défaut pour la fonction axpy]
+void axpy(int N, auto a, const auto* x, auto* y, int incx = 1, int incy = 1)
+{
+    for ( int i = 0; i < N; ++i ) y[i*incy] += a*x[i*incx];
+}
+
+int main()
+{
+    const int N = 4;
+    double A[N][N] = { {1,2, 4,  8}, 
+                       {1,3, 9, 27},
+                       {1,4,16, 64},
+                       {1,5,25,125} };
+    double x[N] = {1,2,3,4};
+    double y[N] = {4,3,2,1};
+    // On soustrait quatre fois la colonne 1 à la colonne 3 de la matrice :
+    axpy(N, -4., &A[0][0], &A[0][2], N, N); // incx = N, incy = N
+    // Rajout de la deuxième colonne à la quatrième ligne :
+    axpy(N, 1., &A[0][1], &A[3][0], N);// incx = N, incy = 1
+    // Rajout de la deuxième ligne à la quatrième colonne :
+    axpy(N, 1., &A[1][0], &A[0][3], 1, N); // incx = 1, incy = N
+    // Opération sur les vecteurs x et y :
+    axpy(4, 1., x, y); // incx = 1, incy = 1;
+
+    return EXIT_SUCCESS;
+}
+\end{lstlisting}
+
+\underline{Remarques} :
+\begin{enumerate}
+    \item Les paramètres ayant des valeurs par défaut doivent \textbf{impérativement} être déclarée en dernier dans les paramètres de la fonction;
+    \item L'ordre des paramètres par défaut doit être respecté à l'appel : si un paramètre possédant une valeur par défaut doit être défini avec une valeur spécifique, \textbf{tous les paramètres précédents}, même ceux ayant une valeur par défaut, doivent également avoir une valeur spécifique définie par l'utilisateur. Ainsi, dans l'exemple ci--dessus, on ne peut pas définir une valeur différente de un pour |incy| sans définir explicitement la valeur un pour |incx| à l'appel !
+\end{enumerate}
+
 
 \subsection{Surcharge des opérateurs}
 

@@ -190,7 +190,7 @@ int main()
     {
         std::cout << "\tPremière façon : ";
         int index;
-        int valeur = trouve_et_localise_valeur_maximale_1(11, valeurs, &index);
+        int valeur = trouve_  et_localise_valeur_maximale_1(11, valeurs, &index);
         std::cout << "\tTrouvé la valeur " << valeur << " sur l'index " << index << std::endl;
     }
     {

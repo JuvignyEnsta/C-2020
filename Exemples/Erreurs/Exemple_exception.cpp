@@ -55,7 +55,7 @@ int main()
         std::cout << std::endl;
     } catch(std::runtime_error& err)
     {
-        std::cout << "Un des deux vecteurs était nul..." << std::endl;
+        std::cout << err.what() << std::endl;
     }
     return EXIT_SUCCESS;
 }

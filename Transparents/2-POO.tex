@@ -818,25 +818,25 @@ public:
 \tiny
 \begin{exampleblock}{Construction d'un nuage de point}
 \begin{itemize}
-\item Construire une classe \lstinline$CloudOfPoints$ permettant d'instancer des nuages de $N$ points en 2D, $N$ pouvant varier d'un nuage à l'autre;
+\item Construire une classe \lstinline$nuage_de_points$ permettant d'instancer des nuages de $N$ points en 2D, $N$ pouvant varier d'un nuage à l'autre;
 \item Mettre des affichages au début de chaque constructeur et destructeur pour tracer l'appel des constructeurs;
 \item Tester votre classe à l'aide du programme suivant :
 \begin{lstlisting}
-# include "CloudOfPoints.hpp"
+# include "nuage_de_points.hpp"
 int main()
 {
-    CloudOfPoints nuage1{ 10 };
-    CloudOfPoints nuage2{ nuage1 };
-    CloudOfPoints nuage3;
-    CloudOfPoints nuage4{2, 5, nuage1};// Copie les points 2 à 5 du nuage1.
+    nuage_de_points nuage1(10);
+    nuage_de_points nuage2(nuage1);
+    nuage_de_points nuage3;
+    nuage_de_points nuage4(2, 5, nuage1);// Copie les points 2 à 5 du nuage1.
 }
 \end{lstlisting}
 \item Bonus : Gérer les erreurs lors de la construction d'un nuage à l'aide des exceptions;
 \item Bonus : Pouvoir construire un nuage de la manière suivante :
 \begin{lstlisting}
-CloudOfPoints nuage5{ Point{1.,0.,0.},Point{1.,1.,0.},Point{1.,1.,1.} };
+nuage_de_points nuage5{ point{1.,0.},point{1.,1.},point{0.,1.} };
 \end{lstlisting}
-où \lstinline$Point$ est un alias sur \lstinline$std::array<double,3>$
+où \lstinline$point$ est un alias sur \lstinline$std::array<double,2>$
 \end{itemize}
 \end{exampleblock}
 \end{frame}

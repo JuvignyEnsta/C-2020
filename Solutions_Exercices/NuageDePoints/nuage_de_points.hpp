@@ -4,6 +4,8 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <string>
+#include <algorithm>
 
 namespace geometrie
 {
@@ -12,6 +14,9 @@ namespace geometrie
     class nuage_de_points
     {
     public:
+        using iterator = std::vector<point>::iterator;
+        using const_iterator = std::vector<point>::const_iterator;
+
         nuage_de_points() = default;
 
         nuage_de_points(int nombre_de_points) try
@@ -53,9 +58,104 @@ namespace geometrie
 
         ~nuage_de_points() = default;
 
+        nuage_de_points& operator = ( const nuage_de_points& ) = default;
+        nuage_de_points& operator = ( nuage_de_points&& ) = default;
+
+        std::size_t size() const
+        {
+            return this->ensemble_des_points.size();
+        }
+
+        point& operator [] ( std::size_t i )
+        {
+            assert(i < this->ensemble_des_points.size());
+            return this->ensemble_des_points[i];
+        }
+
+        const point& operator [] ( std::size_t i ) const
+        {
+            assert(i < this->ensemble_des_points.size());
+            return this->ensemble_des_points[i];
+        }
+
+        nuage_de_points operator + ( const nuage_de_points& nuage ) const
+        {
+            nuage_de_points nuage_union;
+            nuage_union.ensemble_des_points.reserve(this->size() + nuage.size());
+            for ( const auto& pt : this->ensemble_des_points )
+            {
+                nuage_union.ensemble_des_points.emplace_back(pt);
+            }
+            for ( const auto& pt : nuage.ensemble_des_points )
+            {
+                nuage_union.ensemble_des_points.emplace_back(pt);
+            }
+            return nuage_union;
+        }
+
+        nuage_de_points& operator += ( const point& tr )
+        {
+            for ( auto& pt : this->ensemble_des_points )
+            {
+                pt[0] += tr[0];
+                pt[1] += tr[1];
+            }
+            return *this;
+        }
+
+        explicit operator std::string() const
+        {
+            std::string out("{");
+            for ( int i = 0; (i < 5) && (i < this->size()); ++i)
+            {
+                out += "(" + std::to_string(this->ensemble_des_points[i][0]) + ", " 
+                           + std::to_string(this->ensemble_des_points[i][1]) + ")";
+            }
+            if ( this->size() > 10) out += "...";
+            if (this->size() > 5)
+                for ( int i = std::max(this->size()-5, 5ULL); i < this->size(); ++i )
+                    out += "(" + std::to_string(this->ensemble_des_points[i][0]) + ", " 
+                               + std::to_string(this->ensemble_des_points[i][1]) + ")";
+            out += "}";
+            return out;
+        }
+
+        std::ostream& save(std::ostream& out ) const
+        {
+            out << this->size() << " ";
+            for ( const auto& pt : this->ensemble_des_points )
+                out << pt[0] << " " << pt[1] << " ";
+            return out;
+        }
+
+        iterator begin()
+        {
+            return this->ensemble_des_points.begin();
+        }
+
+        const_iterator begin() const
+        {
+            return this->ensemble_des_points.begin();
+        }
+
+        iterator end()
+        {
+            return this->ensemble_des_points.end();
+        }
+
+        const_iterator end() const
+        {
+            return this->ensemble_des_points.end();
+        }
+
     private:
         std::vector<point> ensemble_des_points;
     };
+}
+
+inline std::ostream& operator << (std::ostream& out, const geometrie::nuage_de_points& nuage )
+{
+    return nuage.save(out);
 }
 
 #endif

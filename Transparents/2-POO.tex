@@ -1256,7 +1256,7 @@ private:
 CloudOfPoints cop1, cop2;
 ...
 CloudOfPoints cop3 = cop1 + cop2;// cop3 = fusion de cop1 et cop2
-Point tr{1.,0.,0.};
+Point tr{1.,0.};
 cop3 += tr; // Translation des points par le vecteur tr
 // Affiche nombre de points et les 1ers et derniers points...
 std::cout << "cop3 : " << std::string(cop3) << std::endl;

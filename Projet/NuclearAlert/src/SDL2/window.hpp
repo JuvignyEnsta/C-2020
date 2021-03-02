@@ -25,6 +25,12 @@ namespace sdl2
 
         SDL_Renderer* get_native_renderer() { return m_pt_renderer; }
 
+        std::array<std::int32_t,2> dimensions() const
+        {
+            int w, h;
+            SDL_GetWindowSize(this->m_window, &w, &h);
+            return {w,h};
+        }
 
     private:
         SDL_Window* m_window;

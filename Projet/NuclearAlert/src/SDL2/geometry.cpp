@@ -11,7 +11,7 @@ sdl2::rectangle::rectangle( const std::array<std::uint16_t,2>& position,
                             bool fill)
     :   x(position[0]), y(position[1]), 
         width(dimension[0]), height(dimension[1]),
-        ink(col), is_filled(fill)
+        is_filled(fill), ink(col)
 {}
 // =================================================================================================
 void

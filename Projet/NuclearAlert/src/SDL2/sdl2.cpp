@@ -15,7 +15,7 @@ using namespace std::string_literals;
 
 void sdl2::init(int argc, char *argv[])
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_EVENTS) < 0)
     {
         std::string error_mesg = "Impossible d'initialiser SDL : "s + std::string(SDL_GetError());
         throw std::runtime_error(error_mesg);

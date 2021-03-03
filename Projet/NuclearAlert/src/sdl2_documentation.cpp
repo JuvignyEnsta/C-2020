@@ -55,7 +55,7 @@ void lecture_document(sdl2::window& fenêtre, const std::string& fich_doc)
                         fmt_text.begin_at_line(fenêtre, num_ligne);                    
                         break;
                     case sdl2::event_keyboard::end:
-                        num_ligne = std::max(fmt_text.nb_lines()-25,0ULL);
+                        num_ligne = std::max(fmt_text.nb_lines()-25,std::size_t(0));
                         fenêtre.cls({0,0,0,0xFF});
                         fmt_text.begin_at_line(fenêtre, num_ligne);                    
                         break;

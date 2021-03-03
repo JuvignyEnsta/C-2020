@@ -1,5 +1,5 @@
-#include Make_linux.inc
-include Make_msys2.inc
+include Make_linux.inc
+#include Make_msys2.inc
 #include Make_osx.inc
 
 CXXFLAGS = -std=c++20 `sdl2-config --cflags`
@@ -17,34 +17,34 @@ default:	help
 all: $(ALL)
 
 clean:
-	@rm -fr sdl2/*.o *.exe sdl2/*~ 
+	@rm -fr SDL2/*.o *.exe SDL2/*~ 
 
-OBJS = sdl2/sdl2.o sdl2/geometry.o sdl2/window.o sdl2/font.o sdl2/event.o sdl2/texte.o sdl2/image.o sdl2/formated_text.o
+OBJS = SDL2/sdl2.o SDL2/geometry.o SDL2/window.o SDL2/font.o SDL2/event.o SDL2/texte.o SDL2/image.o SDL2/formated_text.o
 
-sdl2/sdl2.o:	sdl2/sdl2.hpp sdl2/sdl2.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/sdl2.cpp -o sdl2/sdl2.o
+SDL2/sdl2.o:	SDL2/sdl2.hpp SDL2/sdl2.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/sdl2.cpp -o SDL2/sdl2.o
 
-sdl2/geometry.o:	sdl2/geometry.hpp sdl2/window.hpp sdl2/geometry.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/geometry.cpp -o sdl2/geometry.o
+SDL2/geometry.o:	SDL2/geometry.hpp SDL2/window.hpp SDL2/geometry.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/geometry.cpp -o SDL2/geometry.o
 
-sdl2/window.o:	sdl2/window.hpp sdl2/window.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/window.cpp -o sdl2/window.o
+SDL2/window.o:	SDL2/window.hpp SDL2/window.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/window.cpp -o SDL2/window.o
 
-sdl2/font.o:	sdl2/window.hpp sdl2/font.hpp sdl2/font.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/font.cpp -o sdl2/font.o
+SDL2/font.o:	SDL2/window.hpp SDL2/font.hpp SDL2/font.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/font.cpp -o SDL2/font.o
 
-sdl2/event.o : sdl2/window.hpp sdl2/event.hpp sdl2/event.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/event.cpp -o sdl2/event.o
+SDL2/event.o : SDL2/window.hpp SDL2/event.hpp SDL2/event.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/event.cpp -o SDL2/event.o
 
-sdl2/texte.o : sdl2/window.hpp sdl2/font.hpp sdl2/texte.hpp sdl2/texte.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/texte.cpp -o sdl2/texte.o
+SDL2/texte.o : SDL2/window.hpp SDL2/font.hpp SDL2/texte.hpp SDL2/texte.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/texte.cpp -o SDL2/texte.o
 
-sdl2/formated_texte.o : sdl2/window.hpp sdl2/font.hpp sdl2/formated_text.hpp sdl2/formated_text.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/formated_text.cpp -o sdl2/formated_text.o
+SDL2/formated_texte.o : SDL2/window.hpp SDL2/font.hpp SDL2/formated_text.hpp SDL2/formated_text.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/formated_text.cpp -o SDL2/formated_text.o
 
 
-sdl2/image.o : sdl2/window.hpp sdl2/image.hpp sdl2/image.cpp
-	$(CXX) $(CXXFLAGS) -c sdl2/image.cpp -o sdl2/image.o
+SDL2/image.o : SDL2/window.hpp SDL2/image.hpp SDL2/image.cpp
+	$(CXX) $(CXXFLAGS) -c SDL2/image.cpp -o SDL2/image.o
 
 sdl2_documentation.exe : $(OBJS) sdl2_documentation.cpp
 	$(CXX) $(CXXFLAGS) $(OBJS) sdl2_documentation.cpp -o sdl2_documentation.exe $(LIBS)

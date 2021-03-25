@@ -55,12 +55,21 @@ sdl2::texte::texte(const std::string& phrase, const font& fnt, window& win,
 {
     // Première étape, compter le nombre de lignes imposées (par des \n) et leur emplacement
     std::vector<int> positions_retour_chariot; positions_retour_chariot.reserve(1024);
+#if __cplusplus <= 201703L
+    {
+    int pos = 0;
+    for (const auto& car : phrase)
+#else
     for (int pos = 0; const auto& car : phrase )
+#endif
     {
         if (car == '\n') 
             positions_retour_chariot.push_back(pos);
         ++pos;
     }
+#if __cplusplus <= 201703L
+    }
+#endif
     std::vector<std::string> lignes;
     std::size_t début = 0, fin = (positions_retour_chariot.size()>0 ? positions_retour_chariot[0] : phrase.size());
     std::size_t index = 0;
@@ -162,12 +171,21 @@ sdl2::texte::texte(const std::string& phrase, const font& fnt, window& win, int 
     int maxheight = win.dimensions()[1] - marge_height;
     // Première étape, compter le nombre de lignes imposées (par des \n) et leur emplacement
     std::vector<int> positions_retour_chariot; positions_retour_chariot.reserve(1024);
+#if __cplusplus <= 201703L
+    {
+    int pos = 0;
+    for (const auto& car : phrase )    
+#else    
     for (int pos = 0; const auto& car : phrase )
+#endif
     {
         if (car == '\n') 
             positions_retour_chariot.push_back(pos);
         ++pos;
     }
+#if __cplusplus <= 201703L
+    }
+#endif
     std::vector<std::string> lignes;
     std::size_t début = 0, fin = (positions_retour_chariot.size()>0 ? positions_retour_chariot[0] : 
                                                                       phrase.size());

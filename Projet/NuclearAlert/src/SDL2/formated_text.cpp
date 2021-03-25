@@ -206,12 +206,12 @@ sdl2::formated_text::load_simplified_markdown( const std::string& path )
             for ( const auto& word : words)
             {
                 int beg_word = 0;
-                if (std::string_view(word.data(), word.data()+3) == "***")
+                if (std::string_view(word.data(), 3) == "***")
                 {
                     current_style = style::italic_bold;
                     beg_word = 3;
                 }
-                else if (std::string_view(word.data(), word.data()+2) == "**")
+                else if (std::string_view(word.data(), 2) == "**")
                 {
                     if (current_style == style::italic)
                     {

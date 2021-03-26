@@ -49,9 +49,8 @@ void creer_fenetre()
     sdl2::event_queue queue;
     while (not quitting)
     {
+        fenêtre << sdl2::flush;
         auto events = queue.pull_events();
-        if (events.size() > 0)
-            fenêtre << sdl2::flush;
         for ( const auto& e : events)
             if (e->kind_of_event() == sdl2::event::quit)
                 quitting = true;

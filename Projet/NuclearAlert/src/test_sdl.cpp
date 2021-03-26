@@ -30,26 +30,25 @@ void creer_fenetre()
                     {0x00,0x00,0xFF,0xFF});
     doc.at(400, 360);
     doc.rotate({160,100}, 5);
-    // On utilise des flux pour afficher le graphisme
-    // Affichage d'un rectangle plein avec coin
-    // 0 - 9 A = 10, B = 11, C= 12, D = 13, E = 14, F = 15 en base 16
-    // 0x  => Ecriture hexadécimale (en base 16) 0x3E = 3*16 + 14 = 62 en décimal
-    // 0b  => Ecriture binaire 0b100010 => écriture binaire = 2^{1} + 2^{5} = 33 en décimal
-    // 
-    // Donc 0xAB = 10*16 + 11 = 171 en décimal
-    //      0xFF = 15*16 + 15 = 255 en décimal
-    fenêtre << sdl2::rectangle({100,100}, {100,50}, {0,0xFF,0xFF,0xFF}, true);
-    // Affichage d'un segment de droite
-    fenêtre << sdl2::line({10,10}, {50,30}, {0xFF,0x00,0x00,0xFF});
-    // Affichage d'un polygone.
-    fenêtre << sdl2::polygon({ std::array{200,200}, {250,250}, {200,300}, {150,250} }, {0xFF,0xFF,0x00,0xFF})
-            << homer << titre << phrase << doc
-            << sdl2::flush;
     bool quitting = false;
     sdl2::event_queue queue;
     while (not quitting)
     {
-        fenêtre << sdl2::flush;
+        // On utilise des flux pour afficher le graphisme
+        // Affichage d'un rectangle plein avec coin
+        // 0 - 9 A = 10, B = 11, C= 12, D = 13, E = 14, F = 15 en base 16
+        // 0x  => Ecriture hexadécimale (en base 16) 0x3E = 3*16 + 14 = 62 en décimal
+        // 0b  => Ecriture binaire 0b100010 => écriture binaire = 2^{1} + 2^{5} = 33 en décimal
+        // 
+        // Donc 0xAB = 10*16 + 11 = 171 en décimal
+        //      0xFF = 15*16 + 15 = 255 en décimal
+        fenêtre << sdl2::rectangle({100,100}, {100,50}, {0,0xFF,0xFF,0xFF}, true);
+        // Affichage d'un segment de droite
+        fenêtre << sdl2::line({10,10}, {50,30}, {0xFF,0x00,0x00,0xFF});
+        // Affichage d'un polygone.
+        fenêtre << sdl2::polygon({ std::array{200,200}, {250,250}, {200,300}, {150,250} }, {0xFF,0xFF,0x00,0xFF})
+                << homer << titre << phrase << doc
+                << sdl2::flush;
         auto events = queue.pull_events();
         for ( const auto& e : events)
             if (e->kind_of_event() == sdl2::event::quit)

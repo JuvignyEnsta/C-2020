@@ -1,4 +1,5 @@
 #include "SDL2/sdl2.hpp"
+#include <iostream>
 
 void creer_fenetre()
 {
@@ -32,6 +33,11 @@ void creer_fenetre()
     doc.rotate({160,100}, 5);
     bool quitting = false;
     sdl2::event_queue queue;
+    int xinput = 100, yinput = 400;
+    char buffername[255];
+    buffername[0] = '\0';
+    int posbuffer = 0;
+    bool iskey_down = false;
     while (not quitting)
     {
         // On utilise des flux pour afficher le graphisme
@@ -47,12 +53,44 @@ void creer_fenetre()
         fenêtre << sdl2::line({10,10}, {50,30}, {0xFF,0x00,0x00,0xFF});
         // Affichage d'un polygone.
         fenêtre << sdl2::polygon({ std::array{200,200}, {250,250}, {200,300}, {150,250} }, {0xFF,0xFF,0x00,0xFF})
-                << homer << titre << phrase << doc
-                << sdl2::flush;
+                << homer << titre << phrase << doc;
+        if (posbuffer > 0)
+        {
+            sdl2::texte name(buffername, fonte_texte, fenêtre, {0xFF,0xFF,0xFF,0xFF});
+            name.at(xinput,yinput);
+            fenêtre << name;
+        }
+        fenêtre << sdl2::flush;
         auto events = queue.pull_events();
         for ( const auto& e : events)
+        {
             if (e->kind_of_event() == sdl2::event::quit)
                 quitting = true;
+            if ( (e->kind_of_event() == sdl2::event::key_down) ||
+                 (e->kind_of_event() == sdl2::event::key_up) )
+            {
+                auto& key_ev = dynamic_cast<sdl2::event_keyboard&>(*e);
+
+                if ( (key_ev.type_of_event() == sdl2::event::key_down) &&  (iskey_down == false) )
+                {
+                    char keychar = key_ev.ascci_code();
+                    if ( (keychar >= 'a') && (keychar <= 'z') )
+                    {
+                        if (posbuffer < 254)
+                        {
+                            buffername[posbuffer  ] = keychar;
+                            buffername[posbuffer+1] = '\0';
+                            posbuffer ++;
+                        }
+                    }
+                    iskey_down = true;
+                }
+                if (key_ev.type_of_event() == sdl2::event::key_up)
+                {
+                    iskey_down = false;
+                }
+            }
+        }
     }
 }
 

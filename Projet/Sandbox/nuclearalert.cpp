@@ -36,17 +36,29 @@ int main()
 
     bool quit = false;
     bool console_state = true;
-    //console cons(...);
-    //radioprotection prot(...);
-    /*do
+    salle_de_controle_t salle_de_controle(&centrale);
+    radioprotection_t radioprotection(...);
+    do
     {
-        if (console_state)
-            cons.display_and_run();
-        else
-            radioprotection.display_and_run();
+        auto start = std::chrono::high_resolution_clock::now();        
+        std::chrono::duration<double> diff;
+        do
+        {   // On ne fait que gérer l'affichage (raffraichissement) et les événements provoqués par
+            // le joueur.
+            if (console_state)
+                salle_de_controle.display_and_run();
+            else
+                radioprotection.display_and_run();
+
+            auto end = std::chrono::high_resolution_clock::now();
+            diff   = end-start;// Diff delta t en secondes
+        } while (diff < 1);
+        // Met à jour les différents paramètres...
+        // Changer les objectifs demandés dans la boucle interne (exemple abaisser le rendement d'une pompe
+        // ou le taux de graphite immergé demandé pendant la seconde qui s'est écoulée).
+        // 
         // Met le processus en veille pendant une seconde.
-        std::this_thread::sleep_for(1s);
-    }
-    while(quit == false);*/
+        // std::this_thread::sleep_for(1s);
+    } while(quit == false);
     return EXIT_SUCCESS;
 }

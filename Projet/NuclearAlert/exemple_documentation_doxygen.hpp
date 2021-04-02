@@ -16,10 +16,10 @@
 
 
 /**
- * @brief      Cette classe décrit une pompe du circuit primaire ou secondaire *
+ * @brief      Cette classe décrit une pompe du circuit primaire ou secondaire.
  *
  * La pompe est caractérisée par son rendement et son état. Le rendement peut être
- * limité par l'état de la pompe
+ * limité par l'état de la pompe. 
  */
 class pompe
 {
